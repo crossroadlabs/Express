@@ -1,0 +1,3 @@
+github "crossroadlabs/BrightFutures" "master"
+github "SwiftyJSON/SwiftyJSON"
+github "groue/GRMustache.swift" "Swift2.1"
