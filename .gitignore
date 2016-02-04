@@ -1,0 +1,6 @@
+*.xcworkspace
+xcuserdata
+
+Cartfile.resolved
+Carthage
+
