@@ -72,7 +72,7 @@ app.get("/hello") { request in
 }
 ```
 
-Launch the app and follow the link: [http://localhost:9999/myecho?message=Hello](http://localhost:9999/myecho?message=Hello)
+Launch the app and follow the link: [http://localhost:9999/hello?message=Hello](http://localhost:9999/hello?message=Hello)
 
 ## Ideology behind
 
