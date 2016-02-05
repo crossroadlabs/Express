@@ -4,7 +4,7 @@
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ![Platform OS X | Linux](https://img.shields.io/badge/platform-OS%20X%20%7C%20Linux-orange.svg)
 
-### Swift Express is a simple, yet unopinionated web application server written in Swift
+### Express is a simple, yet unopinionated web application server written in Swift
 
 ## Getting started
 
@@ -33,6 +33,8 @@ swift-express run
 ```
 
 Test it in the browser: [http://localhost:9999/myecho?message=Hello](http://localhost:9999/myecho?message=Hello)
+
+##### A complete Swift Express command line documentation can be found here: [https://github.com/crossroadlabs/ExpressCommandLine](https://github.com/crossroadlabs/ExpressCommandLine)
 
 
 ## Installation
