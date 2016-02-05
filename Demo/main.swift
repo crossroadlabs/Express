@@ -80,6 +80,14 @@ app.get("/echo") { request in
     return Action<AnyContent>.chain()
 }
 
+app.get("/myecho") { request in
+    return Action<AnyContent>.ok(AnyContent(str: request.query["message"]?.first))
+}
+
+app.get("/hello") { request in
+    return Action<AnyContent>.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
+}
+
 app.get("/") { (request:Request<AnyContent>)->Action<AnyContent> in
     for me in request.body?.asJSON().map({$0["test"]}) {
         print(me)
