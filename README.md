@@ -8,6 +8,8 @@
 
 ## Getting started
 
+First make sure, please, you have followed the [installation](#installation) section steps.
+
 ##### Create a project:
 
 ```sh
@@ -58,9 +60,9 @@ brew install swift-express
 
 ## Examples
 
-### Hello Express:
+Create a project as it is described in the [getting started](#getting-started) section. Now you can start playing with examples.
 
-Create a project as it is described in the getting started section and add the following lines before server start:
+### Hello Express:
 
 ```swift
 app.get("/hello") { request in
