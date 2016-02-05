@@ -74,7 +74,7 @@ Launch the app and follow the link: [http://localhost:9999/myecho?message=Hello]
 
 ## Ideology behind
 
-### Taking the best of swift
+### Taking the best of Swift
 
 [Swift](https://swift.org/) essentially is a new generation programming language combining simplicity and all the modern stuff like functional programming.
 
@@ -95,7 +95,7 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 * v0.1: Initial Public Release
 	* basic routing
-	* views and view engines (supports Mustache)
+	* views and view engines (supports [Mustache](https://mustache.github.io/))
 	* JSON rendering as a view
 	* query parsing
 	* static files serving
