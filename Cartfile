@@ -1,3 +1,3 @@
-github "crossroadlabs/BrightFutures" "master"
+github "crossroadlabs/BrightFutures" "5127b928524887ce3ad33b7d741f49511902cb03"
 github "SwiftyJSON/SwiftyJSON"
 github "groue/GRMustache.swift" "Swift2.1"
