@@ -84,6 +84,23 @@ We were inspired (and thus influenced) mainly by two modern web frameworks: [Exp
 
 Let us know if we are on the right path! Influence the project, create feature requests, API change requests and so on. While we are in our early stages, it's easy to change. We are open to suggestions!
 
+## Features
+
+* 100% asynchronous (Future-based API)
+* Flexible and extensible
+* Full [MVC](https://ru.wikipedia.org/wiki/Model-View-Controller) support
+* Swift 2.1 compatible
+* Simple routing mechanism
+* Request handlers chaining
+* Easy error handling
+* [Mustache](https://mustache.github.io) templates
+* Built-in [JSON](http://www.json.org) support
+* Easy creation of [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) APIs
+* Built-in static files serving
+* Multiple contents types built-in support
+
+### And heah, the most important feature: [Highly passionate development team](http://www.crossroadlabs.xyz/)
+
 ## Roadmap
 
 * v0.2: advanced paths and regex url matching support
