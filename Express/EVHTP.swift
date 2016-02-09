@@ -139,13 +139,32 @@ private class RepeatingHeaderDict {
     }
     
     private func addHeader(key: UnsafeMutablePointer<Int8>, klen: Int, val: UnsafeMutablePointer<Int8>, vlen: Int) {
-        let k = String(bytesNoCopy: key, length: klen, encoding: NSUTF8StringEncoding, freeWhenDone: false)
-        let v = String(bytesNoCopy: val, length: vlen, encoding: NSUTF8StringEncoding, freeWhenDone: false)
+        var unk = UnsafeMutablePointer<UInt8>.alloc(klen)
+        var unv = UnsafeMutablePointer<UInt8>.alloc(vlen)
+        
+        var k:String?
+        var v:String?
+        
+        if evhtp_unescape_string(&unk, UnsafeMutablePointer<UInt8>(key), klen) == 0 {
+            k = String(bytesNoCopy: unk, length: strnlen(UnsafePointer<Int8>(unk), klen), encoding: NSUTF8StringEncoding, freeWhenDone: false)
+        } else {
+            k = String(bytesNoCopy: key, length: klen, encoding: NSUTF8StringEncoding, freeWhenDone: false)
+        }
+        if evhtp_unescape_string(&unv, UnsafeMutablePointer<UInt8>(val), vlen) == 0 {
+            v = String(bytesNoCopy: unv, length: strnlen(UnsafePointer<Int8>(unv), vlen), encoding: NSUTF8StringEncoding, freeWhenDone: false)
+        } else {
+            v = String(bytesNoCopy: val, length: vlen, encoding: NSUTF8StringEncoding, freeWhenDone: false)
+        }
+
         if var a = dict[k!] {
             a.append(v!)
         } else {
             dict[k!] = [v!]
         }
+        unk.destroy()
+        unk.dealloc(klen)
+        unv.destroy()
+        unv.dealloc(vlen)
     }
 }
 
@@ -331,7 +350,9 @@ internal class _evhtp {
     }
     
     func create_htp(base: COpaquePointer) -> EVHTPp {
-        return evhtp_new(base, nil)
+        let htp = evhtp_new(base, nil)
+        evhtp_set_parser_flags(htp, EVHTP_PARSE_QUERY_FLAG_IGNORE_HEX | EVHTP_PARSE_QUERY_FLAG_ALLOW_EMPTY_VALS | EVHTP_PARSE_QUERY_FLAG_ALLOW_NULL_VALS | EVHTP_PARSE_QUERY_FLAG_TREAT_SEMICOLON_AS_SEP)
+        return htp
     }
     
     func bind_address(htp: EVHTPp, host: String, port: UInt16) {
