@@ -28,7 +28,6 @@ public func express() -> Express {
 
 public class Express : RouterType {
     var routes:Array<RouteType> = []
-    let matcher:UrlMatcherType = DumbUrlMatcher()
     var server:ServerType?
     public let views:Views = Views()
     public let errorHandler:AggregateErrorHandler = AggregateErrorHandler()
@@ -48,7 +47,11 @@ public class Express : RouterType {
             return Transaction(app: self, routeId: routeId, head: head, out: out, handler: handler)
         }
         
-        routes.append(Route(id: routeId, method: method, path: path, factory: factory))
+        //TODO: handle exception properly
+        let matcher = try! RegexUrlMatcher(method: method, pattern: path)
+        let route = Route(id: routeId, matcher: matcher, factory: factory)
+        
+        routes.append(route)
     }
     
     func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, path:String, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
