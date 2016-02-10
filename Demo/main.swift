@@ -53,6 +53,14 @@ app.errorHandler.register { e in
 
 app.get("/:file+", action: StaticAction(path: "public", param:"file"))
 
+app.get("/myecho") { request in
+    return Action.ok(request.query["message"]?.first)
+}
+
+app.get("/myecho/:param") { request in
+    return Action.ok(request.params["param"])
+}
+
 app.get("/test") { req in
     return future {
         return try test()

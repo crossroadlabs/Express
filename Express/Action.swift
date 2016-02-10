@@ -131,3 +131,9 @@ public extension Action {
         return RenderAction(view: view, context: context)
     }
 }
+
+public extension Action where C : AnyContent {
+    public class func ok(str:String?) -> Action<AnyContent> {
+        return Action<AnyContent>.ok(AnyContent(str: str))
+    }
+}
