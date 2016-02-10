@@ -51,7 +51,7 @@ app.errorHandler.register { e in
     return Action<AnyContent>.render("test", context: ["test": "error", "items": viewItems])
 }
 
-app.get("/:file", action: StaticAction(path: "public", param:"file"))
+app.get("/:file+", action: StaticAction(path: "public", param:"file"))
 
 app.get("/test") { req in
     return future {
