@@ -53,6 +53,20 @@ app.errorHandler.register { e in
 
 app.get("/:file+", action: StaticAction(path: "public", param:"file"))
 
+app.get("/hello") { request in
+    return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
+}
+
+//user as an url param
+app.get("/hello/:user.html") { request in
+    //get user
+    let user = request.params["user"]
+    //if there is a user - create our context. If there is no user, context will remain nil
+    let context = user.map {["user": $0]}
+    //render our template named "hello"
+    return Action.render("hello", context: context)
+}
+
 app.post("/api/user") { request in
     //check if JSON has arrived
     guard let json = request.body?.asJSON() else {
@@ -73,6 +87,10 @@ app.post("/api/user") { request in
 
 app.get("/myecho") { request in
     return Action.ok(request.query["message"]?.first)
+}
+
+app.get("/myecho/:param") { request in
+    return Action.ok(request.params["param"])
 }
 
 func factorial(n: Int) -> Int {
@@ -101,14 +119,6 @@ app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyErro
     
     //return the future
     return future
-}
-
-app.get("/myecho/:param") { request in
-    return Action.ok(request.params["param"])
-}
-
-app.get("/hello") { request in
-    return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
 }
 
 app.get("/test") { req in

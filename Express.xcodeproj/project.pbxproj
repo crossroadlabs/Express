@@ -30,6 +30,7 @@
 		6525AC541C24E3C600131F58 /* Mustache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; };
 		6525AC551C24E3E000131F58 /* Mustache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; };
 		6525AC561C24E3E700131F58 /* Mustache.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		652E5E951C6BD79700C11021 /* hello.mustache in Resources */ = {isa = PBXBuildFile; fileRef = 652E5E941C6BD79700C11021 /* hello.mustache */; };
 		655077461C2D936100E42309 /* Static.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655077451C2D936100E42309 /* Static.swift */; };
 		6550774A1C2DC31500E42309 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 655077491C2DC31500E42309 /* logo.png */; };
 		6550774C1C2DC8E500E42309 /* MIME.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550774B1C2DC8E500E42309 /* MIME.swift */; };
@@ -118,6 +119,7 @@
 		6518267A1C2207D200E49AC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6518267E1C22081600E49AC5 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		6525AC531C24E3C600131F58 /* Mustache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mustache.framework; path = Carthage/Build/Mac/Mustache.framework; sourceTree = "<group>"; };
+		652E5E941C6BD79700C11021 /* hello.mustache */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hello.mustache; sourceTree = "<group>"; };
 		655077451C2D936100E42309 /* Static.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Static.swift; sourceTree = "<group>"; };
 		655077491C2DC31500E42309 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		6550774B1C2DC8E500E42309 /* MIME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MIME.swift; sourceTree = "<group>"; };
@@ -276,6 +278,7 @@
 			children = (
 				657C1A741C24E0F40037041F /* test.mustache */,
 				659157FE1C285AFA00672785 /* colored.mustache */,
+				652E5E941C6BD79700C11021 /* hello.mustache */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -400,6 +403,7 @@
 			files = (
 				659157FF1C285AFA00672785 /* colored.mustache in Resources */,
 				657C1A751C24E0F40037041F /* test.mustache in Resources */,
+				652E5E951C6BD79700C11021 /* hello.mustache in Resources */,
 				6550774A1C2DC31500E42309 /* logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

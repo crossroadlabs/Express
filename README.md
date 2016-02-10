@@ -166,6 +166,40 @@ to our api URL: `http://localhost:9999/api/user` (don't forget `application/json
 }
 ```
 
+### Using template engine
+
+First of all you need to switch the template engine on:
+
+```swift
+//we recommend mustache template engine
+app.views.register(MustacheViewEngine())
+```
+
+No create a file called `hello.mustache` in the `views` directory:
+
+```mustache
+<html>
+<body>
+<h1>Hello: {{user}}</h1>
+</body>
+</html>
+```
+
+Add a new request handler:
+```swift
+//user as an url param
+app.get("/hello/:user.html") { request in
+    //get user
+    let user = request.params["user"]
+    //if there is a user - create our context. If there is no user, context will remain nil
+    let context = user.map {["user": $0]}
+    //render our template named "hello"
+    return Action.render("hello", context: context)
+}
+```
+
+Now follow the link to see the result: [http://localhost:9999/hello/express.html](http://localhost:9999/hello/express.html)
+
 ## Ideology behind
 
 ### Taking the best of Swift
