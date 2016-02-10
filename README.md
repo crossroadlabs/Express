@@ -74,6 +74,20 @@ app.get("/hello") { request in
 
 Launch the app and follow the link: [http://localhost:9999/hello?message=Hello](http://localhost:9999/hello?message=Hello)
 
+### Serving static files
+
+```swift
+app.get("/:file+", action: StaticAction(path: "public", param:"file"))
+```
+
+The code above tells Express to serve all static files from the public folder recursively. If you want to serve just the first level in folder, use:
+
+```swift
+app.get("/:file", action: StaticAction(path: "public", param:"file"))
+```
+
+The difference is just in the pattern: `/:file` versus `/:file+`. For more information see our routing section.
+
 ## Ideology behind
 
 ### Taking the best of Swift
