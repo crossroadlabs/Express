@@ -53,6 +53,24 @@ app.errorHandler.register { e in
 
 app.get("/:file+", action: StaticAction(path: "public", param:"file"))
 
+app.post("/api/user") { request in
+    //check if JSON has arrived
+    guard let json = request.body?.asJSON() else {
+        return Action.ok("Invalid request")
+    }
+    //check if JSON object has username field
+    guard let username = json["username"].string else {
+        return Action.ok("Invalid request")
+    }
+    //compose the response as a simple dictionary
+    let response =
+        ["status": "ok",
+        "description": "User with username '" + username + "' created succesfully"]
+    
+    //render disctionary as json
+    return Action.render("json", context: response)
+}
+
 app.get("/myecho") { request in
     return Action.ok(request.query["message"]?.first)
 }

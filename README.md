@@ -88,6 +88,47 @@ app.get("/:file", action: StaticAction(path: "public", param:"file"))
 
 The difference is just in the pattern: `/:file` versus `/:file+`. For more information see our routing section.
 
+### Serving JSON requests
+
+Let's say we want to build a simple API for users registration. We want our API consumers to `POST` to `/api/user` a JSON object and get a `JSON` response back.
+
+```swift
+app.post("/api/user") { request in
+    //check if JSON has arrived
+    guard let json = request.body?.asJSON() else {
+        return Action.ok("Invalid request")
+    }
+    //check if JSON object has username field
+    guard let username = json["username"].string else {
+        return Action.ok("Invalid request")
+    }
+    //compose the response as a simple dictionary
+    let response =
+        ["status": "ok",
+        "description": "User with username '" + username + "' created succesfully"]
+    
+    //render disctionary as json
+    return Action.render("json", context: response)
+}
+```
+
+Lines above will do the job. Post this `JSON`:
+
+```json
+{
+    "username": "swiftexpress"
+}
+```
+
+to our api URL: `http://localhost:9999/api/user` (don't forget `application/json` content type header) and you will get this response:
+
+```json
+{
+  "status": "ok",
+  "description": "User with username 'swiftexpress' created succesfully"
+}
+```
+
 ## Ideology behind
 
 ### Taking the best of Swift
