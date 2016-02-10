@@ -120,8 +120,6 @@ class HttpServer : ServerType {
     let thread: UnsafeMutablePointer<pthread_t>
     
     func start(port:UInt16) -> Future<Void, NoError> {
-        print("Start")
-        
         let params = ServerParams(promise: Promise<Void, NoError>(), port: port, router: router)
         
         pthread_create(thread, nil, server_thread, UnsafeMutablePointer<Void>(Unmanaged.passRetained(params).toOpaque()))
