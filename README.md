@@ -64,6 +64,8 @@ brew install swift-express
 
 Create a project as it is described in the [getting started](#getting-started) section. Now you can start playing with examples.
 
+All the examples can be found in `Demo` project inside the main repo.
+
 ### Hello Express:
 
 ```swift
