@@ -22,7 +22,7 @@ open HelloExpress.xcodeproj
 
 ```swift
 app.get("/myecho") { request in
-    return Action<AnyContent>.ok(AnyContent(str: request.query["message"]?.first))
+    return Action.ok(request.query["message"]?.first)
 }
 ```
 
@@ -68,7 +68,7 @@ Create a project as it is described in the [getting started](#getting-started) s
 
 ```swift
 app.get("/hello") { request in
-    return Action<AnyContent>.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
+    return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
 }
 ```
 

@@ -61,6 +61,10 @@ app.get("/myecho/:param") { request in
     return Action.ok(request.params["param"])
 }
 
+app.get("/hello") { request in
+    return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
+}
+
 app.get("/test") { req in
     return future {
         return try test()
