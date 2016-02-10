@@ -41,7 +41,7 @@ public class RegexUrlMatcher : UrlMatcherType {
     /// - Returns: nil if route does not match. Matched params otherwise
     ///
     public func match(method:String, path:String) -> [String: String]? {
-        if self.method != "*" || self.method != method {
+        if self.method != "*" && self.method != method {
             return nil
         }
         guard let found = regex.findFirst(path) else {

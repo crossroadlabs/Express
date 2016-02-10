@@ -31,14 +31,13 @@ public protocol UrlMatcherType {
 }
 
 extension RouterType {
-    func nextRoute(routeId:String, request:RequestHeadType?) -> (RouteType, [String: String])? {
+    func nextRoute(index:Array<RouteType>.Index?, request:RequestHeadType?) -> (RouteType, [String: String])? {
         return request.flatMap { req in
             let url = req.path
             let method = req.method
             
-            let index = routes.indexOf {routeId == $0.id}
             let route:(RouteType, [String: String])? = index.flatMap { i in
-                let rest = routes.suffixFrom(i.successor())
+                let rest = routes.suffixFrom(i)
                 return rest.mapFirst { e in
                     guard let match = e.matcher.match(method, path:url) else {
                         return nil
@@ -48,5 +47,16 @@ extension RouterType {
             }
             return route
         }
+    }
+    
+    func nextRoute(routeId:String, request:RequestHeadType?) -> (RouteType, [String: String])? {
+        return request.flatMap { req in
+            let index = routes.indexOf {routeId == $0.id} . map { $0.successor() }
+            return nextRoute(index, request: request)
+        }
+    }
+    
+    func firstRoute(request:RequestHeadType?) -> (RouteType, [String: String])? {
+        return nextRoute(routes.startIndex, request: request)
     }
 }
