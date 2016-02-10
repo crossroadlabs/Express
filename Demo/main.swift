@@ -75,6 +75,34 @@ app.get("/myecho") { request in
     return Action.ok(request.query["message"]?.first)
 }
 
+func factorial(n: Int) -> Int {
+    return n == 0 ? 1 : n * factorial(n - 1)
+}
+
+func calcFactorial(num:Int) -> Future<Int, AnyError> {
+    return future {
+        return factorial(num)
+    }
+}
+
+// (request -> Future<Action<AnyContent>, AnyError> in) - this is required to tell swift you want to return a Future
+// hopefully inference in swift will get better eventually and just "request in" will be enough
+app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
+    // get the number from the url
+    let num = request.params["num"].flatMap{Int($0)}.getOrElse(0)
+    
+    // get the factorial Future. Returns immediately - non-blocking
+    let factorial = calcFactorial(num)
+    
+    //map the result of future to Express Action
+    let future = factorial.map { fac in
+        Action.ok(String(fac))
+    }
+    
+    //return the future
+    return future
+}
+
 app.get("/myecho/:param") { request in
     return Action.ok(request.params["param"])
 }
