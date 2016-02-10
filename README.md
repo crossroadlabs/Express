@@ -187,7 +187,7 @@ First of all you need to switch the template engine on:
 app.views.register(MustacheViewEngine())
 ```
 
-No create a file called `hello.mustache` in the `views` directory:
+Now create a file called `hello.mustache` in the `views` directory:
 
 ```mustache
 <html>
