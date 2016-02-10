@@ -51,7 +51,7 @@ app.errorHandler.register { e in
     return Action<AnyContent>.render("test", context: ["test": "error", "items": viewItems])
 }
 
-app.get("/*", action: StaticAction(path: "public"))
+app.get("/:file+", action: StaticAction(path: "public", param:"file"))
 
 app.get("/test") { req in
     return future {
@@ -59,7 +59,7 @@ app.get("/test") { req in
     }
 }
 
-app.get("/test.html") { (request:Request<AnyContent>)->Action<AnyContent> in
+app.get("/test.html") { request in
     let newItems = request.query.map { (k, v) in
         (k, v.first!)
     }
@@ -73,26 +73,26 @@ app.get("/test.html") { (request:Request<AnyContent>)->Action<AnyContent> in
         throw TestError.Test
     }
     
-    return Action<AnyContent>.render("test", context: ["test": "ok", "items": viewItems])
+    return Action.render("test", context: ["test": "ok", "items": viewItems])
 }
 
 app.get("/echo") { request in
-    return Action<AnyContent>.chain()
+    return Action.chain()
 }
 
 app.get("/myecho") { request in
-    return Action<AnyContent>.ok(AnyContent(str: request.query["message"]?.first))
+    return Action.ok(AnyContent(str: request.query["message"]?.first))
 }
 
 app.get("/hello") { request in
-    return Action<AnyContent>.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
+    return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
 }
 
-app.get("/") { (request:Request<AnyContent>)->Action<AnyContent> in
+app.get("/") { request in
     for me in request.body?.asJSON().map({$0["test"]}) {
         print(me)
     }
-    return Action<AnyContent>.ok(AnyContent(str:"{\"response\": \"hey hey\"}", contentType: "application/json"))
+    return Action.ok(AnyContent(str:"{\"response\": \"hey hey\"}", contentType: "application/json"))
 }
 
 func echoData(request:Request<AnyContent>) -> Dictionary<String, String> {
@@ -115,11 +115,11 @@ func echoRender(request:Request<AnyContent>) -> Action<AnyContent> {
     return Action.render("json", context: data)
 }
 
-app.post("/echo/inline") { (request:Request<AnyContent>)->Action<AnyContent> in
+app.post("/echo/inline") { request in
     let call = request.body?.asJSON().map({$0["say"]})?.string
     let response = call.getOrElse("I don't hear you!")
     
-    return Action<AnyContent>.ok(AnyContent(str:"{\"said\": \"" + response + "\"}", contentType: "application/json"))
+    return Action.ok(AnyContent(str:"{\"said\": \"" + response + "\"}", contentType: "application/json"))
 }
 
 app.get("/echo") { request in
@@ -143,7 +143,7 @@ app.post("/echo3") { request in
         contentType: request.contentType))
 }
 
-app.handle(HttpMethod.Any.rawValue, path: "/async/echo") { request in
+app.all("/async/echo") { request in
     return future {
         return echo(request)
     }

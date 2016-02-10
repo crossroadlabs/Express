@@ -78,7 +78,7 @@ class ChainAction<C : FlushableContentType, ReqC: ConstructableContentType> : Ac
         let body = self.request.map {$0.body.map {$0 as ContentType}} .getOrElse(request.body)
         
         let route = app.nextRoute(routeId, request: request)
-        return route.map { (r:(RouteType, UrlMatch))->Future<AbstractActionType, AnyError> in
+        return route.map { (r:(RouteType, [String: String]))->Future<AbstractActionType, AnyError> in
             let req = req.withParams(r.1)
             let transaction = r.0.factory(req, out)
             for b in body {
