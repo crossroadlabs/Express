@@ -103,7 +103,6 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 ## Roadmap
 
-* v0.2: advanced paths and regex url matching support
 * v0.3: Linux support
 * v0.4: proper streaming APIs
 * v0.5: more content types available out of the box
@@ -111,6 +110,11 @@ Let us know if we are on the right path! Influence the project, create feature r
 * v1.0: hit the production!
 
 ## Changelog
+
+* v0.2:
+	* Much better routing APIs
+	* Advanced routing path patterns
+	* Possibility to use Regex for routing
 
 * v0.1: Initial Public Release
 	* basic routing
