@@ -21,6 +21,7 @@
 
 import Foundation
 import BrightFutures
+import Regex
 
 private func defaultUrlMatcher(path:String, method:String = HttpMethod.Any.rawValue) -> UrlMatcherType {
     return try! RegexUrlMatcher(method: method, pattern: path)
@@ -35,6 +36,10 @@ public extension Express {
     
     func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, path:String, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
         self.handleInternal(method, path: path, handler: handler)
+    }
+    
+    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, regex:Regex, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
+        self.handle(RegexUrlMatcher(method: method, regex: regex), handler: handler)
     }
     
     func all<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
@@ -69,6 +74,10 @@ public extension Express {
     
     func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(method:String, path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
         handleInternal(method, path: path, handler: handler)
+    }
+    
+    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(method:String, regex:Regex, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+        self.handle(RegexUrlMatcher(method: method, regex: regex), handler: handler)
     }
     
     func all<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
