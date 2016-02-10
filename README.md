@@ -111,6 +111,18 @@ app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyErro
 }
 ```
 
+### Url params
+
+Let's get our echo example from [Getting Started](#getting-started) a bit further. Our routing engine, which is largely based on NodeJS analog [path-to-regex](https://github.com/pillarjs/path-to-regexp). You can read the complete documentation on how to use path patterns [here](https://github.com/pillarjs/path-to-regexp). Now an example with URL param:
+
+```swift
+//:param - this is how you define a part of URL you want to receive through request object
+app.get("/myecho/:param") { request in
+    //here you get the param from request: request.params["param"]
+    return Action.ok(request.params["param"])
+}
+```
+
 ### Serving static files
 
 ```swift

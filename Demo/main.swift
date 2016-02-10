@@ -89,7 +89,9 @@ app.get("/myecho") { request in
     return Action.ok(request.query["message"]?.first)
 }
 
+//:param - this is how you define a part of URL you want to receive through request object
 app.get("/myecho/:param") { request in
+    //here you get the param from request: request.params["param"]
     return Action.ok(request.params["param"])
 }
 
