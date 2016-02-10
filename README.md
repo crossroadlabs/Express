@@ -249,10 +249,12 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 ## Changelog
 
-* v0.2:
+* v0.2: Solid OS X release
 	* Much better routing APIs
 	* Advanced routing path patterns
 	* Possibility to use Regex for routing
+	* Greately improved README
+	* Some bugfixes
 
 * v0.1: Initial Public Release
 	* basic routing
