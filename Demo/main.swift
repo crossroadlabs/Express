@@ -51,7 +51,79 @@ app.errorHandler.register { e in
     return Action<AnyContent>.render("test", context: ["test": "error", "items": viewItems])
 }
 
-app.get("/*", action: StaticAction(path: "public"))
+/// StaticAction is just a predefined configurable handler for serving static files.
+/// It's important to pass exactly the same param name to it from the url pattern.
+app.get("/:file+", action: StaticAction(path: "public", param:"file"))
+
+app.get("/hello") { request in
+    return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
+}
+
+//user as an url param
+app.get("/hello/:user.html") { request in
+    //get user
+    let user = request.params["user"]
+    //if there is a user - create our context. If there is no user, context will remain nil
+    let context = user.map {["user": $0]}
+    //render our template named "hello"
+    return Action.render("hello", context: context)
+}
+
+app.post("/api/user") { request in
+    //check if JSON has arrived
+    guard let json = request.body?.asJSON() else {
+        return Action.ok("Invalid request")
+    }
+    //check if JSON object has username field
+    guard let username = json["username"].string else {
+        return Action.ok("Invalid request")
+    }
+    //compose the response as a simple dictionary
+    let response =
+        ["status": "ok",
+        "description": "User with username '" + username + "' created succesfully"]
+    
+    //render disctionary as json (remember the one we've registered above?)
+    return Action.render(JsonView.name, context: response)
+}
+
+app.get("/myecho") { request in
+    return Action.ok(request.query["message"]?.first)
+}
+
+//:param - this is how you define a part of URL you want to receive through request object
+app.get("/myecho/:param") { request in
+    //here you get the param from request: request.params["param"]
+    return Action.ok(request.params["param"])
+}
+
+func factorial(n: Int) -> Int {
+    return n == 0 ? 1 : n * factorial(n - 1)
+}
+
+func calcFactorial(num:Int) -> Future<Int, AnyError> {
+    return future {
+        return factorial(num)
+    }
+}
+
+// (request -> Future<Action<AnyContent>, AnyError> in) - this is required to tell swift you want to return a Future
+// hopefully inference in swift will get better eventually and just "request in" will be enough
+app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
+    // get the number from the url
+    let num = request.params["num"].flatMap{Int($0)}.getOrElse(0)
+    
+    // get the factorial Future. Returns immediately - non-blocking
+    let factorial = calcFactorial(num)
+    
+    //map the result of future to Express Action
+    let future = factorial.map { fac in
+        Action.ok(String(fac))
+    }
+    
+    //return the future
+    return future
+}
 
 app.get("/test") { req in
     return future {
@@ -59,7 +131,7 @@ app.get("/test") { req in
     }
 }
 
-app.get("/test.html") { (request:Request<AnyContent>)->Action<AnyContent> in
+app.get("/test.html") { request in
     let newItems = request.query.map { (k, v) in
         (k, v.first!)
     }
@@ -73,26 +145,26 @@ app.get("/test.html") { (request:Request<AnyContent>)->Action<AnyContent> in
         throw TestError.Test
     }
     
-    return Action<AnyContent>.render("test", context: ["test": "ok", "items": viewItems])
+    return Action.render("test", context: ["test": "ok", "items": viewItems])
 }
 
 app.get("/echo") { request in
-    return Action<AnyContent>.chain()
+    return Action.chain()
 }
 
 app.get("/myecho") { request in
-    return Action<AnyContent>.ok(AnyContent(str: request.query["message"]?.first))
+    return Action.ok(AnyContent(str: request.query["message"]?.first))
 }
 
 app.get("/hello") { request in
-    return Action<AnyContent>.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
+    return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
 }
 
-app.get("/") { (request:Request<AnyContent>)->Action<AnyContent> in
+app.get("/") { request in
     for me in request.body?.asJSON().map({$0["test"]}) {
         print(me)
     }
-    return Action<AnyContent>.ok(AnyContent(str:"{\"response\": \"hey hey\"}", contentType: "application/json"))
+    return Action.ok(AnyContent(str:"{\"response\": \"hey hey\"}", contentType: "application/json"))
 }
 
 func echoData(request:Request<AnyContent>) -> Dictionary<String, String> {
@@ -112,14 +184,14 @@ func echo(request:Request<AnyContent>) -> Action<AnyContent> {
 func echoRender(request:Request<AnyContent>) -> Action<AnyContent> {
     var data = echoData(request)
     data["hey"] = "Hello from render"
-    return Action.render("json", context: data)
+    return Action.render(JsonView.name, context: data)
 }
 
-app.post("/echo/inline") { (request:Request<AnyContent>)->Action<AnyContent> in
+app.post("/echo/inline") { request in
     let call = request.body?.asJSON().map({$0["say"]})?.string
     let response = call.getOrElse("I don't hear you!")
     
-    return Action<AnyContent>.ok(AnyContent(str:"{\"said\": \"" + response + "\"}", contentType: "application/json"))
+    return Action.ok(AnyContent(str:"{\"said\": \"" + response + "\"}", contentType: "application/json"))
 }
 
 app.get("/echo") { request in
@@ -143,7 +215,7 @@ app.post("/echo3") { request in
         contentType: request.contentType))
 }
 
-app.handle(HttpMethod.Any.rawValue, path: "/async/echo") { request in
+app.all("/async/echo") { request in
     return future {
         return echo(request)
     }

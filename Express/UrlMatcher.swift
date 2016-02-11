@@ -21,39 +21,25 @@
 
 import Foundation
 
-typealias UrlMatch = Dictionary<String,String>
-
-protocol UrlMatcherType {
-    func matches(pattern:String, url:String) -> UrlMatch?
-}
-
-class DumbUrlMatcher : UrlMatcherType {
-    func matches(pattern:String, url:String) -> UrlMatch? {
-        return pattern == url ? UrlMatch() : nil
-    }
-}
-
-class DefaultUrlMatcher : UrlMatcherType {
-    func matches(pattern:String, url:String) -> UrlMatch? {
-        return pattern == url ? UrlMatch() : nil
-    }
+public protocol UrlMatcherType {
+    ///
+    /// Matches path with a route and returns matched params if avalable.
+    /// - Parameter path: path to match over
+    /// - Returns: nil if route does not match. Matched params otherwise
+    ///
+    func match(method:String, path:String) -> [String: String]?
 }
 
 extension RouterType {
-    func nextRoute(routeId:String, request:RequestHeadType?) -> (RouteType, UrlMatch)? {
+    func nextRoute(index:Array<RouteType>.Index?, request:RequestHeadType?) -> (RouteType, [String: String])? {
         return request.flatMap { req in
-            let matcher = self.matcher
             let url = req.path
             let method = req.method
             
-            let index = routes.indexOf {routeId == $0.id}
-            let route:(RouteType, UrlMatch)? = index.flatMap { i in
-                let rest = routes.suffixFrom(i.successor())
+            let route:(RouteType, [String: String])? = index.flatMap { i in
+                let rest = routes.suffixFrom(i)
                 return rest.mapFirst { e in
-                    if method != e.method {
-                        return nil
-                    }
-                    guard let match = matcher.matches(e.path, url:url) else {
+                    guard let match = e.matcher.match(method, path:url) else {
                         return nil
                     }
                     return (e, match)
@@ -61,6 +47,16 @@ extension RouterType {
             }
             return route
         }
-        
+    }
+    
+    func nextRoute(routeId:String, request:RequestHeadType?) -> (RouteType, [String: String])? {
+        return request.flatMap { req in
+            let index = routes.indexOf {routeId == $0.id} . map { $0.successor() }
+            return nextRoute(index, request: request)
+        }
+    }
+    
+    func firstRoute(request:RequestHeadType?) -> (RouteType, [String: String])? {
+        return nextRoute(routes.startIndex, request: request)
     }
 }

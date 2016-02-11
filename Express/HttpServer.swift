@@ -26,12 +26,12 @@ import CPThread
 private class ServerParams {
     let promise: Promise<Void, NoError>
     let port: UInt16
-    let routes:Array<RouteType>
+    let router:RouterType
     
-    init(promise: Promise<Void, NoError>, port: UInt16, routes: Array<RouteType>) {
+    init(promise: Promise<Void, NoError>, port: UInt16, router: RouterType) {
         self.promise = promise
         self.port = port
-        self.routes = routes
+        self.router = router
     }
 }
 
@@ -67,13 +67,23 @@ private class ResponseDataConsumer : ResponseHeadDataConsumerType {
     }
 }
 
-private func parse_request(req: EVHTPRequest, route: RouteType) {
+private func handle_request(req: EVHTPRequest, serv:ServerParams) {
     //TODO: implement request data parsing
     
     let info = EVHTP.get_request_info(req)
     let head = RequestHead(method: info.method, version: info.version, remoteAddress: info.remoteIp, secure: info.scheme == "HTTPS", uri: info.uri, path: info.path, query: info.query, headers: info.headers, params: Dictionary())
     let os = ResponseDataConsumer(sock: req)
-    let transaction = route.factory(head, os)
+    
+    guard let routeTuple = serv.router.firstRoute(head) else {
+        //TODO: implement page not found (throw exception?, see other places)
+        print("Route not found for request: ", head.path)
+        return
+    }
+    
+    let route = routeTuple.0
+    let header = head.withParams(routeTuple.1)
+    
+    let transaction = route.factory(header, os)
     transaction.selfProcess()
     EVHTP.read_data(req, cb: { data in
         if data.count > 0 {
@@ -93,24 +103,8 @@ private func server_thread(pm: UnsafeMutablePointer<Void>) -> UnsafeMutablePoint
     let htp_serv = EVHTP.create_htp(base)
     EVHTP.bind_address(htp_serv, host: "0.0.0.0", port: serv.port)
     
-    var rootAdded = false
-    
-    for route in serv.routes {
-        if route.path == "*" && !rootAdded {
-            rootAdded = true
-            EVHTP.add_general_route(htp_serv, cb: { (req: EVHTPRequest) -> () in
-                parse_request(req, route: route)
-            })
-            
-        } else if route.path.containsString("*") {
-            EVHTP.add_wildcard_route(htp_serv, wpath: route.path, cb: { (req: EVHTPRequest) -> () in
-                parse_request(req, route: route)
-            })
-        } else {
-            EVHTP.add_simple_route(htp_serv, path: route.path, cb: { (req: EVHTPRequest) -> () in
-                parse_request(req, route: route)
-            })
-        }
+    EVHTP.add_general_route(htp_serv) { (req: EVHTPRequest) -> () in
+        handle_request(req, serv: serv)
     }
     
     EVHTP.start_event(base).onSuccess {
@@ -126,9 +120,7 @@ class HttpServer : ServerType {
     let thread: UnsafeMutablePointer<pthread_t>
     
     func start(port:UInt16) -> Future<Void, NoError> {
-        print("Start")
-        
-        let params = ServerParams(promise: Promise<Void, NoError>(), port: port, routes: router.routes)
+        let params = ServerParams(promise: Promise<Void, NoError>(), port: port, router: router)
         
         pthread_create(thread, nil, server_thread, UnsafeMutablePointer<Void>(Unmanaged.passRetained(params).toOpaque()))
         return params.promise.future

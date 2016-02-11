@@ -24,9 +24,11 @@ import BrightFutures
 
 public class StaticAction : Action<AnyContent>, IntermediateActionType {
     let path:String
+    let param:String
     
-    public init(path:String) {
+    public init(path:String, param:String) {
         self.path = path
+        self.param = param
     }
     
     public func nextAction<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<AbstractActionType, AnyError> {
@@ -37,20 +39,14 @@ public class StaticAction : Action<AnyContent>, IntermediateActionType {
             //yes here we are completely sure route id exists
             let route = app.routeForId(routeId)!
             
-            var base = route.path
-            
-            //TODO: proper path matching
-            //reach last *
-            while !base.hasSuffix("*") {
-                base.removeAtIndex(base.endIndex.predecessor())
+            guard let match = route.matcher.match(request.method, path: request.path) else {
+                return Action<AnyContent>.chain()
             }
             
-            //get rid of last *
-            while base.hasSuffix("*") {
-                base.removeAtIndex(base.endIndex.predecessor())
+            guard let fileFromURI = match[self.param] else {
+                print("Can not find ", self.param, " group in regex")
+                return Action<AnyContent>.chain()
             }
-            
-            let fileFromURI = request.path.substringFromIndex(base.endIndex)
             
             //TODO: get rid of NSs
             let file = (self.path as NSString).stringByAppendingPathComponent(fileFromURI)

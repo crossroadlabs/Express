@@ -23,7 +23,8 @@ import Foundation
 import SwiftyJSON
 
 public class JsonView : NamedViewType {
-    public let name:String = "json"
+    public static let name:String = "json"
+    public let name:String = JsonView.name
     
     public init() {
     }

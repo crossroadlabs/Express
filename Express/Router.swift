@@ -23,28 +23,24 @@ import Foundation
 
 protocol RouteType {
     var id:String {get}
-    var method:String {get}
-    var path:String {get}
+    var matcher:UrlMatcherType {get}
     var factory:TransactionFactory {get}
 }
 
 class Route : RouteType {
     let id:String
-    let method:String
-    let path:String
+    let matcher:UrlMatcherType
     let factory:TransactionFactory
     
-    init(id:String, method:String, path:String, factory:TransactionFactory) {
+    init(id:String, matcher:UrlMatcherType, factory:TransactionFactory) {
         self.id = id
-        self.method = method
-        self.path = path
+        self.matcher = matcher
         self.factory = factory
     }
 }
 
 protocol RouterType {
     var routes:Array<RouteType> {get}
-    var matcher:UrlMatcherType {get}
     
     func routeForId(id:String) -> RouteType?
 }

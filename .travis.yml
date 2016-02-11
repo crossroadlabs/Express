@@ -1,0 +1,36 @@
+language: objective-c
+osx_image: xcode7.2
+env:
+  global: 
+    - FRAMEWORK_NAME=Express
+before_install:
+  - brew update
+  - brew unlink carthage
+  - brew install carthage
+  - brew link carthage
+  - brew tap crossroadlabs/tap
+  - brew install libevhtp --without-oniguruma --with-shared
+before_script:
+  # bootstrap the dependencies for the project
+  # you can remove if you don't have dependencies
+  - carthage bootstrap --platform osx
+before_deploy:
+  - carthage build --no-skip-current
+  - carthage archive $FRAMEWORK_NAME
+  # - pod trunk push PathToRegex.podspec
+script:
+- xcodebuild build -project $FRAMEWORK_NAME.xcodeproj -scheme $FRAMEWORK_NAME
+#- xcodebuild test -project Regex.xcodeproj -scheme Regex-iOS -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6'
+#- xcodebuild test -project Regex.xcodeproj -scheme Regex-tvOS -sdk appletvsimulator -destination 'platform=tvOS Simulator,name=Apple TV 1080p'
+#- xcodebuild build -project Regex.xcodeproj -scheme Regex-watchOS -sdk watchsimulator -destination 'platform=watchOS Simulator,name=Apple Watch - 42mm'
+notifications:
+  email: false
+deploy:
+  provider: releases
+  api_key:
+    secure: NxWvEe4nqcI99oKbtcFtmpz3AVkQiC+4kFu4OcCusAoKimMxx3WJ4+B6anDLG5dj/5rhsl4rQdKr/WIneHodyPrIFQPsRLUV2KFxgd+vbKrXLRRw+sZb//r0j89E7tCEUPdModIKWN4OCR7UWHvZ5syVQFfsP4MH1r+OJcBiewVVVPhgXzvndkxVlgXonyrJ++NAW/g+jO+CYNU9Y3KkyK7BaPMw6/oSC2Ly3A3zU1El++MFz+ew6YDGxiEiw7y20q7/qTT4pdl2HWem1P04UwPyJ2fUw/nD0C+fvX6tnFYX0s9p9VPSnrWXkhSHKT9IGlr8sveRPuQIaJcXcbkMHF8rnCmMpJJ63+YeXV88krW0q2ZyVpSodh/NaJ76PqbXij9WBSZ8AmNJsBlBsjhAgPCfZZkJ3vjrSSH2XP4k0ICLI8sxYmELXzR0MU1LaexE/4KKMDUcl4zuHWQBTJTMvtDyl+AJk+GdPBSGEpCQvHjXAwuW9OAz/sqZrLQy8eQJmji8DVhMJYlCK+krBQFZIekA6Wun5VTmATrtcwd6qwXyMOYeoblh3308zhzgyjBQwfJVpWxLLqB+dyQNLEOYhMcCcTwWNMvz7RYbEMcplkIu5azuUL400pPk2g2wp6U522vsAmH7bra3+VyA0qYG0ckLiwBaBKVCxD7EzkAy5CA=
+  file: $FRAMEWORK_NAME.framework.zip
+  skip_cleanup: true
+  on:
+    repo: crossroadlabs/$FRAMEWORK_NAME
+    tags: true
