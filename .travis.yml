@@ -8,6 +8,8 @@ before_install:
   - brew unlink carthage
   - brew install carthage
   - brew link carthage
+  - brew tap crossroadlabs/tap
+  - brew install libevhtp --without-oniguruma --with-shared
 before_script:
   # bootstrap the dependencies for the project
   # you can remove if you don't have dependencies
