@@ -1,8 +1,10 @@
 # Swift Express
 
-[![GitHub license](https://img.shields.io/badge/license-LGPL v3-lightgrey.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-LGPL v3-green.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ![Platform OS X | Linux](https://img.shields.io/badge/platform-OS%20X%20%7C%20Linux-orange.svg)
+![Swift version](https://img.shields.io/badge/Swift-2.1-blue.svg)
+[![GitHub release](https://img.shields.io/github/release/crossroadlabs/Express.svg)](https://github.com/crossroadlabs/Express/releases)
 
 ### Express is a simple, yet unopinionated web application server written in Swift
 
