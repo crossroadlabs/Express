@@ -22,7 +22,7 @@
 import Foundation
 
 public protocol ViewType {
-    func render(context:AnyObject?) throws -> AbstractActionType
+    func render(context:Any?) throws -> AbstractActionType
 }
 
 public protocol NamedViewType : ViewType {

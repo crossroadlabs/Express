@@ -29,7 +29,7 @@ class MustacheView : ViewType {
         self.template = template
     }
     
-    func render(context:AnyObject?) throws -> AbstractActionType {
+    func render(context:Any?) throws -> AbstractActionType {
         do {
             let box = Box(context as? MustacheBoxable)
             let render = try template.render(box)
