@@ -51,6 +51,8 @@ app.errorHandler.register { e in
     return Action<AnyContent>.render("test", context: ["test": "error", "items": viewItems])
 }
 
+/// StaticAction is just a predefined configurable handler for serving static files.
+/// It's important to pass exactly the same param name to it from the url pattern.
 app.get("/:file+", action: StaticAction(path: "public", param:"file"))
 
 app.get("/hello") { request in
