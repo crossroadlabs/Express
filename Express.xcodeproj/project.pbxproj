@@ -66,12 +66,13 @@
 		65DEAFF71C6A8F3900EBA47F /* Regex.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65DEAFF11C6A8EA700EBA47F /* Regex.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		65DEAFF91C6AA8F700EBA47F /* RegexUrlMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DEAFF81C6AA8F700EBA47F /* RegexUrlMatcher.swift */; };
 		961B9E8B1C23229A000506D2 /* libevent.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 961B9E8A1C23229A000506D2 /* libevent.dylib */; };
-		961B9E8D1C2322A7000506D2 /* libevhtp.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 961B9E8C1C2322A7000506D2 /* libevhtp.a */; };
 		961B9E8F1C2322CA000506D2 /* libevent_openssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 961B9E8E1C2322CA000506D2 /* libevent_openssl.dylib */; };
 		961B9E911C2324B4000506D2 /* EVHTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961B9E901C2324B4000506D2 /* EVHTP.swift */; };
 		964C0FDF1C243A0700D59840 /* libevent_pthreads.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 964C0FDE1C243A0700D59840 /* libevent_pthreads.dylib */; };
 		968A3BAE1C63983700E4AFCC /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 968A3BAD1C63983700E4AFCC /* libssl.dylib */; };
 		968A3BB01C63984400E4AFCC /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 968A3BAF1C63984400E4AFCC /* libcrypto.dylib */; };
+		96E0C0541C6D4A9600CA926F /* libevhtp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 96E0C0531C6D4A9600CA926F /* libevhtp.dylib */; };
+		96E0C0561C6D4B9B00CA926F /* libpthread.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 96E0C0551C6D4B9B00CA926F /* libpthread.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -144,12 +145,13 @@
 		65DEAFF11C6A8EA700EBA47F /* Regex.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Regex.framework; path = Carthage/Build/Mac/Regex.framework; sourceTree = "<group>"; };
 		65DEAFF81C6AA8F700EBA47F /* RegexUrlMatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegexUrlMatcher.swift; sourceTree = "<group>"; };
 		961B9E8A1C23229A000506D2 /* libevent.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevent.dylib; path = ../../../../../usr/local/lib/libevent.dylib; sourceTree = "<group>"; };
-		961B9E8C1C2322A7000506D2 /* libevhtp.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libevhtp.a; path = ../../../../../usr/local/lib/libevhtp.a; sourceTree = "<group>"; };
 		961B9E8E1C2322CA000506D2 /* libevent_openssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevent_openssl.dylib; path = ../../../../../usr/local/lib/libevent_openssl.dylib; sourceTree = "<group>"; };
 		961B9E901C2324B4000506D2 /* EVHTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EVHTP.swift; sourceTree = "<group>"; };
 		964C0FDE1C243A0700D59840 /* libevent_pthreads.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevent_pthreads.dylib; path = ../../../../../usr/local/lib/libevent_pthreads.dylib; sourceTree = "<group>"; };
 		968A3BAD1C63983700E4AFCC /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.dylib; path = ../../../../../usr/local/Cellar/openssl/1.0.2e_1/lib/libssl.dylib; sourceTree = "<group>"; };
 		968A3BAF1C63984400E4AFCC /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = ../../../../../usr/local/Cellar/openssl/1.0.2e_1/lib/libcrypto.dylib; sourceTree = "<group>"; };
+		96E0C0531C6D4A9600CA926F /* libevhtp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevhtp.dylib; path = ../../../../../usr/local/lib/libevhtp.dylib; sourceTree = "<group>"; };
+		96E0C0551C6D4B9B00CA926F /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,7 +165,8 @@
 				6525AC541C24E3C600131F58 /* Mustache.framework in Frameworks */,
 				658DBDA41C221A2A00BE8AA9 /* Result.framework in Frameworks */,
 				658DBDA51C221A2A00BE8AA9 /* SwiftyJSON.framework in Frameworks */,
-				961B9E8D1C2322A7000506D2 /* libevhtp.a in Frameworks */,
+				96E0C0541C6D4A9600CA926F /* libevhtp.dylib in Frameworks */,
+				96E0C0561C6D4B9B00CA926F /* libpthread.tbd in Frameworks */,
 				968A3BAE1C63983700E4AFCC /* libssl.dylib in Frameworks */,
 				968A3BB01C63984400E4AFCC /* libcrypto.dylib in Frameworks */,
 				961B9E8B1C23229A000506D2 /* libevent.dylib in Frameworks */,
@@ -283,18 +286,19 @@
 		658DBDA61C221AEB00BE8AA9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				96E0C0551C6D4B9B00CA926F /* libpthread.tbd */,
 				65DEAFF01C6A8EA700EBA47F /* PathToRegex.framework */,
 				65DEAFF11C6A8EA700EBA47F /* Regex.framework */,
+				658DBDA21C221A2A00BE8AA9 /* SwiftyJSON.framework */,
+				658DBDA11C221A2A00BE8AA9 /* Result.framework */,
+				658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */,
+				6525AC531C24E3C600131F58 /* Mustache.framework */,
+				96E0C0531C6D4A9600CA926F /* libevhtp.dylib */,
 				968A3BAF1C63984400E4AFCC /* libcrypto.dylib */,
 				968A3BAD1C63983700E4AFCC /* libssl.dylib */,
 				964C0FDE1C243A0700D59840 /* libevent_pthreads.dylib */,
 				961B9E8E1C2322CA000506D2 /* libevent_openssl.dylib */,
-				961B9E8C1C2322A7000506D2 /* libevhtp.a */,
 				961B9E8A1C23229A000506D2 /* libevent.dylib */,
-				6525AC531C24E3C600131F58 /* Mustache.framework */,
-				658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */,
-				658DBDA11C221A2A00BE8AA9 /* Result.framework */,
-				658DBDA21C221A2A00BE8AA9 /* SwiftyJSON.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
