@@ -11,13 +11,13 @@ before_install:
 before_script:
   # bootstrap the dependencies for the project
   # you can remove if you don't have dependencies
-  - carthage bootstrap
+  - carthage bootstrap --platform osx
 before_deploy:
   - carthage build --no-skip-current
   - carthage archive $FRAMEWORK_NAME
   # - pod trunk push PathToRegex.podspec
 script:
-- xcodebuild test -project $FRAMEWORK_NAME.xcodeproj -scheme $FRAMEWORK_NAME
+- xcodebuild build -project $FRAMEWORK_NAME.xcodeproj -scheme $FRAMEWORK_NAME
 #- xcodebuild test -project Regex.xcodeproj -scheme Regex-iOS -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 6'
 #- xcodebuild test -project Regex.xcodeproj -scheme Regex-tvOS -sdk appletvsimulator -destination 'platform=tvOS Simulator,name=Apple TV 1080p'
 #- xcodebuild build -project Regex.xcodeproj -scheme Regex-watchOS -sdk watchsimulator -destination 'platform=watchOS Simulator,name=Apple Watch - 42mm'
