@@ -28,7 +28,6 @@ public func express() -> Express {
 
 public class Express : RouterType {
     var routes:Array<RouteType> = []
-    let matcher:UrlMatcherType = DumbUrlMatcher()
     var server:ServerType?
     public let views:Views = Views()
     public let errorHandler:AggregateErrorHandler = AggregateErrorHandler()
@@ -40,7 +39,7 @@ public class Express : RouterType {
         }
     }
     
-    func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(method:String, path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(matcher:UrlMatcherType, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
         
         let routeId = NSUUID().UUIDString
         
@@ -48,12 +47,14 @@ public class Express : RouterType {
             return Transaction(app: self, routeId: routeId, head: head, out: out, handler: handler)
         }
         
-        routes.append(Route(id: routeId, method: method, path: path, factory: factory))
+        let route = Route(id: routeId, matcher: matcher, factory: factory)
+        
+        routes.append(route)
     }
     
-    func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, path:String, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
+    func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(matcher:UrlMatcherType, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
         
-        handleInternal(method, path: path) { request in
+        handleInternal(matcher) { request in
             //execute synchronous request aside from main queue (on a user queue)
             future(ExecutionContext.user) {
                 return try handler(request)
@@ -65,47 +66,18 @@ public class Express : RouterType {
 public extension Express {
 
     //sync
-    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, path:String, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
-        handleInternal(method, path: path, handler: handler)
+    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(matcher:UrlMatcherType, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
+        handleInternal(matcher, handler: handler)
     }
-    
-    func get<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
-        self.handle(HttpMethod.Get.rawValue, path: path, handler: handler)
-    }
-    
-    func post<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
-        self.handle(HttpMethod.Post.rawValue, path: path, handler: handler)
-    }
-    
     
     //async
-    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(method:String, path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
-        handleInternal(method, path: path, handler: handler)
-    }
-    
-    func get<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
-        handleInternal(HttpMethod.Get.rawValue, path: path, handler: handler)
-    }
-    
-    func post<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
-        handleInternal(HttpMethod.Post.rawValue, path: path, handler: handler)
+    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(matcher:UrlMatcherType, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+        handleInternal(matcher, handler: handler)
     }
     
     //action
-    func handle<ResponseContent : FlushableContentType>(method:String, path:String, action:Action<ResponseContent>) -> Void {
-        return handle(method, path: path) { request in
-            return action
-        }
-    }
-    
-    func get<ResponseContent : FlushableContentType>(path:String, action:Action<ResponseContent>) -> Void {
-        return get(path) { request in
-            return action
-        }
-    }
-    
-    func post<ResponseContent : FlushableContentType>(path:String, action:Action<ResponseContent>) -> Void {
-        return post(path) { request in
+    func handle<ResponseContent : FlushableContentType>(matcher:UrlMatcherType, action:Action<ResponseContent>) -> Void {
+        return handle(matcher) { (request:Request<AnyContent>) -> Action<ResponseContent> in
             return action
         }
     }

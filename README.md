@@ -1,8 +1,10 @@
 # Swift Express
 
-[![GitHub license](https://img.shields.io/badge/license-LGPL v3-lightgrey.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-LGPL v3-green.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ![Platform OS X | Linux](https://img.shields.io/badge/platform-OS%20X%20%7C%20Linux-orange.svg)
+![Swift version](https://img.shields.io/badge/Swift-2.1-blue.svg)
+[![GitHub release](https://img.shields.io/github/release/crossroadlabs/Express.svg)](https://github.com/crossroadlabs/Express/releases)
 
 ### Express is a simple, yet unopinionated web application server written in Swift
 
@@ -22,7 +24,7 @@ open HelloExpress.xcodeproj
 
 ```swift
 app.get("/myecho") { request in
-    return Action<AnyContent>.ok(AnyContent(str: request.query["message"]?.first))
+    return Action.ok(request.query["message"]?.first)
 }
 ```
 
@@ -64,15 +66,162 @@ brew install swift-express
 
 Create a project as it is described in the [getting started](#getting-started) section. Now you can start playing with examples.
 
+All the examples can be found in `Demo` project inside the main repo.
+
 ### Hello Express:
 
 ```swift
 app.get("/hello") { request in
-    return Action<AnyContent>.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
+    return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
 }
 ```
 
 Launch the app and follow the link: [http://localhost:9999/hello?message=Hello](http://localhost:9999/hello?message=Hello)
+
+### Synchronous vs Asynchronous
+
+If you don't know what this is you might want to better skip it for now to the next section: [Url params](#url-params). To get more information see [this](http://cs.brown.edu/courses/cs168/s12/handouts/async.pdf) first. We have our APIs based on [Future pattern](https://en.wikipedia.org/wiki/Futures_and_promises). Our implementation is based on [BrightFutures](https://github.com/Thomvis/BrightFutures), thanks @Thomvis!
+
+Express can handle it both ways. All your syncronous code will be executed in a separate queue in a traditional way, so if you are a fan of this approach - it will work (like in "Hello Express" example above).
+
+Still if you want to benefit from asynchronicity, we provide a very powerful API set that accepts futures as result of your handler.
+
+Let's assume you have following function somewhere:
+
+```swift
+func calcFactorial(num:Int) -> Future<Int, AnyError>
+```
+
+it's a purely asyncronous function that returns future. It would be really nice if it could be handled asynchronously as well in a nice functional way. Here is an example of how it could be done.
+
+
+```swift
+// (request -> Future<Action<AnyContent>, AnyError> in) - this is required to tell swift you want to return a Future
+// hopefully inference in swift will get better eventually and just "request in" will be enough
+app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
+    // get the number from the url
+    let num = request.params["num"].flatMap{Int($0)}.getOrElse(0)
+    
+    // get the factorial Future. Returns immediately - non-blocking
+    let factorial = calcFactorial(num)
+    
+    //map the result of future to Express Action
+    let future = factorial.map { fac in
+        Action.ok(String(fac))
+    }
+    
+    //return the future
+    return future
+}
+```
+
+### Url params
+
+Let's get our echo example from [Getting Started](#getting-started) a bit further. Our routing engine, which is largely based on NodeJS analog [path-to-regex](https://github.com/pillarjs/path-to-regexp). You can read the complete documentation on how to use path patterns [here](https://github.com/pillarjs/path-to-regexp). Now an example with URL param:
+
+```swift
+//:param - this is how you define a part of URL you want to receive through request object
+app.get("/myecho/:param") { request in
+    //here you get the param from request: request.params["param"]
+    return Action.ok(request.params["param"])
+}
+```
+
+### Serving static files
+
+```swift
+app.get("/:file+", action: StaticAction(path: "public", param:"file"))
+```
+
+The code above tells Express to serve all static files from the public folder recursively. If you want to serve just the first level in folder, use:
+
+```swift
+app.get("/:file", action: StaticAction(path: "public", param:"file"))
+```
+
+The difference is just in the pattern: `/:file` versus `/:file+`. For more information see our routing section.
+
+### Serving JSON requests
+
+First of all we need to register the JSON view in the system:
+
+```swift
+//now we can refer to this view by name
+app.views.register(JsonView())
+```
+
+Let's say we want to build a simple API for users registration. We want our API consumers to `POST` to `/api/user` a JSON object and get a `JSON` response back.
+
+```swift
+app.post("/api/user") { request in
+    //check if JSON has arrived
+    guard let json = request.body?.asJSON() else {
+        return Action.ok("Invalid request")
+    }
+    //check if JSON object has username field
+    guard let username = json["username"].string else {
+        return Action.ok("Invalid request")
+    }
+    //compose the response as a simple dictionary
+    let response =
+        ["status": "ok",
+        "description": "User with username '" + username + "' created succesfully"]
+    
+    //render disctionary as json (remember the one we've registered above?)
+    return Action.render(JsonView.name, context: response)
+}
+```
+
+Lines above will do the job. Post this `JSON`:
+
+```json
+{
+    "username": "swiftexpress"
+}
+```
+
+to our api URL: `http://localhost:9999/api/user` (don't forget `application/json` content type header) and you will get this response:
+
+```json
+{
+  "status": "ok",
+  "description": "User with username 'swiftexpress' created succesfully"
+}
+```
+
+### Using template engine
+
+First of all you need to switch the template engine on:
+
+```swift
+//we recommend mustache template engine
+app.views.register(MustacheViewEngine())
+```
+
+Now create a file called `hello.mustache` in the `views` directory:
+
+```mustache
+<html>
+<body>
+<h1>Hello: {{user}}</h1>
+</body>
+</html>
+```
+
+Add a new request handler:
+```swift
+//user as an url param
+app.get("/hello/:user.html") { request in
+    //get user
+    let user = request.params["user"]
+    //if there is a user - create our context. If there is no user, context will remain nil
+    let context = user.map {["user": $0]}
+    //render our template named "hello"
+    return Action.render("hello", context: context)
+}
+```
+
+Now follow the link to see the result: [http://localhost:9999/hello/express.html](http://localhost:9999/hello/express.html)
 
 ## Ideology behind
 
@@ -103,7 +252,6 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 ## Roadmap
 
-* v0.2: advanced paths and regex url matching support
 * v0.3: Linux support
 * v0.4: proper streaming APIs
 * v0.5: more content types available out of the box
@@ -111,6 +259,13 @@ Let us know if we are on the right path! Influence the project, create feature r
 * v1.0: hit the production!
 
 ## Changelog
+
+* v0.2: Solid OS X release
+	* Much better routing APIs
+	* Advanced routing path patterns
+	* Possibility to use Regex for routing
+	* Greately improved README
+	* Some bugfixes
 
 * v0.1: Initial Public Release
 	* basic routing

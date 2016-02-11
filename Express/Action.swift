@@ -54,9 +54,9 @@ class ResponseAction<C : FlushableContentType> : Action<C>, FlushableAction {
 
 class RenderAction<C : FlushableContentType> : Action<C>, IntermediateActionType {
     let view:String
-    let context:AnyObject?
+    let context:Any?
     
-    init(view:String, context:AnyObject?) {
+    init(view:String, context:Any?) {
         self.view = view
         self.context = context
     }
@@ -78,7 +78,7 @@ class ChainAction<C : FlushableContentType, ReqC: ConstructableContentType> : Ac
         let body = self.request.map {$0.body.map {$0 as ContentType}} .getOrElse(request.body)
         
         let route = app.nextRoute(routeId, request: request)
-        return route.map { (r:(RouteType, UrlMatch))->Future<AbstractActionType, AnyError> in
+        return route.map { (r:(RouteType, [String: String]))->Future<AbstractActionType, AnyError> in
             let req = req.withParams(r.1)
             let transaction = r.0.factory(req, out)
             for b in body {
@@ -127,7 +127,13 @@ public extension Action {
         return chain(nilRequest())
     }
     
-    public class func render(view:String, context:AnyObject? = nil) -> Action<C> {
+    public class func render(view:String, context:Any? = nil) -> Action<C> {
         return RenderAction(view: view, context: context)
+    }
+}
+
+public extension Action where C : AnyContent {
+    public class func ok(str:String?) -> Action<AnyContent> {
+        return Action<AnyContent>.ok(AnyContent(str: str))
     }
 }
