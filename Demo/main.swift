@@ -83,8 +83,8 @@ app.post("/api/user") { request in
         ["status": "ok",
         "description": "User with username '" + username + "' created succesfully"]
     
-    //render disctionary as json
-    return Action.render("json", context: response)
+    //render disctionary as json (remember the one we've registered above?)
+    return Action.render(JsonView.name, context: response)
 }
 
 app.get("/myecho") { request in
@@ -184,7 +184,7 @@ func echo(request:Request<AnyContent>) -> Action<AnyContent> {
 func echoRender(request:Request<AnyContent>) -> Action<AnyContent> {
     var data = echoData(request)
     data["hey"] = "Hello from render"
-    return Action.render("json", context: data)
+    return Action.render(JsonView.name, context: data)
 }
 
 app.post("/echo/inline") { request in

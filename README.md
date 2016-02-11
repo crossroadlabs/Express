@@ -141,6 +141,13 @@ The difference is just in the pattern: `/:file` versus `/:file+`. For more infor
 
 ### Serving JSON requests
 
+First of all we need to register the JSON view in the system:
+
+```swift
+//now we can refer to this view by name
+app.views.register(JsonView())
+```
+
 Let's say we want to build a simple API for users registration. We want our API consumers to `POST` to `/api/user` a JSON object and get a `JSON` response back.
 
 ```swift
@@ -158,8 +165,8 @@ app.post("/api/user") { request in
         ["status": "ok",
         "description": "User with username '" + username + "' created succesfully"]
     
-    //render disctionary as json
-    return Action.render("json", context: response)
+    //render disctionary as json (remember the one we've registered above?)
+    return Action.render(JsonView.name, context: response)
 }
 ```
 
