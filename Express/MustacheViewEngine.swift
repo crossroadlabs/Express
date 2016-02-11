@@ -31,7 +31,8 @@ class MustacheView : ViewType {
     
     func render(context:Any?) throws -> AbstractActionType {
         do {
-            let box = Box(context as? MustacheBoxable)
+            let anyContext = context.flatMap { $0 as? AnyObject }
+            let box = Box(anyContext as? MustacheBoxable)
             let render = try template.render(box)
             return Action<AnyContent>.ok(AnyContent(str:render, contentType: "text/html"))
         } catch let e as MustacheError {
