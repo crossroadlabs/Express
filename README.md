@@ -78,6 +78,8 @@ Launch the app and follow the link: [http://localhost:9999/hello?message=Hello](
 
 ### Synchronous vs Asynchronous
 
+If you don't know what this is you might want to better skip it for now to the next section: [Url params](#url-params). To get more information see [this](http://cs.brown.edu/courses/cs168/s12/handouts/async.pdf) first. We have our APIs based on [Future pattern](https://en.wikipedia.org/wiki/Futures_and_promises). For exact implementation we use [BrightFutures](https://github.com/Thomvis/BrightFutures), thanks @Thomvis!
+
 Express can handle it both ways. All your syncronous code will be executed in a separate queue in a traditional way, so if you are a fan of this approach - it will work (like in "Hello Express" example above).
 
 Still if you want to benefit from asynchronicity, we provide a very powerful API set that accepts futures as result of your handler.
