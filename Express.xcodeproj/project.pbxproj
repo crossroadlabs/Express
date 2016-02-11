@@ -24,7 +24,6 @@
 		650493751C22199300616444 /* Express.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650493641C22199300616444 /* Express.swift */; };
 		650493761C22199300616444 /* ExpressServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650493651C22199300616444 /* ExpressServer.swift */; };
 		650493771C22199300616444 /* ExpressSugar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650493661C22199300616444 /* ExpressSugar.swift */; };
-		651475D21C21F1550049825D /* Express.h in Headers */ = {isa = PBXBuildFile; fileRef = 651475D11C21F1550049825D /* Express.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6518267F1C22081600E49AC5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6518267E1C22081600E49AC5 /* main.swift */; };
 		651826801C2208A800E49AC5 /* Express.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651475CE1C21F1550049825D /* Express.framework */; };
 		6525AC541C24E3C600131F58 /* Mustache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; };
@@ -113,7 +112,6 @@
 		650493651C22199300616444 /* ExpressServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressServer.swift; sourceTree = "<group>"; };
 		650493661C22199300616444 /* ExpressSugar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExpressSugar.swift; sourceTree = "<group>"; };
 		651475CE1C21F1550049825D /* Express.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Express.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		651475D11C21F1550049825D /* Express.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Express.h; sourceTree = "<group>"; };
 		651475D31C21F1550049825D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		651826711C2207D200E49AC5 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6518267A1C2207D200E49AC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -238,7 +236,6 @@
 				650493661C22199300616444 /* ExpressSugar.swift */,
 				650493651C22199300616444 /* ExpressServer.swift */,
 				6504935E1C22199300616444 /* HttpServer.swift */,
-				651475D11C21F1550049825D /* Express.h */,
 				651475D31C21F1550049825D /* Info.plist */,
 				961B9E901C2324B4000506D2 /* EVHTP.swift */,
 				65D922201C25BBFF00EEA056 /* View.swift */,
@@ -309,7 +306,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				651475D21C21F1550049825D /* Express.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
