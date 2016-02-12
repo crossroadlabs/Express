@@ -22,6 +22,15 @@
 import Foundation
 import SwiftyJSON
 
+//quick fix
+private func anyDescription(any:Any) -> String? {
+    guard let anyObject = any as? AnyObject else {
+        return nil
+    }
+    
+    return anyObject.description
+}
+
 public class JsonView : NamedViewType {
     public static let name:String = "json"
     public let name:String = JsonView.name
@@ -29,14 +38,14 @@ public class JsonView : NamedViewType {
     public init() {
     }
     
-    public func render(context:AnyObject?) throws -> AbstractActionType {
+    public func render(context:Any?) throws -> AbstractActionType {
         //TODO: implement reflection
-        let json = context.map { context in
+        let json = context.flatMap { $0 as? AnyObject } .map { context in
             JSON(context)
         }.getOrElse(JSON(Dictionary()))
         //TODO: avoid string path
         guard let render = json.rawString() else {
-            throw ExpressError.Render(description: "unable to render json: " + (context?.description).getOrElse("None"), line: nil, cause: nil)
+            throw ExpressError.Render(description: "unable to render json: " + context.flatMap(anyDescription).getOrElse("None"), line: nil, cause: nil)
         }
         return Action<AnyContent>.ok(AnyContent(str:render, contentType: "application/json"))
     }
