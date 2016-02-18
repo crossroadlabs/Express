@@ -1,3 +1,5 @@
+<div style="text-align:center"><img src ="./logo-full.png" /></div>
+
 # Swift Express
 
 [![GitHub license](https://img.shields.io/badge/license-LGPL v3-green.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
