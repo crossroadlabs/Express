@@ -1,4 +1,4 @@
-<p align="center"><img src ="./logo-full.png"/></p>
+<p align="center"><a href="#swift-express"><img src ="./logo-full.png"/></a></p>
 
 # Swift Express
 
