@@ -262,13 +262,15 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 ## Changelog
 
+* v0.2.1: minor changes
+	* Swift modules are installed via Carthage
+	* Enabled bynary builds on OS X
 * v0.2: Solid OS X release
 	* Much better routing APIs
 	* Advanced routing path patterns
 	* Possibility to use Regex for routing
 	* Greately improved README
 	* Some bugfixes
-
 * v0.1: Initial Public Release
 	* basic routing
 	* views and view engines (supports [Mustache](https://mustache.github.io/))
