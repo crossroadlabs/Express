@@ -264,7 +264,7 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 * v0.2.1: minor changes
 	* Swift modules are installed via Carthage
-	* Enabled bynary builds on OS X
+	* Enabled binary builds on OS X
 * v0.2: Solid OS X release
 	* Much better routing APIs
 	* Advanced routing path patterns
