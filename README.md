@@ -6,7 +6,9 @@
 ![Swift version](https://img.shields.io/badge/Swift-2.1-blue.svg)
 [![GitHub release](https://img.shields.io/github/release/crossroadlabs/Express.svg)](https://github.com/crossroadlabs/Express/releases)
 
-### Express is a simple, yet unopinionated web application server written in Swift
+### Being [perfectionists](http://www.crossroadlabs.xyz), we took the best from what we think is the best: power of [Play Framework](https://www.playframework.com/) and simplicity of [Express.js](http://expressjs.com/)
+
+#### Express is an asynchronous, simple, powerful, yet unopinionated web application server written in Swift
 
 ## Getting started
 
