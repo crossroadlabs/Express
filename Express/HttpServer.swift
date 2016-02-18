@@ -21,7 +21,6 @@
 
 import Foundation
 import BrightFutures
-import CPThread
 
 private class ServerParams {
     let promise: Promise<Void, NoError>

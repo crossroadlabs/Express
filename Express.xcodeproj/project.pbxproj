@@ -72,7 +72,6 @@
 		968A3BAE1C63983700E4AFCC /* libssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 968A3BAD1C63983700E4AFCC /* libssl.dylib */; };
 		968A3BB01C63984400E4AFCC /* libcrypto.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 968A3BAF1C63984400E4AFCC /* libcrypto.dylib */; };
 		96E0C0541C6D4A9600CA926F /* libevhtp.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 96E0C0531C6D4A9600CA926F /* libevhtp.dylib */; };
-		96E0C0561C6D4B9B00CA926F /* libpthread.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 96E0C0551C6D4B9B00CA926F /* libpthread.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -151,7 +150,6 @@
 		968A3BAD1C63983700E4AFCC /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.dylib; path = ../../../../../usr/local/Cellar/openssl/1.0.2e_1/lib/libssl.dylib; sourceTree = "<group>"; };
 		968A3BAF1C63984400E4AFCC /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = ../../../../../usr/local/Cellar/openssl/1.0.2e_1/lib/libcrypto.dylib; sourceTree = "<group>"; };
 		96E0C0531C6D4A9600CA926F /* libevhtp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevhtp.dylib; path = ../../../../../usr/local/lib/libevhtp.dylib; sourceTree = "<group>"; };
-		96E0C0551C6D4B9B00CA926F /* libpthread.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpthread.tbd; path = usr/lib/libpthread.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,7 +164,6 @@
 				658DBDA41C221A2A00BE8AA9 /* Result.framework in Frameworks */,
 				658DBDA51C221A2A00BE8AA9 /* SwiftyJSON.framework in Frameworks */,
 				96E0C0541C6D4A9600CA926F /* libevhtp.dylib in Frameworks */,
-				96E0C0561C6D4B9B00CA926F /* libpthread.tbd in Frameworks */,
 				968A3BAE1C63983700E4AFCC /* libssl.dylib in Frameworks */,
 				968A3BB01C63984400E4AFCC /* libcrypto.dylib in Frameworks */,
 				961B9E8B1C23229A000506D2 /* libevent.dylib in Frameworks */,
@@ -286,7 +283,6 @@
 		658DBDA61C221AEB00BE8AA9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				96E0C0551C6D4B9B00CA926F /* libpthread.tbd */,
 				65DEAFF01C6A8EA700EBA47F /* PathToRegex.framework */,
 				65DEAFF11C6A8EA700EBA47F /* Regex.framework */,
 				658DBDA21C221A2A00BE8AA9 /* SwiftyJSON.framework */,
@@ -320,6 +316,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 651475D61C21F1550049825D /* Build configuration list for PBXNativeTarget "Express" */;
 			buildPhases = (
+				962A8B381C74C61B008E2BB3 /* Check Carthage Checkouts directory */,
 				651475C91C21F1550049825D /* Sources */,
 				651475CA1C21F1550049825D /* Frameworks */,
 				651475CB1C21F1550049825D /* Headers */,
@@ -409,6 +406,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		962A8B381C74C61B008E2BB3 /* Check Carthage Checkouts directory */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Carthage Checkouts directory";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script checks Carthage/Checkouts directory.\n# If directory empty - then we runned as dependency\n# for some another project.\n# We need make soft link to parent Checkouts directory\nset -e\n\nif [ -d \"${SRCROOT}/Carthage\" ]; then\n    if [ ! -d \"${SRCROOT}/Carthage/Checkouts\" ]; then\n        cd \"${SRCROOT}/Carthage\"\n        ln -s \"../../\" Checkouts\n    fi\nfi\n\nexit 0";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		651475C91C21F1550049825D /* Sources */ = {
@@ -578,7 +593,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.swiftexpress.Express;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/Modules";
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/Carthage/Checkouts $(SRCROOT)/Packages";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -611,7 +626,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = io.swiftexpress.Express;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/Modules";
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/Carthage/Checkouts $(SRCROOT)/Packages";
 			};
 			name = Release;
 		};
