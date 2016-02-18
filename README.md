@@ -1,4 +1,4 @@
-<div style="text-align:center"><img src ="./logo-full.png" /></div>
+<p align="center"><img src ="./logo-full.png"/></p>
 
 # Swift Express
 
