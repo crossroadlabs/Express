@@ -1,4 +1,4 @@
-//===--- ExecutionContext.swift -------------------------------------------===//
+//===--- Utils.swift -------------------------------------------===//
 //
 //Copyright (c) 2015-2016 Daniel Leping (dileping)
 //
@@ -20,19 +20,11 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
-import ExecutionContext
 
-private let cmain:ExecutionContextType = ExecutionContext.main
-
-extension ExecutionContext {
-    static let main = cmain
-    static let user = global
-    static let action = toContext(ExecutionContext(kind: .Parallel))
-    static let render = toContext(ExecutionContext(kind: .Parallel))
-    static let view = toContext(ExecutionContext(kind: .Serial))
-    
-    @noreturn class func run() {
-        executionContextMain()
+#if !os(Linux)
+    extension String {
+        func bridge() -> NSString {
+            return self as NSString
+        }
     }
-}
+#endif
