@@ -21,7 +21,6 @@
 
 import Foundation
 import BrightFutures
-import Dispatch
 import ExecutionContext
 
 private let cmain:ExecutionContextType = ExecutionContext.main
