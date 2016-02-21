@@ -80,7 +80,7 @@ public class JsonView : NamedViewType {
     public init() {
     }
     
-    public func render<T>(context:T?) throws -> AbstractActionType {
+    public func render<Context>(context:Context?) throws -> AbstractActionType {
         //TODO: implement reflection
         let json = context.flatMap{$0 as? JSONConvertible}.flatMap { $0.toJSON() }
         //TODO: avoid string path
