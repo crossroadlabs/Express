@@ -20,6 +20,7 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
+import Result
 import BrightFutures
 
 private class ServerParams {

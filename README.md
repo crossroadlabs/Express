@@ -1,12 +1,17 @@
+<p align="center"><a href="#swift-express"><img src ="./logo-full.png" height=256/></a></p>
+
 # Swift Express
 
 [![GitHub license](https://img.shields.io/badge/license-LGPL v3-green.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
+[![Build Status](https://travis-ci.org/crossroadlabs/Express.svg?branch=master)](https://travis-ci.org/crossroadlabs/Express)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ![Platform OS X | Linux](https://img.shields.io/badge/platform-OS%20X%20%7C%20Linux-orange.svg)
 ![Swift version](https://img.shields.io/badge/Swift-2.1-blue.svg)
 [![GitHub release](https://img.shields.io/github/release/crossroadlabs/Express.svg)](https://github.com/crossroadlabs/Express/releases)
 
-### Express is a simple, yet unopinionated web application server written in Swift
+### Being [perfectionists](http://www.crossroadlabs.xyz), we took the best from what we think is the best: power of [Play Framework](https://www.playframework.com/) and simplicity of [Express.js](http://expressjs.com/)
+
+#### Express is an asynchronous, simple, powerful, yet unopinionated web application server written in Swift
 
 ## Getting started
 
@@ -260,13 +265,15 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 ## Changelog
 
+* v0.2.1: minor changes
+	* Swift modules are installed via Carthage
+	* Enabled binary builds on OS X
 * v0.2: Solid OS X release
 	* Much better routing APIs
 	* Advanced routing path patterns
 	* Possibility to use Regex for routing
 	* Greately improved README
 	* Some bugfixes
-
 * v0.1: Initial Public Release
 	* basic routing
 	* views and view engines (supports [Mustache](https://mustache.github.io/))

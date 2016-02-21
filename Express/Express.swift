@@ -20,6 +20,7 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
+import ExecutionContext
 import BrightFutures
 
 public func express() -> Express {

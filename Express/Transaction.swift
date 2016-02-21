@@ -20,7 +20,9 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
+import ExecutionContext
 import BrightFutures
+import Result
 
 public protocol TransactionType : DataConsumerType {
     func tryConsume(content:ContentType) -> Bool

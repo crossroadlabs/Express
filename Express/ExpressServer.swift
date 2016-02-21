@@ -20,6 +20,8 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
+import Result
+import ExecutionContext
 import BrightFutures
 
 public extension Express {

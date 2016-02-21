@@ -1,0 +1,1 @@
+<li type="disk">Item: <span style="color:{{item.color}}">{{item.name}}</span></li>

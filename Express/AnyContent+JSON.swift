@@ -20,16 +20,17 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import SwiftyJSON
+import TidyJSON
 
 public extension AnyContent {
     func asJSON() -> JSON? {
         for ct in contentType {
             //TODO: move to constants
             if "application/json" == ct {
-                let json = JSON(data: NSData(bytes: data, length: data.count))
-                for e in json.error {
-                    //TODO: better log
+                guard let (json, error) = self.asText().map(JSON.parse) else {
+                    return Optional.None
+                }
+                if let e = error {
                     print(e)
                     return Optional.None
                 }

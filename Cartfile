@@ -1,6 +1,7 @@
-github "crossroadlabs/BrightFutures" "master"
-github "SwiftyJSON/SwiftyJSON"
+github "crossroadlabs/BrightFutures" "feature-express-linux"
+github "crossroadlabs/TidyJSON" "master"
 github "groue/GRMustache.swift" "Swift2.1"
-github "crossroadlabs/Regex" ~> 0.4
-github "crossroadlabs/PathToRegex" ~> 0.1
-github "crossroadlabs/CEVHTP" ~> 0.1.0
+github "crossroadlabs/Regex" ~> 0.5
+github "crossroadlabs/PathToRegex" ~> 0.2
+github "crossroadlabs/CEVHTP" ~> 0.1
+github "crossroadlabs/Stencil" ~> 0.5
