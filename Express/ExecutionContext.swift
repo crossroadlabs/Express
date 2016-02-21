@@ -28,10 +28,10 @@ private let cmain:ExecutionContextType = ExecutionContext.main
 
 extension ExecutionContext {
     static let main = cmain
-    static let user = ExecutionContext.global
-    static let action = toContext(DefaultExecutionContext(kind: .Parallel))
-    static let render = toContext(DefaultExecutionContext(kind: .Parallel))
-    static let view = toContext(DefaultExecutionContext(kind: .Serial))
+    static let user = global
+    static let action = toContext(ExecutionContext(kind: .Parallel))
+    static let render = toContext(ExecutionContext(kind: .Parallel))
+    static let view = toContext(ExecutionContext(kind: .Serial))
     
     @noreturn class func run() {
         dispatch_main()
