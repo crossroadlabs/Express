@@ -24,9 +24,11 @@ import BrightFutures
 import Dispatch
 import ExecutionContext
 
-extension DefaultExecutionContext {
-    static let main = mainContext
-    static let user = globalContext
+private let cmain:ExecutionContextType = ExecutionContext.main
+
+extension ExecutionContext {
+    static let main = cmain
+    static let user = ExecutionContext.global
     static let action = toContext(DefaultExecutionContext(kind: .Parallel))
     static let render = toContext(DefaultExecutionContext(kind: .Parallel))
     static let view = toContext(DefaultExecutionContext(kind: .Serial))
