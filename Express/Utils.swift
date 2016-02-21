@@ -1,4 +1,4 @@
-//===--- View.swift -------------------------------------------------------===//
+//===--- Utils.swift -------------------------------------------===//
 //
 //Copyright (c) 2015-2016 Daniel Leping (dileping)
 //
@@ -21,10 +21,10 @@
 
 import Foundation
 
-public protocol ViewType {
-    func render<Context>(context:Context?) throws -> AbstractActionType
-}
-
-public protocol NamedViewType : ViewType {
-    var name:String {get}
-}
+#if !os(Linux)
+    extension String {
+        func bridge() -> NSString {
+            return self as NSString
+        }
+    }
+#endif

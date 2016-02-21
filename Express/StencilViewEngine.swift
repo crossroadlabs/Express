@@ -54,7 +54,7 @@ class StencilView : ViewType {
         self.loader = loader
     }
     
-    func render(context:Any?) throws -> AbstractActionType {
+    func render<C>(context:C?) throws -> AbstractActionType {
         do {
             let edibleOption = context.flatMap{$0 as? StencilCookable }?.cook()
             let contextSupplied:[String:Any] = edibleOption.getOrElse(Dictionary())

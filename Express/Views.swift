@@ -90,7 +90,7 @@ public class Views {
                 
                 let combinedData = self.paths.map { path in
                     exts.map { ext in
-                        (ext, path.toNSString().stringByAppendingPathComponent(viewName) + "." + ext)
+                        (ext, path.bridge().stringByAppendingPathComponent(viewName) + "." + ext)
                     }
                 }.flatten()
                 
@@ -121,7 +121,7 @@ public class Views {
         }
     }
     
-    func render(view:String, context:Any?) -> Future<AbstractActionType, AnyError> {
+    func render<Context>(view:String, context:Context?) -> Future<AbstractActionType, AnyError> {
         return self.view(view).map(renderContext) { view in
             try view.render(context)
         }

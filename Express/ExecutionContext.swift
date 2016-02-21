@@ -36,13 +36,3 @@ extension ExecutionContext {
         executionContextMain()
     }
 }
-
-extension String {
-    func toNSString() -> NSString {
-        #if !os(Linux)
-            return self as NSString
-        #else
-            return self.bridge()
-        #endif
-    }
-}

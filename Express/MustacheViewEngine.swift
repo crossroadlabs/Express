@@ -50,7 +50,7 @@ private let warning = "Warning: " + message
             self.template = template
         }
         
-        func render(context:Any?) throws -> AbstractActionType {
+        func render<Context>(context:Context?) throws -> AbstractActionType {
             do {
                 let anyContext = context.flatMap { (i)->AnyObject? in
                     if let obj = i as? AnyObject {

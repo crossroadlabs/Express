@@ -41,6 +41,7 @@
 		657C1A721C24DD1D0037041F /* MustacheViewEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C1A711C24DD1D0037041F /* MustacheViewEngine.swift */; };
 		657C1A751C24E0F40037041F /* test.mustache in Resources */ = {isa = PBXBuildFile; fileRef = 657C1A741C24E0F40037041F /* test.mustache */; };
 		657CDBCF1C2A07C5005261BA /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CDBCE1C2A07C5005261BA /* Errors.swift */; };
+		6589201B1C7A2982008EEE37 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6589201A1C7A2982008EEE37 /* Utils.swift */; };
 		658DBDA31C221A2A00BE8AA9 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */; };
 		658DBDA41C221A2A00BE8AA9 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DBDA11C221A2A00BE8AA9 /* Result.framework */; };
 		658DBDA71C221B0D00BE8AA9 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */; };
@@ -142,6 +143,7 @@
 		657C1A711C24DD1D0037041F /* MustacheViewEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MustacheViewEngine.swift; sourceTree = "<group>"; };
 		657C1A741C24E0F40037041F /* test.mustache */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.mustache; sourceTree = "<group>"; };
 		657CDBCE1C2A07C5005261BA /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		6589201A1C7A2982008EEE37 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BrightFutures.framework; path = Carthage/Build/Mac/BrightFutures.framework; sourceTree = "<group>"; };
 		658DBDA11C221A2A00BE8AA9 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/Mac/Result.framework; sourceTree = "<group>"; };
 		658DBDAE1C22218100BE8AA9 /* Headers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Headers.swift; sourceTree = "<group>"; };
@@ -270,6 +272,7 @@
 				65BB8DAA1C2A226E00F8B52C /* ErrorHandler.swift */,
 				655077451C2D936100E42309 /* Static.swift */,
 				6550774B1C2DC8E500E42309 /* MIME.swift */,
+				6589201A1C7A2982008EEE37 /* Utils.swift */,
 			);
 			path = Express;
 			sourceTree = "<group>";
@@ -473,6 +476,7 @@
 				658DBDB11C2228F000BE8AA9 /* Response.swift in Sources */,
 				65E646EA1C79A5340036D028 /* StencilViewEngine.swift in Sources */,
 				655CC27E1C2370F9009FE219 /* Streams+Headers.swift in Sources */,
+				6589201B1C7A2982008EEE37 /* Utils.swift in Sources */,
 				657CDBCF1C2A07C5005261BA /* Errors.swift in Sources */,
 				650493691C22199300616444 /* AnyContent+JSON.swift in Sources */,
 				657C1A701C24C8FF0037041F /* ViewEngine.swift in Sources */,

@@ -49,8 +49,8 @@ public class StaticAction : Action<AnyContent>, IntermediateActionType {
             }
             
             //TODO: get rid of NSs
-            let file = self.path.toNSString().stringByAppendingPathComponent(fileFromURI)
-            let ext = file.toNSString().pathExtension
+            let file = self.path.bridge().stringByAppendingPathComponent(fileFromURI)
+            let ext = file.bridge().pathExtension
             
             let fm = NSFileManager.defaultManager()
             
