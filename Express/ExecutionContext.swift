@@ -33,6 +33,16 @@ extension ExecutionContext {
     static let view = toContext(ExecutionContext(kind: .Serial))
     
     @noreturn class func run() {
-        dispatch_main()
+        executionContextMain()
+    }
+}
+
+extension String {
+    func toNSString() -> NSString {
+        #if !os(Linux)
+            return self as NSString
+        #else
+            return self.bridge()
+        #endif
     }
 }

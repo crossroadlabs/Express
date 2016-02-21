@@ -90,7 +90,7 @@ public class Views {
                 
                 let combinedData = self.paths.map { path in
                     exts.map { ext in
-                        (ext, (path as NSString).stringByAppendingPathComponent(viewName) + "." + ext)
+                        (ext, path.toNSString().stringByAppendingPathComponent(viewName) + "." + ext)
                     }
                 }.flatten()
                 
