@@ -22,6 +22,22 @@
 import Foundation
 import Mustache
 
+typealias MustacheEdible = AnyObject
+
+private protocol MustacheCookable {
+    func cook() -> MustacheEdible
+}
+
+extension Dictionary : MustacheCookable {
+    func cook() -> MustacheEdible {
+        let s = self.map { (k,v) in
+            (String(k), v as! AnyObject)
+        }
+        let dict:NSDictionary = NSDictionary(dictionary: s)
+        return dict
+    }
+}
+
 class MustacheView : ViewType {
     let template:Template
     
@@ -31,7 +47,15 @@ class MustacheView : ViewType {
     
     func render(context:Any?) throws -> AbstractActionType {
         do {
-            let anyContext = context.flatMap { $0 as? AnyObject }
+            let anyContext = context.flatMap { (i)->AnyObject? in
+                if let obj = i as? AnyObject {
+                    return obj
+                }
+                guard let cookable = i as? MustacheCookable else {
+                    return nil
+                }
+                return cookable.cook()
+            }
             let box = Box(anyContext as? MustacheBoxable)
             let render = try template.render(box)
             return Action<AnyContent>.ok(AnyContent(str:render, contentType: "text/html"))
