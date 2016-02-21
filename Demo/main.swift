@@ -142,7 +142,7 @@ app.get("/test") { req in
     }
 }
 
-app.get("/test.html") { request in
+func testItems(request:Request<AnyContent>) throws -> [String: Any] {
     let newItems = request.query.map { (k, v) in
         (k, v.first!)
     }
@@ -156,7 +156,16 @@ app.get("/test.html") { request in
         throw TestError.Test
     }
     
-    return Action.render("test", context: ["test": "ok", "items": viewItems])
+    return ["test": "ok", "items": viewItems]
+}
+
+app.get("/test.html") { request in
+    let items = try testItems(request)
+    return Action.render("test", context: items)
+}
+
+app.get("/test2.html") { request in
+    return Action.render("test2", context: try testItems(request))
 }
 
 app.get("/echo") { request in
