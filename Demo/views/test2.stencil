@@ -4,7 +4,7 @@
 <h1>Test Stencil: {{test}}</h1>
 <h2>
 {% for item in items %}
-<li type="disk">Item: <span style="color:{{item.color}}">{{item.name}}</span></li>
+{% include "colored2.stencil" %}
 {% endfor %}
 </h2>
 </body>
