@@ -65,6 +65,16 @@
 		65DEAFF71C6A8F3900EBA47F /* Regex.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65DEAFF11C6A8EA700EBA47F /* Regex.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		65DEAFF91C6AA8F700EBA47F /* RegexUrlMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65DEAFF81C6AA8F700EBA47F /* RegexUrlMatcher.swift */; };
 		65E646DB1C79878E0036D028 /* ExecutionContext.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646DA1C79878E0036D028 /* ExecutionContext.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		65E646E31C79A4EB0036D028 /* PathKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646E11C79A4EB0036D028 /* PathKit.framework */; };
+		65E646E41C79A4EB0036D028 /* Stencil.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646E21C79A4EB0036D028 /* Stencil.framework */; };
+		65E646E51C79A4FA0036D028 /* PathKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646E11C79A4EB0036D028 /* PathKit.framework */; };
+		65E646E61C79A4FA0036D028 /* Stencil.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646E21C79A4EB0036D028 /* Stencil.framework */; };
+		65E646E71C79A5010036D028 /* PathKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646E11C79A4EB0036D028 /* PathKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		65E646E81C79A5010036D028 /* Stencil.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646E21C79A4EB0036D028 /* Stencil.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		65E646EA1C79A5340036D028 /* StencilViewEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E646E91C79A5340036D028 /* StencilViewEngine.swift */; };
+		65E646EC1C79AD280036D028 /* hello2.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646EB1C79AD280036D028 /* hello2.stencil */; };
+		65E646EE1C79AF4E0036D028 /* test2.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646ED1C79AF4E0036D028 /* test2.stencil */; };
+		65E646F01C79AF6C0036D028 /* colored2.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646EF1C79AF6C0036D028 /* colored2.stencil */; };
 		961B9E8B1C23229A000506D2 /* libevent.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 961B9E8A1C23229A000506D2 /* libevent.dylib */; };
 		961B9E8F1C2322CA000506D2 /* libevent_openssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 961B9E8E1C2322CA000506D2 /* libevent_openssl.dylib */; };
 		961B9E911C2324B4000506D2 /* EVHTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961B9E901C2324B4000506D2 /* EVHTP.swift */; };
@@ -81,6 +91,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				65E646E71C79A5010036D028 /* PathKit.framework in Copy Frameworks */,
+				65E646E81C79A5010036D028 /* Stencil.framework in Copy Frameworks */,
 				65E646DB1C79878E0036D028 /* ExecutionContext.framework in Copy Frameworks */,
 				659E80AD1C7756DD00DE85B1 /* TidyJSON.framework in Copy Frameworks */,
 				65DEAFF61C6A8F3900EBA47F /* PathToRegex.framework in Copy Frameworks */,
@@ -144,6 +156,12 @@
 		65DEAFF11C6A8EA700EBA47F /* Regex.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Regex.framework; path = Carthage/Build/Mac/Regex.framework; sourceTree = "<group>"; };
 		65DEAFF81C6AA8F700EBA47F /* RegexUrlMatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegexUrlMatcher.swift; sourceTree = "<group>"; };
 		65E646DA1C79878E0036D028 /* ExecutionContext.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExecutionContext.framework; path = Carthage/Build/Mac/ExecutionContext.framework; sourceTree = "<group>"; };
+		65E646E11C79A4EB0036D028 /* PathKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PathKit.framework; path = Carthage/Build/Mac/PathKit.framework; sourceTree = "<group>"; };
+		65E646E21C79A4EB0036D028 /* Stencil.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stencil.framework; path = Carthage/Build/Mac/Stencil.framework; sourceTree = "<group>"; };
+		65E646E91C79A5340036D028 /* StencilViewEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StencilViewEngine.swift; sourceTree = "<group>"; };
+		65E646EB1C79AD280036D028 /* hello2.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hello2.stencil; sourceTree = "<group>"; };
+		65E646ED1C79AF4E0036D028 /* test2.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test2.stencil; sourceTree = "<group>"; };
+		65E646EF1C79AF6C0036D028 /* colored2.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = colored2.stencil; sourceTree = "<group>"; };
 		961B9E8A1C23229A000506D2 /* libevent.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevent.dylib; path = ../../../../../usr/local/lib/libevent.dylib; sourceTree = "<group>"; };
 		961B9E8E1C2322CA000506D2 /* libevent_openssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevent_openssl.dylib; path = ../../../../../usr/local/lib/libevent_openssl.dylib; sourceTree = "<group>"; };
 		961B9E901C2324B4000506D2 /* EVHTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EVHTP.swift; sourceTree = "<group>"; };
@@ -158,6 +176,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65E646E31C79A4EB0036D028 /* PathKit.framework in Frameworks */,
+				65E646E41C79A4EB0036D028 /* Stencil.framework in Frameworks */,
 				659E80AB1C7756C200DE85B1 /* TidyJSON.framework in Frameworks */,
 				65DEAFF21C6A8EA700EBA47F /* PathToRegex.framework in Frameworks */,
 				65DEAFF31C6A8EA700EBA47F /* Regex.framework in Frameworks */,
@@ -184,6 +204,8 @@
 				65DEAFF51C6A8F1900EBA47F /* Regex.framework in Frameworks */,
 				658DBDA81C221B0D00BE8AA9 /* Result.framework in Frameworks */,
 				651826801C2208A800E49AC5 /* Express.framework in Frameworks */,
+				65E646E51C79A4FA0036D028 /* PathKit.framework in Frameworks */,
+				65E646E61C79A4FA0036D028 /* Stencil.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,6 +264,7 @@
 				657C1A6F1C24C8FF0037041F /* ViewEngine.swift */,
 				657C1A6D1C24C8850037041F /* Views.swift */,
 				657C1A711C24DD1D0037041F /* MustacheViewEngine.swift */,
+				65E646E91C79A5340036D028 /* StencilViewEngine.swift */,
 				65BA1E971C25D38200BCE076 /* JsonView.swift */,
 				657CDBCE1C2A07C5005261BA /* Errors.swift */,
 				65BB8DAA1C2A226E00F8B52C /* ErrorHandler.swift */,
@@ -276,6 +299,9 @@
 				657C1A741C24E0F40037041F /* test.mustache */,
 				659157FE1C285AFA00672785 /* colored.mustache */,
 				652E5E941C6BD79700C11021 /* hello.mustache */,
+				65E646EB1C79AD280036D028 /* hello2.stencil */,
+				65E646ED1C79AF4E0036D028 /* test2.stencil */,
+				65E646EF1C79AF6C0036D028 /* colored2.stencil */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -283,6 +309,8 @@
 		658DBDA61C221AEB00BE8AA9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				65E646E11C79A4EB0036D028 /* PathKit.framework */,
+				65E646E21C79A4EB0036D028 /* Stencil.framework */,
 				65E646DA1C79878E0036D028 /* ExecutionContext.framework */,
 				659E80AA1C7756C200DE85B1 /* TidyJSON.framework */,
 				65DEAFF01C6A8EA700EBA47F /* PathToRegex.framework */,
@@ -399,6 +427,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65E646EC1C79AD280036D028 /* hello2.stencil in Resources */,
+				65E646F01C79AF6C0036D028 /* colored2.stencil in Resources */,
+				65E646EE1C79AF4E0036D028 /* test2.stencil in Resources */,
 				659157FF1C285AFA00672785 /* colored.mustache in Resources */,
 				657C1A751C24E0F40037041F /* test.mustache in Resources */,
 				652E5E951C6BD79700C11021 /* hello.mustache in Resources */,
@@ -440,6 +471,7 @@
 				6504936D1C22199300616444 /* Functional.swift in Sources */,
 				65662D061C33377200A16177 /* AnyContent+MultipartFormData.swift in Sources */,
 				658DBDB11C2228F000BE8AA9 /* Response.swift in Sources */,
+				65E646EA1C79A5340036D028 /* StencilViewEngine.swift in Sources */,
 				655CC27E1C2370F9009FE219 /* Streams+Headers.swift in Sources */,
 				657CDBCF1C2A07C5005261BA /* Errors.swift in Sources */,
 				650493691C22199300616444 /* AnyContent+JSON.swift in Sources */,
