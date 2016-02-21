@@ -22,13 +22,14 @@
 import Foundation
 import BrightFutures
 import Dispatch
+import ExecutionContext
 
-class ExecutionContext {
-    static let main = toContext(Queue.main)
-    static let user = toContext(Queue.user)
-    static let action = toContext(Queue.action)
-    static let render = toContext(Queue.render)
-    static let view = toContext(Queue.view)
+extension DefaultExecutionContext {
+    static let main = mainContext
+    static let user = globalContext
+    static let action = toContext(DefaultExecutionContext(kind: .Parallel))
+    static let render = toContext(DefaultExecutionContext(kind: .Parallel))
+    static let view = toContext(DefaultExecutionContext(kind: .Serial))
     
     @noreturn class func run() {
         dispatch_main()

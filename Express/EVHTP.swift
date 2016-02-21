@@ -21,6 +21,7 @@
 
 import Foundation
 import CEVHTP
+import Result
 import BrightFutures
 
 internal typealias EVHTPp = UnsafeMutablePointer<evhtp_t>
