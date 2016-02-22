@@ -60,6 +60,7 @@ matrix:
         - sudo apt-get install libevent-dev libssl-dev
         - git clone https://github.com/ellzey/libevhtp.git
         - cd libevhtp
+        - git checkout tags/1.2.10
         - cd build
         - cmake -DEVHTP_DISABLE_REGEX:STRING=ON -DEVHTP_BUILD_SHARED:STRING=ON -DCMAKE_INSTALL_PREFIX:STRING=/usr ..
         - make
