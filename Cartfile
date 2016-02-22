@@ -1,5 +1,5 @@
 github "crossroadlabs/BrightFutures" "feature-express-linux"
-github "benloong/TidyJSON" ~> 1.0
+github "crossroadlabs/TidyJSON" ~> 1.0
 github "groue/GRMustache.swift" "Swift2.1"
 github "crossroadlabs/Regex" ~> 0.5
 github "crossroadlabs/PathToRegex" ~> 0.2
