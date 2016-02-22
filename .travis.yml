@@ -61,8 +61,7 @@ matrix:
         - git clone https://github.com/ellzey/libevhtp.git
         - cd libevhtp
         - git checkout tags/1.2.10
-        - cd build
-        - cmake -DEVHTP_DISABLE_REGEX:STRING=ON -DEVHTP_BUILD_SHARED:STRING=ON -DCMAKE_INSTALL_PREFIX:STRING=/usr ..
+        - cmake -DEVHTP_DISABLE_REGEX:STRING=ON -DEVHTP_BUILD_SHARED:STRING=ON -DCMAKE_INSTALL_PREFIX:STRING=/usr
         - make
         - sudo make install
         - sudo mv -f /usr/include/evhtp/* /usr/include/
