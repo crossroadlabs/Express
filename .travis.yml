@@ -32,10 +32,7 @@ matrix:
           repo: crossroadlabs/Express
           tags: true
     - script:
-        - cat /usr/include/evhtp-config.h
-        - cat /usr/include/event2/event-config.h
-        - cat /usr/include/event2/thread.h
-        - ./build test
+        - ./build
       sudo: required
       dist: trusty
       language: generic
