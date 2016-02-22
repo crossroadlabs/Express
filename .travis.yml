@@ -32,7 +32,8 @@ matrix:
           repo: crossroadlabs/Express
           tags: true
     - script:
-        ./build test
+        - cat /usr/include/evhtp-config.h
+        - ./build test
       sudo: required
       dist: trusty
       language: generic
