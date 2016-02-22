@@ -65,7 +65,7 @@ brew install swift-express
 
 #### [Linux ![Linux](https://cdn1.iconfinder.com/data/icons/system-shade-circles/512/linux_tox-16.png)](http://www.linux.org/)
 
-##### Stay tuned! We are working hard on this.
+##### We are almost there! Checkout this branch: [feature-linux](https://github.com/crossroadlabs/Express/tree/feature-linux).
 
 ## Examples
 
