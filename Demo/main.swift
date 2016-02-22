@@ -49,7 +49,9 @@ app.errorHandler.register { e in
         ["name": k, "color": v]
     }
     
-    return Action<AnyContent>.render("test", context: ["test": "error", "items": viewItems])
+    let context:[String: Any] = ["test": "error", "items": viewItems]
+    
+    return Action<AnyContent>.render("test", context: context)
 }
 
 /// StaticAction is just a predefined configurable handler for serving static files.
