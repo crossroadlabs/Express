@@ -60,6 +60,8 @@ matrix:
         - cmake -DEVHTP_DISABLE_REGEX:STRING=ON -DEVHTP_BUILD_SHARED:STRING=ON -DCMAKE_INSTALL_PREFIX:STRING=/usr ..
         - make
         - sudo make install
+        - sudo mv -f /usr/include/evhtp/* /usr/include/
+        - sudo rm -rf /usr/include/evhtp
         - cd ../..
         # get back home
         - cd $MODULE_NAME
