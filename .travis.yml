@@ -4,7 +4,7 @@ env:
 matrix:
   include:
     - script:
-        - xcodebuild test -project $MODULE_NAME.xcodeproj -scheme $MODULE_NAME
+        - xcodebuild build -project $MODULE_NAME.xcodeproj -scheme $MODULE_NAME
       os: osx
       osx_image: xcode7.2
       language: objective-c
