@@ -53,6 +53,7 @@ matrix:
         - cd ..
         # express dependencies
         # - sudo apt-get install libevhtp-dev libevent-dev libssl-dev //libevhtp-dev is not available on trusty
+        - sudo apt-get update
         - sudo apt-get install libevent-dev libssl-dev
         - git clone https://github.com/ellzey/libevhtp.git
         - cd libevhtp
