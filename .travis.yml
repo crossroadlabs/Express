@@ -33,6 +33,7 @@ matrix:
           tags: true
     - script:
         - cat /usr/include/evhtp-config.h
+        - cat /usr/include/event2/event-config.h
         - ./build test
       sudo: required
       dist: trusty
