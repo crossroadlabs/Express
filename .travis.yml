@@ -56,6 +56,8 @@ matrix:
         # get crossroad build script
         - wget https://raw.githubusercontent.com/crossroadlabs/utils/master/build
         - chmod +x build
+        # express dependencies
+        - sudo apt-get install libevhtp-dev libevent-dev libssl-dev
 notifications:
   email: false
   
