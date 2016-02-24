@@ -65,7 +65,7 @@ brew install swift-express
 
 #### [Linux ![Linux](https://cdn1.iconfinder.com/data/icons/system-shade-circles/512/linux_tox-16.png)](http://www.linux.org/)
 
-##### Stay tuned! We are working hard on this.
+##### We are almost there! Checkout this branch: [feature-linux](https://github.com/crossroadlabs/Express/tree/feature-linux).
 
 ## Examples
 
@@ -261,6 +261,7 @@ Let us know if we are on the right path! Influence the project, create feature r
 * v0.4: proper streaming APIs
 * v0.5: more content types available out of the box
 * v0.6: Web Sockets
+* v0.7: hot code reload
 * v1.0: hit the production!
 
 ## Changelog
