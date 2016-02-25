@@ -51,6 +51,7 @@ public enum StatusCode : UInt16 {
     case TooManyRequest = 429
     case Unauthorized = 401
     case UnsupportedMediaType = 415
+    case UnavailableForLegalReasons = 451 //farenheit
     case UriTooLong = 414
 }
 
