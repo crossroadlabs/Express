@@ -165,6 +165,22 @@ public extension Action {
         let code:RedirectStatusCode = permanent ? .MovedPermanently : .TemporaryRedirect
         return redirect(url, status: code)
     }
+    
+    public class func found(url:String) -> Action<C> {
+        return redirect(url, status: .Found)
+    }
+    
+    public class func movedPermanently(url:String) -> Action<C> {
+        return redirect(url, status: .MovedPermanently)
+    }
+    
+    public class func seeOther(url:String) -> Action<C> {
+        return redirect(url, status: .SeeOther)
+    }
+    
+    public class func temporaryRedirect(url:String) -> Action<C> {
+        return redirect(url, status: .TemporaryRedirect)
+    }
 }
 
 public extension Action where C : AnyContent {
