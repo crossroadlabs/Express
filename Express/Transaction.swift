@@ -53,26 +53,28 @@ class Transaction<RequestContent : ConstructableContentType, ResponseContent : F
         self.actionPromise = Promise()
         self.action = actionPromise.future
         self.request = Promise<Request<RequestContent>, NoError>()
+        content.onSuccess(ExecutionContext.user) { content in
+            let request = Request<RequestContent>(head: head, body: content as? RequestContent)
+            self.request.success(request)
+        }
+        content.onFailure { e in
+            self.actionPromise.failure(AnyError(cause: e))
+        }
     }
     
     convenience init(app:Express, routeId:String, head:RequestHeadType, out:DataConsumerType, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) {
         self.init(app: app, routeId: routeId, head: head, out: out)
-        content.onSuccess(ExecutionContext.user) { content in
-            let request = Request<RequestContent>(head: head, body: content as? RequestContent)
-            self.request.success(request)
+        request.future.onSuccess { request in
             let action = handler(request)
             action.onSuccess { action in
                 self.actionPromise.success(action)
             }
             action.onFailure { e in
                 switch e {
-                    case let e as AnyError: self.failAction(e.cause)
-                    default: self.failAction(e)
+                case let e as AnyError: self.failAction(e.cause)
+                default: self.failAction(e)
                 }
             }
-        }
-        content.onFailure { e in
-            self.actionPromise.failure(AnyError(cause: e))
         }
     }
     
@@ -92,7 +94,7 @@ class Transaction<RequestContent : ConstructableContentType, ResponseContent : F
             let next = self.app.errorHandler.handle(e)!
             
             //FIXME: get the request from intermediate action somehow as well, it could have changed
-            for request in self.request.future.value {
+            self.request.future.onSuccess { request in
                 self.processAction(next, request: request)
             }
         }

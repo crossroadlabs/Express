@@ -24,12 +24,12 @@ import BrightFutures
 import Result
 
 protocol ServerType {
-    var router:RouterType {
+    var app:Express {
         get
     }
     
     func start(port:UInt16) -> Future<Void, NoError>
     
-    init(router:RouterType)
+    init(app:Express)
 }
 

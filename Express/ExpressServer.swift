@@ -26,7 +26,7 @@ import BrightFutures
 
 public extension Express {
     func listen(port:UInt16) -> Future<Void, NoError> {
-        let server = HttpServer(router: self)
+        let server = HttpServer(app: self)
         return server.start(port)
     }
     
