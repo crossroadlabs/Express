@@ -447,3 +447,11 @@ internal class _evhtp {
 }
 
 internal let EVHTP = _evhtp()
+
+func evhtp_parse_query(query:String) -> [String: [String]] {
+    let parsed = evhtp_parse_query_wflags(query, query.utf8.count,EVHTP_PARSE_QUERY_FLAG_IGNORE_HEX | EVHTP_PARSE_QUERY_FLAG_ALLOW_EMPTY_VALS | EVHTP_PARSE_QUERY_FLAG_ALLOW_NULL_VALS | EVHTP_PARSE_QUERY_FLAG_TREAT_SEMICOLON_AS_SEP)
+    defer {
+        evhtp_kvs_free(parsed)
+    }
+    return RepeatingHeaderDict.fromHeaders(parsed).dict
+}

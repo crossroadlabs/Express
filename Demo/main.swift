@@ -243,6 +243,10 @@ app.all("/async/echo") { request in
     }
 }
 
+app.post("/merged/query") { request in
+    Action.render(JsonView.name, context: request.mergedQuery())
+}
+
 app.listen(9999).onSuccess {
     print("Successfully launched server")
 }
