@@ -27,16 +27,21 @@ public extension AnyContent {
         for ct in contentType {
             //TODO: move to constants
             if "application/json" == ct {
-                guard let (json, error) = self.asText().map(JSON.parse) else {
-                    return Optional.None
-                }
-                if let e = error {
+                do {
+                    guard let text = self.asText() else {
+                        return nil
+                    }
+                    let json = try JSON.parse(text)
+                    return json
+                } catch let e as TidyJSON.ParseError {
                     print(e)
-                    return Optional.None
+                    return nil
+                } catch let e {
+                    print(e)
+                    return nil
                 }
-                return json
             }
         }
-        return Optional.None
+        return nil
     }
 }
