@@ -17,6 +17,7 @@ let app = express()
 
 app.views.register(JsonView())
 app.views.register(MustacheViewEngine())
+app.views.register(StencilViewEngine())
 
 enum TestError {
     case Test
@@ -48,7 +49,9 @@ app.errorHandler.register { e in
         ["name": k, "color": v]
     }
     
-    return Action<AnyContent>.render("test", context: ["test": "error", "items": viewItems])
+    let context:[String: Any] = ["test": "error", "items": viewItems]
+    
+    return Action<AnyContent>.render("test", context: context)
 }
 
 /// StaticAction is just a predefined configurable handler for serving static files.
@@ -67,6 +70,16 @@ app.get("/hello/:user.html") { request in
     let context = user.map {["user": $0]}
     //render our template named "hello"
     return Action.render("hello", context: context)
+}
+
+//user as an url param
+app.get("/hello2/:user.html") { request in
+    //get user
+    let user = request.params["user"]
+    //if there is a user - create our context. If there is no user, context will remain nil
+    let context = user.map {["user": $0]}
+    //render our template named "hello"
+    return Action.render("hello2", context: context)
 }
 
 app.post("/api/user") { request in
@@ -131,7 +144,7 @@ app.get("/test") { req in
     }
 }
 
-app.get("/test.html") { request in
+func testItems(request:Request<AnyContent>) throws -> [String: Any] {
     let newItems = request.query.map { (k, v) in
         (k, v.first!)
     }
@@ -145,7 +158,16 @@ app.get("/test.html") { request in
         throw TestError.Test
     }
     
-    return Action.render("test", context: ["test": "ok", "items": viewItems])
+    return ["test": "ok", "items": viewItems]
+}
+
+app.get("/test.html") { request in
+    let items = try testItems(request)
+    return Action.render("test", context: items)
+}
+
+app.get("/test2.html") { request in
+    return Action.render("test2", context: try testItems(request))
 }
 
 app.get("/echo") { request in

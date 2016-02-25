@@ -57,9 +57,12 @@ public class AggregateErrorHandler : ErrorHandlerType {
         register { e in
             //this is the only way to check. Otherwise it will just always tall-free bridge to NSError
             if e.dynamicType == NSError.self {
-                let e = e as NSError
-                //TODO: generalize this shit
-                return Action<AnyContent>.internalServerError(e.description)
+                //stupid autobridging
+                switch e {
+                case let e as NSError:
+                    return Action<AnyContent>.internalServerError(e.description)
+                default: return nil
+                }
             } else {
                 return nil
             }

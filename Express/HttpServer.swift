@@ -20,7 +20,11 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
+import Result
 import BrightFutures
+#if os(Linux)
+    import Glibc
+#endif
 
 private class ServerParams {
     let promise: Promise<Void, NoError>

@@ -52,11 +52,11 @@ class ResponseAction<C : FlushableContentType> : Action<C>, FlushableAction {
     }
 }
 
-class RenderAction<C : FlushableContentType> : Action<C>, IntermediateActionType {
+class RenderAction<C : FlushableContentType, Context> : Action<C>, IntermediateActionType {
     let view:String
-    let context:Any?
+    let context:Context?
     
-    init(view:String, context:Any?) {
+    init(view:String, context:Context?) {
         self.view = view
         self.context = context
     }
@@ -127,7 +127,7 @@ public extension Action {
         return chain(nilRequest())
     }
     
-    public class func render(view:String, context:Any? = nil) -> Action<C> {
+    public class func render<Context>(view:String, context:Context? = nil) -> Action<C> {
         return RenderAction(view: view, context: context)
     }
 }

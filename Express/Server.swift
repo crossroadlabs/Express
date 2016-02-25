@@ -21,6 +21,7 @@
 
 import Foundation
 import BrightFutures
+import Result
 
 protocol ServerType {
     var router:RouterType {
