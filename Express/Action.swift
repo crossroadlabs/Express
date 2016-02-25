@@ -110,6 +110,11 @@ public extension Action {
         return ResponseAction(response: response)
     }
     
+    internal class func routeNotFound(path:String) -> Action<AnyContent> {
+        let response = Response<AnyContent>(status: 404, content: AnyContent(str: "404 Route Not Found\n\n\tpath: " + path), headers: Dictionary())
+        return ResponseAction(response: response)
+    }
+    
     internal class func internalServerError(description:String) -> Action<AnyContent> {
         let response = Response<AnyContent>(status: 500, content: AnyContent(str: "500 Internal Server Error\n\n" + description), headers: Dictionary())
         return ResponseAction(response: response)

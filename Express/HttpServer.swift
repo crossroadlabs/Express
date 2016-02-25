@@ -106,7 +106,7 @@ private func handle_request(req: EVHTPRequest, serv:ServerParams) {
     } else {
         let transaction = Transaction<AnyContent, AnyContent, NoError>(app: serv.app, routeId: "", head: head, out: os)
         let action = future(immediate) { () throws -> AbstractActionType in
-            throw ExpressError.PageNotFound(path: head.path)
+            throw ExpressError.RouteNotFound(path: head.path)
         }
         transaction.handleAction(action)
         try! transaction.dataEnd()
