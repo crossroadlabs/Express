@@ -135,6 +135,36 @@ public extension Action {
     public class func render<Context>(view:String, context:Context? = nil) -> Action<C> {
         return RenderAction(view: view, context: context)
     }
+    
+    public class func response(response:Response<C>) -> Action<C> {
+        return ResponseAction(response: response)
+    }
+    
+    public class func response(status:UInt16, content:C? = nil, headers:Dictionary<String, String> = Dictionary()) -> Action<C> {
+        return response(Response(status: status, content: content, headers: headers))
+    }
+    
+    public class func response(status:StatusCode, content:C? = nil, headers:Dictionary<String, String> = Dictionary()) -> Action<C> {
+        return response(status.rawValue, content: content, headers: headers)
+    }
+    
+    public class func status(status:UInt16) -> Action<C> {
+        return response(status)
+    }
+    
+    public class func status(status:StatusCode) -> Action<C> {
+        return self.status(status.rawValue)
+    }
+    
+    public class func redirect(url:String, status:RedirectStatusCode) -> Action<C> {
+        let headers = ["Location": url]
+        return response(status.rawValue, headers: headers)
+    }
+    
+    public class func redirect(url:String, permanent:Bool = false) -> Action<C> {
+        let code:RedirectStatusCode = permanent ? .MovedPermanently : .TemporaryRedirect
+        return redirect(url, status: code)
+    }
 }
 
 public extension Action where C : AnyContent {

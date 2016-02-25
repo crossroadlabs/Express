@@ -243,6 +243,13 @@ app.all("/async/echo") { request in
     }
 }
 
+app.get("/test/redirect") { request in
+    return future {
+        let to = request.query["to"].flatMap{$0.first}.getOrElse("../test.html")
+        return Action.redirect(to)
+    }
+}
+
 app.post("/merged/query") { request in
     Action.render(JsonView.name, context: request.mergedQuery())
 }
