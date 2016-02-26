@@ -1,8 +1,8 @@
 # Hello Express
 
-This is a very basic application. Much simpler than one created with [Express Command Line](#). Still it's good to understand the basic concepts by creating an app by hands. Keep in mind that you have to follow [Installation instructions](./installing.md) first. If you are doing it on a Mac, please, install [Swift 2.2 latest development](https://swift.org/download/#latest-development-snapshots) snapshot in addition.
+This is a very basic application. Much simpler than one created with [Express Command Line](./commandline.md). Still it's good to understand the basic concepts by creating an app by hands. Keep in mind that you have to follow [Installation instructions](./installing.md) first. If you are doing it on a Mac, please, install [Swift 2.2 latest development](https://swift.org/download/#latest-development-snapshots) snapshot in addition.
 
-##### If you don't want to create an app manually, just skip this tutorial and use [Express Command Line](#) tool instead.
+##### If you don't want to create an app manually, just skip this tutorial and use [Express Command Line](./commandline.md) tool instead.
 
 ## Create a folder
 
@@ -91,4 +91,4 @@ Enter the following url in the browser: [http://localhost:9999/](http://localhos
 http://localhost:9999/
 ```
 
-# Next tutorial: [Express command line](#)
+# Next tutorial: [Express Command Line](./commandline.md)
