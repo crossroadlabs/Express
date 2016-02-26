@@ -5,5 +5,5 @@
 	* [Hello Express](./gettingstarted/helloexpress.md)
 	* [Express Command Line](./gettingstarted/commandline.md)
 	* [Basic routing](./gettingstarted/routing.md)
-	* Static files
-	* Basic error handling
+	* [Static files](./gettingstarted/static.md)
+	* [Basic error handling](./gettingstarted/errorhandling.md)
