@@ -52,7 +52,7 @@ public class AnyContentFactory : AbstractContentFactory<AnyContent> {
 public class AnyContent : ConstructableContentType, FlushableContentType {
     public typealias Factory = AnyContentFactory
     let data:Array<UInt8>
-    let contentType:String?
+    public let contentType:String?
     
     public init?(data:Array<UInt8>?, contentType:String?) {
         guard let data = data else {

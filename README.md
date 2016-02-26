@@ -1,4 +1,15 @@
-<p align="center"><a href="#swift-express"><img src ="./logo-full.png" height=256/></a></p>
+[//]: https://www.iconfinder.com/icons/383207/doc_tag_icon#size=64
+<p align="center">
+	<a href="#swift-express">
+		<img src ="./logo-full.png" height=256/>
+	</a>
+	<a href="./doc/index.md">
+		<h5 align="right">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/>
+		</h5>
+	</a>
+</p>
+[<h5 align="right">Live 🐧 server running Demo  <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/34/play-circle-32.png" height=16/>
+		</h5>](http://demo.swiftexpress.io/)
 
 # Swift Express
 
@@ -6,7 +17,7 @@
 [![Build Status](https://travis-ci.org/crossroadlabs/Express.svg?branch=master)](https://travis-ci.org/crossroadlabs/Express)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ![Platform OS X | Linux](https://img.shields.io/badge/platform-OS%20X%20%7C%20Linux-orange.svg)
-![Swift version](https://img.shields.io/badge/Swift-2.1-blue.svg)
+![Swift version](https://img.shields.io/badge/Swift-2.1 | 2.2-blue.svg)
 [![GitHub release](https://img.shields.io/github/release/crossroadlabs/Express.svg)](https://github.com/crossroadlabs/Express/releases)
 
 ### Being [perfectionists](http://www.crossroadlabs.xyz), we took the best from what we think is the best: power of [Play Framework](https://www.playframework.com/) and simplicity of [Express.js](http://expressjs.com/)
@@ -94,7 +105,7 @@ Still if you want to benefit from asynchronicity, we provide a very powerful API
 Let's assume you have following function somewhere:
 
 ```swift
-func calcFactorial(num:Int) -> Future<Int, AnyError>
+func calcFactorial(num:Double) -> Future<Double, AnyError>
 ```
 
 it's a purely asyncronous function that returns future. It would be really nice if it could be handled asynchronously as well in a nice functional way. Here is an example of how it could be done.
@@ -105,7 +116,7 @@ it's a purely asyncronous function that returns future. It would be really nice 
 // hopefully inference in swift will get better eventually and just "request in" will be enough
 app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
     // get the number from the url
-    let num = request.params["num"].flatMap{Int($0)}.getOrElse(0)
+    let num = request.params["num"].flatMap{Double($0)}.getOrElse(0)
     
     // get the factorial Future. Returns immediately - non-blocking
     let factorial = calcFactorial(num)
@@ -126,7 +137,7 @@ Let's get our echo example from [Getting Started](#getting-started) a bit furthe
 
 ```swift
 //:param - this is how you define a part of URL you want to receive through request object
-app.get("/myecho/:param") { request in
+app.get("/echo/:param") { request in
     //here you get the param from request: request.params["param"]
     return Action.ok(request.params["param"])
 }
@@ -214,6 +225,7 @@ Now create a file called `hello.mustache` in the `views` directory:
 ```
 
 Add a new request handler:
+
 ```swift
 //user as an url param
 app.get("/hello/:user.html") { request in
@@ -227,6 +239,9 @@ app.get("/hello/:user.html") { request in
 ```
 
 Now follow the link to see the result: [http://localhost:9999/hello/express.html](http://localhost:9999/hello/express.html)
+
+
+### If you want more, please, visit our [documentation](./doc/index.md) page
 
 ## Ideology behind
 

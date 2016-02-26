@@ -21,14 +21,17 @@
 
 import Foundation
 import BrightFutures
+import Result
 
-protocol ServerType {
-    var router:RouterType {
+public protocol ServerType {
+    var port:UInt16 {get}
+    
+    var app:Express {
         get
     }
     
-    func start(port:UInt16) -> Future<Void, NoError>
+    func start() -> Future<ServerType, NoError>
     
-    init(router:RouterType)
+    init(app:Express, port:UInt16)
 }
 

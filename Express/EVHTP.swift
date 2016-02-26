@@ -21,7 +21,11 @@
 
 import Foundation
 import CEVHTP
+import Result
 import BrightFutures
+#if os(Linux)
+    import Glibc
+#endif
 
 internal typealias EVHTPp = UnsafeMutablePointer<evhtp_t>
 internal typealias EVHTPRequest = UnsafeMutablePointer<evhtp_request_t>
@@ -184,9 +188,27 @@ private func request_callback(req: EVHTPRequest, callbk: UnsafeMutablePointer<Vo
     evhtp_request_pause(req)
 }
 
+private func sockaddr_size(saddr: UnsafeMutablePointer<sockaddr>) -> Int {
+    #if os(Linux)
+        switch Int32(saddr.memory.sa_family) {
+            case AF_INET:
+                return strideof(sockaddr_in)
+            case AF_INET6:
+                return strideof(sockaddr_in6)
+            case AF_LOCAL:
+                return strideof(sockaddr_un)
+            default:
+                return 0
+        }
+    #else
+        return Int(saddr.memory.sa_len)
+    #endif
+}
 
 internal class EVHTPRequestInfo {
     private let req:EVHTPRequest
+
+
     
     var headers: Dictionary<String, String> {
         get {
@@ -314,7 +336,7 @@ internal class EVHTPRequestInfo {
     var remoteIp: String {
         get {
             let mbuf = UnsafeMutablePointer<Int8>.alloc(Int(INET6_ADDRSTRLEN))
-            let err = getnameinfo(req.memory.conn.memory.saddr, UInt32(req.memory.conn.memory.saddr.memory.sa_len), mbuf, UInt32(INET6_ADDRSTRLEN), nil, 0, NI_NUMERICHOST)
+            let err = getnameinfo(req.memory.conn.memory.saddr, UInt32(sockaddr_size(req.memory.conn.memory.saddr)), mbuf, UInt32(INET6_ADDRSTRLEN), nil, 0, NI_NUMERICHOST)
             var res = ""
             if err == 0 {
                 let t = String.fromCString(mbuf)
@@ -425,3 +447,11 @@ internal class _evhtp {
 }
 
 internal let EVHTP = _evhtp()
+
+func evhtp_parse_query(query:String) -> [String: [String]] {
+    let parsed = evhtp_parse_query_wflags(query, query.utf8.count,EVHTP_PARSE_QUERY_FLAG_IGNORE_HEX | EVHTP_PARSE_QUERY_FLAG_ALLOW_EMPTY_VALS | EVHTP_PARSE_QUERY_FLAG_ALLOW_NULL_VALS | EVHTP_PARSE_QUERY_FLAG_TREAT_SEMICOLON_AS_SEP)
+    defer {
+        evhtp_kvs_free(parsed)
+    }
+    return RepeatingHeaderDict.fromHeaders(parsed).dict
+}

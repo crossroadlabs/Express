@@ -28,6 +28,7 @@ public enum ExpressError : ErrorType {
     case NotImplemented(description:String)
     case FileNotFound(filename:String)
     case PageNotFound(path:String)
+    case RouteNotFound(path:String)
     case NoSuchView(name:String)
     case Render(description:String, line:Int?, cause:ErrorType?)
 }
@@ -42,6 +43,7 @@ func ExpressErrorHandler(e:ErrorType) -> AbstractActionType? {
         case .FileNotFound(let filename): return Action<AnyContent>.internalServerError("File not found: " + filename)
         case .NoSuchView(let name): return Action<AnyContent>.internalServerError("View not found: " + name)
         case .PageNotFound(let path): return Action<AnyContent>.notFound(path)
+        case .RouteNotFound(let path): return Action<AnyContent>.routeNotFound(path)
         case .Render(var description, line: let line, cause: let e):
             description += "\n\n"
             if (line != nil) {

@@ -1,4 +1,4 @@
-//===--- Queue.swift ------------------------------------------------------===//
+//===--- Utils.swift -------------------------------------------===//
 //
 //Copyright (c) 2015-2016 Daniel Leping (dileping)
 //
@@ -19,14 +19,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-
 import Foundation
-import BrightFutures
-import Dispatch
 
-extension Queue {
-    static let user:Queue = Queue.global
-    static let action:Queue = Queue(queue: dispatch_queue_create("action", DISPATCH_QUEUE_CONCURRENT))
-    static let render:Queue = Queue(queue: dispatch_queue_create("render", DISPATCH_QUEUE_CONCURRENT))
-    static let view:Queue = Queue(queue: dispatch_queue_create("view", DISPATCH_QUEUE_SERIAL))
-}
+#if !os(Linux)
+    extension String {
+        func bridge() -> NSString {
+            return self as NSString
+        }
+    }
+#endif
