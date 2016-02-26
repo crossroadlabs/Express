@@ -56,7 +56,7 @@ extension Array : StencilNormalizable {
 extension Dictionary : StencilNormalizable {
     func normalize() -> Any {
         let normalized = self.map { (k, v) in
-            (k, v as Any)
+            (k, normalizeValue(v))
         }
         return toMap(normalized)
     }
