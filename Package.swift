@@ -23,6 +23,7 @@ import PackageDescription
 
 let package = Package(
     name: "Express",
+    exclude: ["doc"],
     targets: [
         Target(
             name: "Express"
