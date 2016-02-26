@@ -132,20 +132,25 @@ private func server_thread(pm: UnsafeMutablePointer<Void>) -> UnsafeMutablePoint
 }
 
 class HttpServer : ServerType {
+    let port:UInt16
     let app:Express
     let thread: UnsafeMutablePointer<pthread_t>
     
-    func start(port:UInt16) -> Future<Void, NoError> {
+    func start() -> Future<ServerType, NoError> {
         let params = ServerParams(promise: Promise<Void, NoError>(), port: port, app: app)
         
         pthread_create(thread, nil, server_thread, UnsafeMutablePointer<Void>(Unmanaged.passRetained(params).toOpaque()))
-        return params.promise.future
+        return params.promise.future.map {
+            self
+        }
     }
     
-    required init(app:Express) {
+    required init(app:Express, port:UInt16) {
+        self.port = port
         self.app = app
         self.thread = UnsafeMutablePointer<pthread_t>.alloc(1)
     }
+    
     deinit {
         self.thread.destroy()
         self.thread.dealloc(1)

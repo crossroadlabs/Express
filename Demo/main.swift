@@ -203,8 +203,8 @@ app.post("/merged/query") { request in
     Action.render(JsonView.name, context: request.mergedQuery())
 }
 
-app.listen(9999).onSuccess {
-    print("Successfully launched server")
+app.listen(9999).onSuccess { server in
+    print("Express was successfully launched on port", server.port)
 }
 
 app.run()

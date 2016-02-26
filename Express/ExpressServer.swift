@@ -25,9 +25,9 @@ import ExecutionContext
 import BrightFutures
 
 public extension Express {
-    func listen(port:UInt16) -> Future<Void, NoError> {
-        let server = HttpServer(app: self)
-        return server.start(port)
+    func listen(port:UInt16) -> Future<ServerType, NoError> {
+        let server = HttpServer(app: self, port: port)
+        return server.start()
     }
     
     @noreturn func run() {
