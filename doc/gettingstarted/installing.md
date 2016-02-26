@@ -39,23 +39,22 @@ Ubuntu 14.4 does not have `libevhtp-dev` package. So you have to install everyth
 sudo apt-get install libevent-dev libssl-dev
 ```
 
-and install `libevhtp-dev` from sources from this repo [ellzey/libevhtp](https://github.com/ellzey/libevhtp) or use our package `apt` package:
+and then install `libevhtp-dev` from sources from this repo [ellzey/libevhtp](https://github.com/ellzey/libevhtp) or use our pre-built `apt` package:
 
 ```sh
 TBD
 ```
 
 * [Dispatch](https://swift.org/core-libraries/#libdispatch) _(optional)_
-	* For more information see dedicated [Dispatch installation section](#), please.
+	* For more information refer to the dedicated [Dispatch installation section](#installing-dispatch-on-linux), please.
 
 	
-##### We have not ported our command line tools to linux yet, so either [generate project on OS X](#) or use [this](#) temporary script:
+##### We have not ported our command line tools to Linux yet, so either [generate project on OS X](#) and then use it or use [this](#) temporary script:
 
 ```sh
 TBD
 # download the script
 ```
-
 	
 ### Installing [Dispatch](https://swift.org/core-libraries/#libdispatch) on Linux
 
