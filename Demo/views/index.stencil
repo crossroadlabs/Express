@@ -1,0 +1,8 @@
+<html>
+<body>
+<h1>Examples:</h1>
+{% for example in examples %}
+<p><a href="{{example.link}}">{{example.title}}</a></p>
+{% endfor %}
+</body>
+</html>

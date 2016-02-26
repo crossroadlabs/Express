@@ -150,10 +150,20 @@ app.get("/render.html") { request in
 
 //TODO: make a list of pages
 app.get("/") { request in
-    for me in request.body?.asJSON().map({$0["test"]}) {
-        print(me)
-    }
-    return Action.ok(AnyContent(str:"{\"response\": \"hey hey\"}", contentType: "application/json"))
+    let examples = [
+        ["title": "Hello Express", "link": "/hello"],
+        ["title": "Echo", "link": "/echo?call=hello"],
+        ["title": "Echo with param", "link": "/echo/hello"],
+        ["title": "Error recoverable (will redirect back)", "link": "/error"],
+        ["title": "Error fatal", "link": "/error/thebigbanghappened"],
+        ["title": "Custom 404", "link": "/thisfiledoesnotexist"],
+        ["title": "Hello [username]. You can put your name instead", "link": "/hello/username.html"],
+        ///api/user - implement JSON post form
+        ["title": "Asynchronous factorial", "link": "/factorial/200"],
+        ["title": "Render", "link": "/render.html?sun=yellow&clouds=lightgray"],
+    ]
+    
+    return Action.render("index", context: ["examples": examples])
 }
 
 app.get("/test/redirect") { request in
