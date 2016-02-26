@@ -27,7 +27,6 @@
 		651826801C2208A800E49AC5 /* Express.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651475CE1C21F1550049825D /* Express.framework */; };
 		651A23451C80552100A8480E /* 404.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 651A23441C80552100A8480E /* 404.stencil */; };
 		651A23471C80D98700A8480E /* index.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 651A23461C80D98700A8480E /* index.stencil */; };
-		651A23491C80F31000A8480E /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 651A23481C80F31000A8480E /* index.html */; };
 		6525AC541C24E3C600131F58 /* Mustache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; };
 		6525AC551C24E3E000131F58 /* Mustache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; };
 		6525AC561C24E3E700131F58 /* Mustache.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -132,7 +131,6 @@
 		6518267E1C22081600E49AC5 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		651A23441C80552100A8480E /* 404.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 404.stencil; sourceTree = "<group>"; };
 		651A23461C80D98700A8480E /* index.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.stencil; sourceTree = "<group>"; };
-		651A23481C80F31000A8480E /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		6525AC531C24E3C600131F58 /* Mustache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mustache.framework; path = Carthage/Build/Mac/Mustache.framework; sourceTree = "<group>"; };
 		655077451C2D936100E42309 /* Static.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Static.swift; sourceTree = "<group>"; };
 		655077491C2DC31500E42309 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
@@ -295,7 +293,6 @@
 			isa = PBXGroup;
 			children = (
 				655077491C2DC31500E42309 /* logo.png */,
-				651A23481C80F31000A8480E /* index.html */,
 			);
 			path = public;
 			sourceTree = "<group>";
@@ -433,7 +430,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				651A23491C80F31000A8480E /* index.html in Resources */,
 				65E646EC1C79AD280036D028 /* hello.stencil in Resources */,
 				651A23471C80D98700A8480E /* index.stencil in Resources */,
 				65E646F01C79AF6C0036D028 /* colored.stencil in Resources */,
