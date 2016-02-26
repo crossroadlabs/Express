@@ -81,7 +81,7 @@ class StencilView : ViewType {
         self.loader = loader
     }
     
-    func render<C>(context:C?) throws -> ResponseType {
+    func render<C>(context:C?) throws -> FlushableContentType {
         do {
             let edibleOption = context.flatMap{$0 as? StencilCookable }?.cook()
             let contextSupplied:[String:Any] = edibleOption.getOrElse(Dictionary())
@@ -103,7 +103,7 @@ class StencilView : ViewType {
             
             let stencilContext = Context(dictionary: finalContext)
             let render = try template.render(stencilContext)
-            return Response(status: .Ok, content: AnyContent(str:render, contentType: "text/html"))
+            return AnyContent(str:render, contentType: "text/html")!
         } catch let e as TemplateSyntaxError {
             throw ExpressError.Render(description: e.description, line: nil, cause: e)
         }

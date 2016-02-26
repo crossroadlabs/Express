@@ -65,15 +65,24 @@ extension ResponseAction where C : FlushableContent {
 class RenderAction<C : FlushableContentType, Context> : Action<C>, IntermediateActionType {
     let view:String
     let context:Context?
+    let status:StatusCode
+    let headers:Dictionary<String, String>
     
-    init(view:String, context:Context?) {
+    init(view:String, context:Context?, status:StatusCode = .Ok, headers:Dictionary<String, String> = Dictionary()) {
         self.view = view
         self.context = context
+        self.status = status
+        self.headers = headers
+    }
+    
+    private func response<RC:FlushableContentType>(status:StatusCode, content:RC?, headers:Dictionary<String, String>) -> Response<RC> {
+        return Response(status: status, content: content, headers: headers)
     }
     
     func nextAction<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<AbstractActionType, AnyError> {
-        return app.views.render(view, context: context).map { response in
-            ResponseAction(response: response)
+        return app.views.render(view, context: context).map { content in
+            let response = Response(status: self.status, content: content, headers: self.headers)
+            return ResponseAction(response: response)
         }
     }
 }
@@ -144,8 +153,8 @@ public extension Action {
         return chain(nilRequest())
     }
     
-    public class func render<Context>(view:String, context:Context? = nil) -> Action<C> {
-        return RenderAction(view: view, context: context)
+    public class func render<Context>(view:String, context:Context? = nil, status:StatusCode = .Ok, headers:Dictionary<String, String> = Dictionary()) -> Action<C> {
+        return RenderAction(view: view, context: context, status: status, headers: headers)
     }
     
     public class func response(response:Response<C>) -> Action<C> {

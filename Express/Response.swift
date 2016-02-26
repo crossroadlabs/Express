@@ -78,3 +78,12 @@ public class Response<C : FlushableContentType> : HttpResponseHead, HeadersAdjus
         return h.getOrElse(headers)
     }
 }
+
+extension Response where C : FlushableContent {
+    convenience init(status:StatusCode, content:FlushableContentType?, headers:Dictionary<String, String> = Dictionary()) {
+        let content = content.map { content in
+            C(content: content)
+        }
+        self.init(status: status, content: content, headers: headers)
+    }
+}
