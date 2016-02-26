@@ -22,6 +22,12 @@ brew install swift-express
 * [Linux](http://www.linux.org/), one of the following distributions will work:
 	* [Ubuntu 15.10 (Wily Werewolf)](http://releases.ubuntu.com/15.10/)
 	* [Ubuntu 14.04 (Trusty Tahr)](http://releases.ubuntu.com/14.04/)
+	* We have exprerienced some dependencies missing if installing by original instructions from [swift.org](http://swift.org/). Install these dependencies first, please:
+
+```sh
+apt-get install clang binutils libicu-dev
+```
+	
 * [Swift](https://swift.org/), the latest development snapshot from [here](https://swift.org/download/#latest-development-snapshots)
 	* _You should have swift at least of 25.02.2016_
 	* Installation instructions are [here](https://swift.org/getting-started/#on-linux)
