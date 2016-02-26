@@ -1,7 +1,7 @@
 [//]: https://www.iconfinder.com/icons/383207/doc_tag_icon#size=64
-<p align="center"><a href="#swift-express"><img src ="./logo-full.png" height=256/></a><a href="./doc/index.md"><h5>Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/></h5></a></p>
+<p align="center"><a href="#swift-express"><img src ="./logo-full.png" height=256/></a><a href="./doc/index.md"><h5 align="right">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/></h5></a></p>
 
-# Swift Express {:style="float:right"}
+# Swift Express
 
 [![GitHub license](https://img.shields.io/badge/license-LGPL v3-green.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
 [![Build Status](https://travis-ci.org/crossroadlabs/Express.svg?branch=master)](https://travis-ci.org/crossroadlabs/Express)
