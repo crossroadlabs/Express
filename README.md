@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/crossroadlabs/Express.svg?branch=master)](https://travis-ci.org/crossroadlabs/Express)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ![Platform OS X | Linux](https://img.shields.io/badge/platform-OS%20X%20%7C%20Linux-orange.svg)
-![Swift version](https://img.shields.io/badge/Swift-2.1-blue.svg)
+![Swift version](https://img.shields.io/badge/Swift-2.1 | 2.2-blue.svg)
 [![GitHub release](https://img.shields.io/github/release/crossroadlabs/Express.svg)](https://github.com/crossroadlabs/Express/releases)
 
 ### Being [perfectionists](http://www.crossroadlabs.xyz), we took the best from what we think is the best: power of [Play Framework](https://www.playframework.com/) and simplicity of [Express.js](http://expressjs.com/)
@@ -214,6 +214,7 @@ Now create a file called `hello.mustache` in the `views` directory:
 ```
 
 Add a new request handler:
+
 ```swift
 //user as an url param
 app.get("/hello/:user.html") { request in
@@ -227,6 +228,9 @@ app.get("/hello/:user.html") { request in
 ```
 
 Now follow the link to see the result: [http://localhost:9999/hello/express.html](http://localhost:9999/hello/express.html)
+
+
+### If you want more, please, visit our [documentation](./doc/index.md) page
 
 ## Ideology behind
 
