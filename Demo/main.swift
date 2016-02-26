@@ -161,6 +161,8 @@ app.get("/") { request in
         ///api/user - implement JSON post form
         ["title": "Asynchronous factorial", "link": "/factorial/100"],
         ["title": "Render", "link": "/render.html?sun=yellow&clouds=lightgray"],
+        ["title": "Redirect", "link": "/test/redirect"],
+        ["title": "Merged query (form url encoded and query string)", "link": "/merged/query?some=param&another=param2"],
     ]
     
     return Action.render("index", context: ["examples": examples])
@@ -168,12 +170,12 @@ app.get("/") { request in
 
 app.get("/test/redirect") { request in
     return future {
-        let to = request.query["to"].flatMap{$0.first}.getOrElse("../test.html")
+        let to = request.query["to"].flatMap{$0.first}.getOrElse("../render.html")
         return Action.redirect(to)
     }
 }
 
-app.post("/merged/query") { request in
+app.all("/merged/query") { request in
     Action.render(JsonView.name, context: request.mergedQuery())
 }
 
