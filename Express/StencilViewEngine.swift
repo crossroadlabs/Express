@@ -35,10 +35,37 @@ private protocol StencilCookable {
     func cook() -> StencilEdible
 }
 
+private protocol StencilNormalizable {
+    func normalizeValue(value:Any) -> Any
+    func normalize() -> Any
+}
+
+extension StencilNormalizable {
+    func normalizeValue(value:Any) -> Any {
+        let normalizable = value as? StencilNormalizable
+        return normalizable.map {$0.normalize()} .getOrElse(value)
+    }
+}
+
+extension Array : StencilNormalizable {
+    func normalize() -> Any {
+        return self.map(normalizeValue)
+    }
+}
+
+extension Dictionary : StencilNormalizable {
+    func normalize() -> Any {
+        let normalized = self.map { (k, v) in
+            (k, v as Any)
+        }
+        return toMap(normalized)
+    }
+}
+
 extension Dictionary : StencilCookable {
     func cook() -> StencilEdible {
         return self.map { (k,v) in
-            (String(k), v)
+            return (String(k), normalizeValue(v))
         }
     }
 }
