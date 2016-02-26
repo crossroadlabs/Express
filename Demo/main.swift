@@ -165,18 +165,6 @@ app.get("/test2.html") { request in
     return Action.render("test2", context: try testItems(request))
 }
 
-app.get("/echo") { request in
-    return Action.chain()
-}
-
-app.get("/myecho") { request in
-    return Action.ok(AnyContent(str: request.query["message"]?.first))
-}
-
-app.get("/hello") { request in
-    return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
-}
-
 app.get("/") { request in
     for me in request.body?.asJSON().map({$0["test"]}) {
         print(me)
@@ -202,40 +190,6 @@ func echoRender(request:Request<AnyContent>) -> Action<AnyContent> {
     var data = echoData(request)
     data["hey"] = "Hello from render"
     return Action.render(JsonView.name, context: data)
-}
-
-app.post("/echo/inline") { request in
-    let call = request.body?.asJSON().map({$0["say"]})?.string
-    let response = call.getOrElse("I don't hear you!")
-    
-    return Action.ok(AnyContent(str:"{\"said\": \"" + response + "\"}", contentType: "application/json"))
-}
-
-app.get("/echo") { request in
-    return echo(request)
-}
-
-app.get("/echo/render", handler: echoRender)
-app.post("/echo/render", handler: echoRender)
-
-app.post("/echo") { request in
-    return echo(request)
-}
-
-app.post("/echo2") { request in
-    return Action.ok(AnyContent(str: request.body?.asText().map {"Text echo: " + $0},
-        contentType: request.contentType))
-}
-
-app.post("/echo3") { request in
-    return Action.ok(AnyContent(data: request.body?.asRaw(),
-        contentType: request.contentType))
-}
-
-app.all("/async/echo") { request in
-    return future {
-        return echo(request)
-    }
 }
 
 app.get("/test/redirect") { request in
