@@ -1,5 +1,5 @@
 [//]: https://www.iconfinder.com/icons/383207/doc_tag_icon#size=64
-<p align="center"><a href="#swift-express"><img src ="./logo-full.png" height=256/></a><a href="./doc/index.md"><h5 align="right">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/></h5></a></p>
+<p align="center"><a href="#swift-express"><img src ="./logo-full.png" height=256/></a><a href="./doc/index.md"><h5 align="right">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/></h5></a><a href="http://demo.swiftexpress.io/"><h5 align="right">Live 🐧 server running Demo  <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/34/play-circle-32.png" height=16/></h5></a></p>
 
 # Swift Express
 
