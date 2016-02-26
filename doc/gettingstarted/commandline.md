@@ -26,5 +26,5 @@ swift-express run
 
 Full documentation of [Express Command Line](https://github.com/crossroadlabs/ExpressCommandLine) can be found here [crossroadlabs/ExpressCommandLine](https://github.com/crossroadlabs/ExpressCommandLine).
 
-# Next tutorial: [Basic Routing](./routing.md.md)
+# Next tutorial: [Basic Routing](./routing.md)
 
