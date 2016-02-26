@@ -29,7 +29,6 @@
 		6525AC541C24E3C600131F58 /* Mustache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; };
 		6525AC551C24E3E000131F58 /* Mustache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; };
 		6525AC561C24E3E700131F58 /* Mustache.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		652E5E951C6BD79700C11021 /* hello.mustache in Resources */ = {isa = PBXBuildFile; fileRef = 652E5E941C6BD79700C11021 /* hello.mustache */; };
 		655077461C2D936100E42309 /* Static.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655077451C2D936100E42309 /* Static.swift */; };
 		6550774A1C2DC31500E42309 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 655077491C2DC31500E42309 /* logo.png */; };
 		6550774C1C2DC8E500E42309 /* MIME.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550774B1C2DC8E500E42309 /* MIME.swift */; };
@@ -75,7 +74,7 @@
 		65E646E71C79A5010036D028 /* PathKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646E11C79A4EB0036D028 /* PathKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		65E646E81C79A5010036D028 /* Stencil.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646E21C79A4EB0036D028 /* Stencil.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		65E646EA1C79A5340036D028 /* StencilViewEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E646E91C79A5340036D028 /* StencilViewEngine.swift */; };
-		65E646EC1C79AD280036D028 /* hello2.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646EB1C79AD280036D028 /* hello2.stencil */; };
+		65E646EC1C79AD280036D028 /* hello.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646EB1C79AD280036D028 /* hello.stencil */; };
 		65E646EE1C79AF4E0036D028 /* test2.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646ED1C79AF4E0036D028 /* test2.stencil */; };
 		65E646F01C79AF6C0036D028 /* colored2.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646EF1C79AF6C0036D028 /* colored2.stencil */; };
 		961B9E8B1C23229A000506D2 /* libevent.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 961B9E8A1C23229A000506D2 /* libevent.dylib */; };
@@ -133,7 +132,6 @@
 		6518267E1C22081600E49AC5 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		651A23441C80552100A8480E /* 404.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 404.stencil; sourceTree = "<group>"; };
 		6525AC531C24E3C600131F58 /* Mustache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mustache.framework; path = Carthage/Build/Mac/Mustache.framework; sourceTree = "<group>"; };
-		652E5E941C6BD79700C11021 /* hello.mustache */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hello.mustache; sourceTree = "<group>"; };
 		655077451C2D936100E42309 /* Static.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Static.swift; sourceTree = "<group>"; };
 		655077491C2DC31500E42309 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		6550774B1C2DC8E500E42309 /* MIME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MIME.swift; sourceTree = "<group>"; };
@@ -165,7 +163,7 @@
 		65E646E11C79A4EB0036D028 /* PathKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PathKit.framework; path = Carthage/Build/Mac/PathKit.framework; sourceTree = "<group>"; };
 		65E646E21C79A4EB0036D028 /* Stencil.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stencil.framework; path = Carthage/Build/Mac/Stencil.framework; sourceTree = "<group>"; };
 		65E646E91C79A5340036D028 /* StencilViewEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StencilViewEngine.swift; sourceTree = "<group>"; };
-		65E646EB1C79AD280036D028 /* hello2.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hello2.stencil; sourceTree = "<group>"; };
+		65E646EB1C79AD280036D028 /* hello.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hello.stencil; sourceTree = "<group>"; };
 		65E646ED1C79AF4E0036D028 /* test2.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test2.stencil; sourceTree = "<group>"; };
 		65E646EF1C79AF6C0036D028 /* colored2.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = colored2.stencil; sourceTree = "<group>"; };
 		961B9E8A1C23229A000506D2 /* libevent.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevent.dylib; path = ../../../../../usr/local/lib/libevent.dylib; sourceTree = "<group>"; };
@@ -306,8 +304,7 @@
 			children = (
 				657C1A741C24E0F40037041F /* test.mustache */,
 				659157FE1C285AFA00672785 /* colored.mustache */,
-				652E5E941C6BD79700C11021 /* hello.mustache */,
-				65E646EB1C79AD280036D028 /* hello2.stencil */,
+				65E646EB1C79AD280036D028 /* hello.stencil */,
 				65E646ED1C79AF4E0036D028 /* test2.stencil */,
 				65E646EF1C79AF6C0036D028 /* colored2.stencil */,
 				651A23441C80552100A8480E /* 404.stencil */,
@@ -436,13 +433,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65E646EC1C79AD280036D028 /* hello2.stencil in Resources */,
+				65E646EC1C79AD280036D028 /* hello.stencil in Resources */,
 				65E646F01C79AF6C0036D028 /* colored2.stencil in Resources */,
 				65E646EE1C79AF4E0036D028 /* test2.stencil in Resources */,
 				651A23451C80552100A8480E /* 404.stencil in Resources */,
 				659157FF1C285AFA00672785 /* colored.mustache in Resources */,
 				657C1A751C24E0F40037041F /* test.mustache in Resources */,
-				652E5E951C6BD79700C11021 /* hello.mustache in Resources */,
 				6550774A1C2DC31500E42309 /* logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

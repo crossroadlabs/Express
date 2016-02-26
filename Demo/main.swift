@@ -87,16 +87,6 @@ app.get("/hello/:user.html") { request in
     return Action.render("hello", context: context)
 }
 
-//user as an url param
-app.get("/hello2/:user.html") { request in
-    //get user
-    let user = request.params["user"]
-    //if there is a user - create our context. If there is no user, context will remain nil
-    let context = user.map {["user": $0]}
-    //render our template named "hello"
-    return Action.render("hello2", context: context)
-}
-
 app.post("/api/user") { request in
     //check if JSON has arrived
     guard let json = request.body?.asJSON() else {
