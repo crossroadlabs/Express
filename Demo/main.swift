@@ -19,6 +19,10 @@ app.views.register(JsonView())
 app.views.register(MustacheViewEngine())
 app.views.register(StencilViewEngine())
 
+app.get("/echo") { request in
+    return Action.ok(request.query["call"]?.first)
+}
+
 enum TestError {
     case Test
     case Test2
@@ -71,10 +75,6 @@ app.get("/:file+", action: StaticAction(path: "public", param:"file"))
 
 app.get("/hello") { request in
     return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
-}
-
-app.get("/echo") { request in
-    return Action.ok(request.query["call"]?.first)
 }
 
 //user as an url param
