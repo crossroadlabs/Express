@@ -27,22 +27,17 @@ brew install swift-express
 	* Installation instructions are [here](https://swift.org/getting-started/#on-linux)
 * Dependency libraries:
 
-If you are using Ubuntu 15.10, you are lucky. Just install the dependencies from `apt`:
+If you are using Ubuntu 15.10, you are lucky. Skip the following step. If you are on Ubuntu 14.04 you need to add our repo to your `apt`:
 
 ```sh
-sudo apt-get install libevhtp-dev libevent-dev libssl-dev
+sudo add-apt-repository ppa:swiftexpress/swiftexpress
+sudo apt-get update
 ```
 
-Ubuntu 14.4 does not have `libevhtp-dev` package. So you have to install everything else:
+Following is common for both Ubuntu 14.04 and Ubuntu 15.10:
 
 ```sh
-sudo apt-get install libevent-dev libssl-dev
-```
-
-and then install `libevhtp-dev` from sources from this repo [ellzey/libevhtp](https://github.com/ellzey/libevhtp) or use our pre-built `apt` package:
-
-```sh
-TBD
+sudo apt-get install libevhtp-dev libevent-dev libssl-dev git
 ```
 
 * [Dispatch](https://swift.org/core-libraries/#libdispatch) _(optional)_
