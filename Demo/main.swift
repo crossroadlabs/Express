@@ -105,21 +105,17 @@ app.post("/api/user") { request in
     return Action.render(JsonView.name, context: response)
 }
 
-app.get("/myecho") { request in
-    return Action.ok(request.query["message"]?.first)
-}
-
 //:param - this is how you define a part of URL you want to receive through request object
-app.get("/myecho/:param") { request in
+app.get("/echo/:param") { request in
     //here you get the param from request: request.params["param"]
     return Action.ok(request.params["param"])
 }
 
-func factorial(n: Int) -> Int {
+func factorial(n: Double) -> Double {
     return n == 0 ? 1 : n * factorial(n - 1)
 }
 
-func calcFactorial(num:Int) -> Future<Int, AnyError> {
+func calcFactorial(num:Double) -> Future<Double, AnyError> {
     return future {
         return factorial(num)
     }
@@ -129,7 +125,7 @@ func calcFactorial(num:Int) -> Future<Int, AnyError> {
 // hopefully inference in swift will get better eventually and just "request in" will be enough
 app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
     // get the number from the url
-    let num = request.params["num"].flatMap{Int($0)}.getOrElse(0)
+    let num = request.params["num"].flatMap{Double($0)}.getOrElse(0)
     
     // get the factorial Future. Returns immediately - non-blocking
     let factorial = calcFactorial(num)
@@ -141,12 +137,6 @@ app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyErro
     
     //return the future
     return future
-}
-
-app.get("/test") { req in
-    return future {
-        return try test()
-    }
 }
 
 func testItems(request:Request<AnyContent>) throws -> [String: Any] {

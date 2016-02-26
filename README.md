@@ -94,7 +94,7 @@ Still if you want to benefit from asynchronicity, we provide a very powerful API
 Let's assume you have following function somewhere:
 
 ```swift
-func calcFactorial(num:Int) -> Future<Int, AnyError>
+func calcFactorial(num:Double) -> Future<Double, AnyError>
 ```
 
 it's a purely asyncronous function that returns future. It would be really nice if it could be handled asynchronously as well in a nice functional way. Here is an example of how it could be done.
@@ -105,7 +105,7 @@ it's a purely asyncronous function that returns future. It would be really nice 
 // hopefully inference in swift will get better eventually and just "request in" will be enough
 app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
     // get the number from the url
-    let num = request.params["num"].flatMap{Int($0)}.getOrElse(0)
+    let num = request.params["num"].flatMap{Double($0)}.getOrElse(0)
     
     // get the factorial Future. Returns immediately - non-blocking
     let factorial = calcFactorial(num)
@@ -126,7 +126,7 @@ Let's get our echo example from [Getting Started](#getting-started) a bit furthe
 
 ```swift
 //:param - this is how you define a part of URL you want to receive through request object
-app.get("/myecho/:param") { request in
+app.get("/echo/:param") { request in
     //here you get the param from request: request.params["param"]
     return Action.ok(request.params["param"])
 }
