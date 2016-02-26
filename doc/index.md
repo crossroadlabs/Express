@@ -2,7 +2,7 @@
 
 * Getting started
 	* [Installing](./gettingstarted/installing.md)
-	* Hello world
+	* [Hello Express](./gettingstarted/helloexpress.md)
 	* Express command line
 	* Basic routing
 	* Static files
