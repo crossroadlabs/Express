@@ -159,7 +159,7 @@ app.get("/") { request in
         ["title": "Custom 404", "link": "/thisfiledoesnotexist"],
         ["title": "Hello [username]. You can put your name instead", "link": "/hello/username.html"],
         ///api/user - implement JSON post form
-        ["title": "Asynchronous factorial", "link": "/factorial/200"],
+        ["title": "Asynchronous factorial", "link": "/factorial/100"],
         ["title": "Render", "link": "/render.html?sun=yellow&clouds=lightgray"],
     ]
     
