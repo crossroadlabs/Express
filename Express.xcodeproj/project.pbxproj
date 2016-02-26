@@ -39,7 +39,6 @@
 		657C1A6E1C24C8850037041F /* Views.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C1A6D1C24C8850037041F /* Views.swift */; };
 		657C1A701C24C8FF0037041F /* ViewEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C1A6F1C24C8FF0037041F /* ViewEngine.swift */; };
 		657C1A721C24DD1D0037041F /* MustacheViewEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C1A711C24DD1D0037041F /* MustacheViewEngine.swift */; };
-		657C1A751C24E0F40037041F /* test.mustache in Resources */ = {isa = PBXBuildFile; fileRef = 657C1A741C24E0F40037041F /* test.mustache */; };
 		657CDBCF1C2A07C5005261BA /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CDBCE1C2A07C5005261BA /* Errors.swift */; };
 		6589201B1C7A2982008EEE37 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6589201A1C7A2982008EEE37 /* Utils.swift */; };
 		658DBDA31C221A2A00BE8AA9 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */; };
@@ -51,7 +50,6 @@
 		658DBDAF1C22218100BE8AA9 /* Headers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658DBDAE1C22218100BE8AA9 /* Headers.swift */; };
 		658DBDB11C2228F000BE8AA9 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658DBDB01C2228F000BE8AA9 /* Response.swift */; };
 		658F1CC81C3BF017004968B9 /* UrlMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658F1CC71C3BF017004968B9 /* UrlMatcher.swift */; };
-		659157FF1C285AFA00672785 /* colored.mustache in Resources */ = {isa = PBXBuildFile; fileRef = 659157FE1C285AFA00672785 /* colored.mustache */; };
 		659E80AB1C7756C200DE85B1 /* TidyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 659E80AA1C7756C200DE85B1 /* TidyJSON.framework */; };
 		659E80AC1C7756D000DE85B1 /* TidyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 659E80AA1C7756C200DE85B1 /* TidyJSON.framework */; };
 		659E80AD1C7756DD00DE85B1 /* TidyJSON.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 659E80AA1C7756C200DE85B1 /* TidyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -75,8 +73,8 @@
 		65E646E81C79A5010036D028 /* Stencil.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646E21C79A4EB0036D028 /* Stencil.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		65E646EA1C79A5340036D028 /* StencilViewEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E646E91C79A5340036D028 /* StencilViewEngine.swift */; };
 		65E646EC1C79AD280036D028 /* hello.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646EB1C79AD280036D028 /* hello.stencil */; };
-		65E646EE1C79AF4E0036D028 /* test2.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646ED1C79AF4E0036D028 /* test2.stencil */; };
-		65E646F01C79AF6C0036D028 /* colored2.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646EF1C79AF6C0036D028 /* colored2.stencil */; };
+		65E646EE1C79AF4E0036D028 /* test.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646ED1C79AF4E0036D028 /* test.stencil */; };
+		65E646F01C79AF6C0036D028 /* colored.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646EF1C79AF6C0036D028 /* colored.stencil */; };
 		961B9E8B1C23229A000506D2 /* libevent.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 961B9E8A1C23229A000506D2 /* libevent.dylib */; };
 		961B9E8F1C2322CA000506D2 /* libevent_openssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 961B9E8E1C2322CA000506D2 /* libevent_openssl.dylib */; };
 		961B9E911C2324B4000506D2 /* EVHTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961B9E901C2324B4000506D2 /* EVHTP.swift */; };
@@ -142,7 +140,6 @@
 		657C1A6D1C24C8850037041F /* Views.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Views.swift; sourceTree = "<group>"; };
 		657C1A6F1C24C8FF0037041F /* ViewEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewEngine.swift; sourceTree = "<group>"; };
 		657C1A711C24DD1D0037041F /* MustacheViewEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MustacheViewEngine.swift; sourceTree = "<group>"; };
-		657C1A741C24E0F40037041F /* test.mustache */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.mustache; sourceTree = "<group>"; };
 		657CDBCE1C2A07C5005261BA /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		6589201A1C7A2982008EEE37 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BrightFutures.framework; path = Carthage/Build/Mac/BrightFutures.framework; sourceTree = "<group>"; };
@@ -150,7 +147,6 @@
 		658DBDAE1C22218100BE8AA9 /* Headers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Headers.swift; sourceTree = "<group>"; };
 		658DBDB01C2228F000BE8AA9 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		658F1CC71C3BF017004968B9 /* UrlMatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlMatcher.swift; sourceTree = "<group>"; };
-		659157FE1C285AFA00672785 /* colored.mustache */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = colored.mustache; sourceTree = "<group>"; };
 		659E80AA1C7756C200DE85B1 /* TidyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TidyJSON.framework; path = Carthage/Build/Mac/TidyJSON.framework; sourceTree = "<group>"; };
 		65BA1E971C25D38200BCE076 /* JsonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JsonView.swift; sourceTree = "<group>"; };
 		65BB8DAA1C2A226E00F8B52C /* ErrorHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorHandler.swift; sourceTree = "<group>"; };
@@ -164,8 +160,8 @@
 		65E646E21C79A4EB0036D028 /* Stencil.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stencil.framework; path = Carthage/Build/Mac/Stencil.framework; sourceTree = "<group>"; };
 		65E646E91C79A5340036D028 /* StencilViewEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StencilViewEngine.swift; sourceTree = "<group>"; };
 		65E646EB1C79AD280036D028 /* hello.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hello.stencil; sourceTree = "<group>"; };
-		65E646ED1C79AF4E0036D028 /* test2.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test2.stencil; sourceTree = "<group>"; };
-		65E646EF1C79AF6C0036D028 /* colored2.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = colored2.stencil; sourceTree = "<group>"; };
+		65E646ED1C79AF4E0036D028 /* test.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.stencil; sourceTree = "<group>"; };
+		65E646EF1C79AF6C0036D028 /* colored.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = colored.stencil; sourceTree = "<group>"; };
 		961B9E8A1C23229A000506D2 /* libevent.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevent.dylib; path = ../../../../../usr/local/lib/libevent.dylib; sourceTree = "<group>"; };
 		961B9E8E1C2322CA000506D2 /* libevent_openssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevent_openssl.dylib; path = ../../../../../usr/local/lib/libevent_openssl.dylib; sourceTree = "<group>"; };
 		961B9E901C2324B4000506D2 /* EVHTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EVHTP.swift; sourceTree = "<group>"; };
@@ -302,11 +298,9 @@
 		657C1A731C24E0F40037041F /* views */ = {
 			isa = PBXGroup;
 			children = (
-				657C1A741C24E0F40037041F /* test.mustache */,
-				659157FE1C285AFA00672785 /* colored.mustache */,
 				65E646EB1C79AD280036D028 /* hello.stencil */,
-				65E646ED1C79AF4E0036D028 /* test2.stencil */,
-				65E646EF1C79AF6C0036D028 /* colored2.stencil */,
+				65E646ED1C79AF4E0036D028 /* test.stencil */,
+				65E646EF1C79AF6C0036D028 /* colored.stencil */,
 				651A23441C80552100A8480E /* 404.stencil */,
 			);
 			path = views;
@@ -434,11 +428,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				65E646EC1C79AD280036D028 /* hello.stencil in Resources */,
-				65E646F01C79AF6C0036D028 /* colored2.stencil in Resources */,
-				65E646EE1C79AF4E0036D028 /* test2.stencil in Resources */,
+				65E646F01C79AF6C0036D028 /* colored.stencil in Resources */,
+				65E646EE1C79AF4E0036D028 /* test.stencil in Resources */,
 				651A23451C80552100A8480E /* 404.stencil in Resources */,
-				659157FF1C285AFA00672785 /* colored.mustache in Resources */,
-				657C1A751C24E0F40037041F /* test.mustache in Resources */,
 				6550774A1C2DC31500E42309 /* logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

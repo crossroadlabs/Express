@@ -23,25 +23,6 @@ app.get("/echo") { request in
     return Action.ok(request.query["call"]?.first)
 }
 
-enum TestError {
-    case Test
-    case Test2
-    
-    func items() -> Dictionary<String, String> {
-        switch self {
-            case .Test: return ["blood": "red"]
-            case .Test2: return ["sickness": "purple"]
-        }
-    }
-}
-
-extension TestError : ErrorType {
-}
-
-func test() throws -> Action<AnyContent> {
-    throw TestError.Test2
-}
-
 enum NastyError : ErrorType {
     case Recoverable
     case Fatal(reason:String)
@@ -64,23 +45,6 @@ app.errorHandler.register { (e:NastyError) in
         return Action<AnyContent>.response(.InternalServerError, content: content)
     }
 }
-
-app.errorHandler.register { e in
-    guard let e = e as? TestError else {
-        return nil
-    }
-    
-    let items = e.items()
-    
-    let viewItems = items.map { (k, v) in
-        ["name": k, "color": v]
-    }
-    
-    let context:[String: Any] = ["test": "error", "items": viewItems]
-    
-    return Action<AnyContent>.render("test", context: context)
-}
-
 
 /// Custom page not found error handler
 app.errorHandler.register { (e:ExpressError) in
@@ -172,47 +136,24 @@ func testItems(request:Request<AnyContent>) throws -> [String: Any] {
         ["name": k, "color": v]
     }
     
-    if ((request.query["throw"]?.first) != nil) {
-        throw TestError.Test
+    if let reason = request.query["throw"]?.first {
+        throw NastyError.Fatal(reason: reason)
     }
     
     return ["test": "ok", "items": viewItems]
 }
 
-app.get("/test.html") { request in
+app.get("/render.html") { request in
     let items = try testItems(request)
     return Action.render("test", context: items)
 }
 
-app.get("/test2.html") { request in
-    return Action.render("test2", context: try testItems(request))
-}
-
+//TODO: make a list of pages
 app.get("/") { request in
     for me in request.body?.asJSON().map({$0["test"]}) {
         print(me)
     }
     return Action.ok(AnyContent(str:"{\"response\": \"hey hey\"}", contentType: "application/json"))
-}
-
-func echoData(request:Request<AnyContent>) -> Dictionary<String, String> {
-    let call = request.body?.asJSON().map({$0["say"]})?.string
-    let response = call.getOrElse("I don't hear you!")
-    return ["said": response]
-}
-
-func echo(request:Request<AnyContent>) -> Action<AnyContent> {
-    let data = echoData(request)
-    let tuple = data.first!
-    let str = "{\"" + tuple.0 + "\": \"" + tuple.1 + "\"}"
-    
-    return Action<AnyContent>.ok(AnyContent(str:str, contentType: "application/json"))
-}
-
-func echoRender(request:Request<AnyContent>) -> Action<AnyContent> {
-    var data = echoData(request)
-    data["hey"] = "Hello from render"
-    return Action.render(JsonView.name, context: data)
 }
 
 app.get("/test/redirect") { request in
@@ -231,5 +172,3 @@ app.listen(9999).onSuccess { server in
 }
 
 app.run()
-
-//TODO: proper error handling for sync requests
