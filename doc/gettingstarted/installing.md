@@ -26,16 +26,35 @@ brew install swift-express
 	* _You should have swift at least of 25.02.2016_
 	* Installation instructions are [here](https://swift.org/getting-started/#on-linux)
 * Dependency libraries:
-	* If you are using Ubuntu 15.10, you are lucky. Just install the dependencies from `apt`:
+
+If you are using Ubuntu 15.10, you are lucky. Just install the dependencies from `apt`:
 
 ```sh
 sudo apt-get install libevhtp-dev libevent-dev libssl-dev
 ```
 
-	* 
+Ubuntu 14.4 does not have `libevhtp-dev` package. So you have to install everything else:
+
+```sh
+sudo apt-get install libevent-dev libssl-dev
+```
+
+and install `libevhtp-dev` from sources from this repo [ellzey/libevhtp](https://github.com/ellzey/libevhtp) or use our package `apt` package:
+
+```sh
+TBD
+```
 
 * [Dispatch](https://swift.org/core-libraries/#libdispatch) _(optional)_
 	* For more information see dedicated [Dispatch installation section](#), please.
+
+	
+##### We have not ported our command line tools to linux yet, so either [generate project on OS X](#) or use [this](#) temporary script:
+
+```sh
+TBD
+# download the script
+```
 
 	
 ### Installing [Dispatch](https://swift.org/core-libraries/#libdispatch) on Linux
@@ -82,7 +101,7 @@ sh ./autogen.sh
 make
 ```
 
-* Install (*Don't worry, it will not install system wide*)
+* Install (*Don't worry, it will NOT install system wide*)
 
 ```sh
 make install
