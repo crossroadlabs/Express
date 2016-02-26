@@ -25,6 +25,7 @@
 		650493771C22199300616444 /* ExpressSugar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650493661C22199300616444 /* ExpressSugar.swift */; };
 		6518267F1C22081600E49AC5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6518267E1C22081600E49AC5 /* main.swift */; };
 		651826801C2208A800E49AC5 /* Express.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651475CE1C21F1550049825D /* Express.framework */; };
+		651A23451C80552100A8480E /* 404.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 651A23441C80552100A8480E /* 404.stencil */; };
 		6525AC541C24E3C600131F58 /* Mustache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; };
 		6525AC551C24E3E000131F58 /* Mustache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; };
 		6525AC561C24E3E700131F58 /* Mustache.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -130,6 +131,7 @@
 		651826711C2207D200E49AC5 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6518267A1C2207D200E49AC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6518267E1C22081600E49AC5 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		651A23441C80552100A8480E /* 404.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 404.stencil; sourceTree = "<group>"; };
 		6525AC531C24E3C600131F58 /* Mustache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mustache.framework; path = Carthage/Build/Mac/Mustache.framework; sourceTree = "<group>"; };
 		652E5E941C6BD79700C11021 /* hello.mustache */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hello.mustache; sourceTree = "<group>"; };
 		655077451C2D936100E42309 /* Static.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Static.swift; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 				65E646EB1C79AD280036D028 /* hello2.stencil */,
 				65E646ED1C79AF4E0036D028 /* test2.stencil */,
 				65E646EF1C79AF6C0036D028 /* colored2.stencil */,
+				651A23441C80552100A8480E /* 404.stencil */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -436,6 +439,7 @@
 				65E646EC1C79AD280036D028 /* hello2.stencil in Resources */,
 				65E646F01C79AF6C0036D028 /* colored2.stencil in Resources */,
 				65E646EE1C79AF4E0036D028 /* test2.stencil in Resources */,
+				651A23451C80552100A8480E /* 404.stencil in Resources */,
 				659157FF1C285AFA00672785 /* colored.mustache in Resources */,
 				657C1A751C24E0F40037041F /* test.mustache in Resources */,
 				652E5E951C6BD79700C11021 /* hello.mustache in Resources */,
