@@ -49,6 +49,18 @@ public class ContentFactoryBase {
 public protocol FlushableContentType : ContentType, FlushableType {
 }
 
+public class FlushableContent : FlushableContentType {
+    let content:FlushableContentType
+    
+    public required init(content:FlushableContentType) {
+        self.content = content
+    }
+    
+    public func flushTo(out:DataConsumerType) -> Future<Void, AnyError> {
+        return content.flushTo(out)
+    }
+}
+
 public class AbstractContentFactory<T> : ContentFactoryBase, ContentFactoryType {
     public typealias Content = T
     var promise:Promise<Content, AnyError>

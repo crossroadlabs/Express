@@ -121,7 +121,7 @@ public class Views {
         }
     }
     
-    func render<Context>(view:String, context:Context?) -> Future<AbstractActionType, AnyError> {
+    func render<Context>(view:String, context:Context?) -> Future<ResponseType, AnyError> {
         return self.view(view).map(renderContext) { view in
             try view.render(context)
         }

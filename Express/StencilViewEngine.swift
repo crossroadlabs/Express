@@ -81,7 +81,7 @@ class StencilView : ViewType {
         self.loader = loader
     }
     
-    func render<C>(context:C?) throws -> AbstractActionType {
+    func render<C>(context:C?) throws -> ResponseType {
         do {
             let edibleOption = context.flatMap{$0 as? StencilCookable }?.cook()
             let contextSupplied:[String:Any] = edibleOption.getOrElse(Dictionary())
@@ -103,7 +103,7 @@ class StencilView : ViewType {
             
             let stencilContext = Context(dictionary: finalContext)
             let render = try template.render(stencilContext)
-            return Action<AnyContent>.ok(AnyContent(str:render, contentType: "text/html"))
+            return Response(status: .Ok, content: AnyContent(str:render, contentType: "text/html"))
         } catch let e as TemplateSyntaxError {
             throw ExpressError.Render(description: e.description, line: nil, cause: e)
         }

@@ -52,6 +52,16 @@ class ResponseAction<C : FlushableContentType> : Action<C>, FlushableAction {
     }
 }
 
+extension ResponseAction where C : FlushableContent {
+    convenience init(response:ResponseType) {
+        let content = response.content.map { content in
+            C(content: content)
+        }
+        let mappedResponse = Response<C>(status: response.status, content: content, headers: response.headers)
+        self.init(response: mappedResponse)
+    }
+}
+
 class RenderAction<C : FlushableContentType, Context> : Action<C>, IntermediateActionType {
     let view:String
     let context:Context?
@@ -62,7 +72,9 @@ class RenderAction<C : FlushableContentType, Context> : Action<C>, IntermediateA
     }
     
     func nextAction<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<AbstractActionType, AnyError> {
-        return app.views.render(view, context: context)
+        return app.views.render(view, context: context).map { response in
+            ResponseAction(response: response)
+        }
     }
 }
 
