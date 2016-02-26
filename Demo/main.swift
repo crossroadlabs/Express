@@ -42,6 +42,29 @@ func test() throws -> Action<AnyContent> {
     throw TestError.Test2
 }
 
+enum NastyError : ErrorType {
+    case Recoverable
+    case Fatal(reason:String)
+}
+
+app.get("/error/:fatal?") { request in
+    guard let fatal = request.params["fatal"] else {
+        throw NastyError.Recoverable
+    }
+    
+    throw NastyError.Fatal(reason: fatal)
+}
+
+app.errorHandler.register { (e:NastyError) in
+    switch e {
+    case .Recoverable:
+        return Action<AnyContent>.redirect("/")
+    case .Fatal(let reason):
+        let content = AnyContent(str: "Unrecoverable nasty error happened. Reason: " + reason)
+        return Action<AnyContent>.response(.InternalServerError, content: content)
+    }
+}
+
 app.errorHandler.register { e in
     guard let e = e as? TestError else {
         return nil
