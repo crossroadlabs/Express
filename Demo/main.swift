@@ -150,7 +150,7 @@ app.get("/render.html") { request in
 
 //TODO: make a list of pages
 app.get("/") { request in
-    let examples = [
+    /*let examples = [
         ["title": "Hello Express", "link": "/hello"],
         ["title": "Echo", "link": "/echo?call=hello"],
         ["title": "Echo with param", "link": "/echo/hello"],
@@ -165,7 +165,8 @@ app.get("/") { request in
         ["title": "Merged query (form url encoded and query string)", "link": "/merged/query?some=param&another=param2"],
     ]
     
-    return Action.render("index", context: ["examples": examples])
+    return Action.render("index", context: ["examples": examples])*/
+    return Action.redirect("/index.html")
 }
 
 app.get("/test/redirect") { request in
