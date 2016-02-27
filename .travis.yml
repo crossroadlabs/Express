@@ -45,7 +45,7 @@ matrix:
         - tar xzf $SWIFT_VERSION-ubuntu14.04.tar.gz
         - export PATH="${PWD}/${SWIFT_VERSION}-ubuntu14.04/usr/bin:${PATH}"
         # express dependencies
-        - sudo add-apt-repository ppa:swiftexpress/swiftexpress
+        - sudo add-apt-repository ppa:swiftexpress/swiftexpress --yes
         - sudo apt-get update
         - sudo apt-get install libevhtp-dev libevent-dev libssl-dev
         # get back home
