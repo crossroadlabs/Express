@@ -25,13 +25,10 @@
 		650493771C22199300616444 /* ExpressSugar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 650493661C22199300616444 /* ExpressSugar.swift */; };
 		6518267F1C22081600E49AC5 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6518267E1C22081600E49AC5 /* main.swift */; };
 		651826801C2208A800E49AC5 /* Express.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 651475CE1C21F1550049825D /* Express.framework */; };
-		651A23451C80552100A8480E /* 404.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 651A23441C80552100A8480E /* 404.stencil */; };
-		651A23471C80D98700A8480E /* index.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 651A23461C80D98700A8480E /* index.stencil */; };
 		6525AC541C24E3C600131F58 /* Mustache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; };
 		6525AC551C24E3E000131F58 /* Mustache.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; };
 		6525AC561C24E3E700131F58 /* Mustache.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 6525AC531C24E3C600131F58 /* Mustache.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		655077461C2D936100E42309 /* Static.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655077451C2D936100E42309 /* Static.swift */; };
-		6550774A1C2DC31500E42309 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 655077491C2DC31500E42309 /* logo.png */; };
 		6550774C1C2DC8E500E42309 /* MIME.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6550774B1C2DC8E500E42309 /* MIME.swift */; };
 		655CC27E1C2370F9009FE219 /* Streams+Headers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655CC27D1C2370F9009FE219 /* Streams+Headers.swift */; };
 		65662D041C3336BB00A16177 /* AnyContent+FormUrlEncoded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65662D031C3336BB00A16177 /* AnyContent+FormUrlEncoded.swift */; };
@@ -73,9 +70,6 @@
 		65E646E71C79A5010036D028 /* PathKit.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646E11C79A4EB0036D028 /* PathKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		65E646E81C79A5010036D028 /* Stencil.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65E646E21C79A4EB0036D028 /* Stencil.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		65E646EA1C79A5340036D028 /* StencilViewEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65E646E91C79A5340036D028 /* StencilViewEngine.swift */; };
-		65E646EC1C79AD280036D028 /* hello.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646EB1C79AD280036D028 /* hello.stencil */; };
-		65E646EE1C79AF4E0036D028 /* test.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646ED1C79AF4E0036D028 /* test.stencil */; };
-		65E646F01C79AF6C0036D028 /* colored.stencil in Resources */ = {isa = PBXBuildFile; fileRef = 65E646EF1C79AF6C0036D028 /* colored.stencil */; };
 		961B9E8B1C23229A000506D2 /* libevent.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 961B9E8A1C23229A000506D2 /* libevent.dylib */; };
 		961B9E8F1C2322CA000506D2 /* libevent_openssl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 961B9E8E1C2322CA000506D2 /* libevent_openssl.dylib */; };
 		961B9E911C2324B4000506D2 /* EVHTP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961B9E901C2324B4000506D2 /* EVHTP.swift */; };
@@ -129,11 +123,8 @@
 		651826711C2207D200E49AC5 /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6518267A1C2207D200E49AC5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6518267E1C22081600E49AC5 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		651A23441C80552100A8480E /* 404.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = 404.stencil; sourceTree = "<group>"; };
-		651A23461C80D98700A8480E /* index.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = index.stencil; sourceTree = "<group>"; };
 		6525AC531C24E3C600131F58 /* Mustache.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mustache.framework; path = Carthage/Build/Mac/Mustache.framework; sourceTree = "<group>"; };
 		655077451C2D936100E42309 /* Static.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Static.swift; sourceTree = "<group>"; };
-		655077491C2DC31500E42309 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		6550774B1C2DC8E500E42309 /* MIME.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MIME.swift; sourceTree = "<group>"; };
 		655CC27D1C2370F9009FE219 /* Streams+Headers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Streams+Headers.swift"; sourceTree = "<group>"; };
 		65662D031C3336BB00A16177 /* AnyContent+FormUrlEncoded.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AnyContent+FormUrlEncoded.swift"; sourceTree = "<group>"; };
@@ -161,12 +152,11 @@
 		65E646E11C79A4EB0036D028 /* PathKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PathKit.framework; path = Carthage/Build/Mac/PathKit.framework; sourceTree = "<group>"; };
 		65E646E21C79A4EB0036D028 /* Stencil.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Stencil.framework; path = Carthage/Build/Mac/Stencil.framework; sourceTree = "<group>"; };
 		65E646E91C79A5340036D028 /* StencilViewEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StencilViewEngine.swift; sourceTree = "<group>"; };
-		65E646EB1C79AD280036D028 /* hello.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hello.stencil; sourceTree = "<group>"; };
-		65E646ED1C79AF4E0036D028 /* test.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = test.stencil; sourceTree = "<group>"; };
-		65E646EF1C79AF6C0036D028 /* colored.stencil */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = colored.stencil; sourceTree = "<group>"; };
 		961B9E8A1C23229A000506D2 /* libevent.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevent.dylib; path = ../../../../../usr/local/lib/libevent.dylib; sourceTree = "<group>"; };
 		961B9E8E1C2322CA000506D2 /* libevent_openssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevent_openssl.dylib; path = ../../../../../usr/local/lib/libevent_openssl.dylib; sourceTree = "<group>"; };
 		961B9E901C2324B4000506D2 /* EVHTP.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EVHTP.swift; sourceTree = "<group>"; };
+		963ED1CC1C81F3E4002351EE /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
+		963ED1CE1C81F3ED002351EE /* views */ = {isa = PBXFileReference; lastKnownFileType = folder; path = views; sourceTree = "<group>"; };
 		964C0FDE1C243A0700D59840 /* libevent_pthreads.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libevent_pthreads.dylib; path = ../../../../../usr/local/lib/libevent_pthreads.dylib; sourceTree = "<group>"; };
 		968A3BAD1C63983700E4AFCC /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libssl.dylib; path = ../../../../../usr/local/Cellar/openssl/1.0.2e_1/lib/libssl.dylib; sourceTree = "<group>"; };
 		968A3BAF1C63984400E4AFCC /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = ../../../../../usr/local/Cellar/openssl/1.0.2e_1/lib/libcrypto.dylib; sourceTree = "<group>"; };
@@ -281,32 +271,12 @@
 		651826721C2207D200E49AC5 /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				655077481C2DC31500E42309 /* public */,
-				657C1A731C24E0F40037041F /* views */,
+				963ED1CE1C81F3ED002351EE /* views */,
+				963ED1CC1C81F3E4002351EE /* public */,
 				6518267A1C2207D200E49AC5 /* Info.plist */,
 				6518267E1C22081600E49AC5 /* main.swift */,
 			);
 			path = Demo;
-			sourceTree = "<group>";
-		};
-		655077481C2DC31500E42309 /* public */ = {
-			isa = PBXGroup;
-			children = (
-				655077491C2DC31500E42309 /* logo.png */,
-			);
-			path = public;
-			sourceTree = "<group>";
-		};
-		657C1A731C24E0F40037041F /* views */ = {
-			isa = PBXGroup;
-			children = (
-				65E646EB1C79AD280036D028 /* hello.stencil */,
-				65E646ED1C79AF4E0036D028 /* test.stencil */,
-				65E646EF1C79AF6C0036D028 /* colored.stencil */,
-				651A23441C80552100A8480E /* 404.stencil */,
-				651A23461C80D98700A8480E /* index.stencil */,
-			);
-			path = views;
 			sourceTree = "<group>";
 		};
 		658DBDA61C221AEB00BE8AA9 /* Frameworks */ = {
@@ -430,12 +400,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65E646EC1C79AD280036D028 /* hello.stencil in Resources */,
-				651A23471C80D98700A8480E /* index.stencil in Resources */,
-				65E646F01C79AF6C0036D028 /* colored.stencil in Resources */,
-				65E646EE1C79AF4E0036D028 /* test.stencil in Resources */,
-				651A23451C80552100A8480E /* 404.stencil in Resources */,
-				6550774A1C2DC31500E42309 /* logo.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

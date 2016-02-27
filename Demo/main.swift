@@ -51,6 +51,8 @@ app.errorHandler.register { (e:ExpressError) in
     switch e {
     case .PageNotFound(let path):
         return Action<AnyContent>.render("404", context: ["path": path], status: .NotFound)
+    case  .RouteNotFound(let path):
+        return Action<AnyContent>.render("404", context: ["path": path], status: .NotFound)
     default:
         return nil
     }
@@ -58,10 +60,10 @@ app.errorHandler.register { (e:ExpressError) in
 
 /// StaticAction is just a predefined configurable handler for serving static files.
 /// It's important to pass exactly the same param name to it from the url pattern.
-app.get("/:file+", action: StaticAction(path: "public", param:"file"))
+app.get("/assets/:file+", action: StaticAction(path: "public", param:"file"))
 
 app.get("/hello") { request in
-    return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
+    return Action.ok(AnyContent(str: "<h1><center>Hello Express!!!</center></h1>", contentType: "text/html"))
 }
 
 //user as an url param
