@@ -282,7 +282,7 @@ Let us know if we are on the right path! Influence the project, create feature r
 ## Changelog
 
 * v0.3: linux support
-	* Runs on linux with and without [Dispatch](https://swift.org/core-libraries/#libdispatch) support (see [installation section](./doc/gettingstarted/installing.md#linux-))
+	* Runs on linux with and without [Dispatch](https://swift.org/core-libraries/#libdispatch) support (see [installation section](./doc/gettingstarted/installing.md#linux-) and [building in production](./doc/gettingstarted/buildrun.md#production-build))
 	* FormUrlEncoded ContentType support
 	* Merged Query (params from both query string and form-url-encoded body merged together)
 	* Utility methods (redirect, status, etc)
