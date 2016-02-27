@@ -1,6 +1,6 @@
 [//]: https://www.iconfinder.com/icons/383207/doc_tag_icon#size=64
 <p align="center">
-	<a href="#swift-express">
+	<a href="http://swiftexpress.io/">
 		<img src ="./logo-full.png" height=256/>
 	</a>
 	<a href="./doc/index.md">
