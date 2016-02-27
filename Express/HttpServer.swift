@@ -25,16 +25,17 @@ import BrightFutures
 #if os(Linux)
     import Glibc
 #endif
+import ExecutionContext
 
 private class ServerParams {
     let promise: Promise<Void, NoError>
     let port: UInt16
-    let router:RouterType
+    let app:Express
     
-    init(promise: Promise<Void, NoError>, port: UInt16, router: RouterType) {
+    init(promise: Promise<Void, NoError>, port: UInt16, app: Express) {
         self.promise = promise
         self.port = port
-        self.router = router
+        self.app = app
     }
 }
 
@@ -77,27 +78,39 @@ private func handle_request(req: EVHTPRequest, serv:ServerParams) {
     let head = RequestHead(method: info.method, version: info.version, remoteAddress: info.remoteIp, secure: info.scheme == "HTTPS", uri: info.uri, path: info.path, query: info.query, headers: info.headers, params: Dictionary())
     let os = ResponseDataConsumer(sock: req)
     
-    guard let routeTuple = serv.router.firstRoute(head) else {
-        //TODO: implement page not found (throw exception?, see other places)
-        print("Route not found for request: ", head.path)
-        return
+    let routeTuple = serv.app.firstRoute(head)
+    let transaction = routeTuple.map {
+        ($0.0, head.withParams($0.1))
+    }.map { (let route, let header) in
+        route.factory(header, os)
     }
+        
+        
+    /*    .getOrElse(Transaction(app: serv.app, routeId: "", head: head, out: os))
     
     let route = routeTuple.0
-    let header = head.withParams(routeTuple.1)
+    let header = head.withParams(routeTuple.1)*/
     
-    let transaction = route.factory(header, os)
-    transaction.selfProcess()
-    EVHTP.read_data(req, cb: { data in
-        if data.count > 0 {
-            //TODO: handle consumption success or error
-            transaction.consume(data)
-        } else {
-            //TODO: handle errors (for now silencing it with try!)
-            try! transaction.dataEnd()
+    if let transaction = transaction {
+        transaction.selfProcess()
+        EVHTP.read_data(req, cb: { data in
+            if data.count > 0 {
+                //TODO: handle consumption success or error
+                transaction.consume(data)
+            } else {
+                //TODO: handle errors (for now silencing it with try!)
+                try! transaction.dataEnd()
+            }
+            return true
+        })
+    } else {
+        let transaction = Transaction<AnyContent, AnyContent, NoError>(app: serv.app, routeId: "", head: head, out: os)
+        let action = future(immediate) { () throws -> AbstractActionType in
+            throw ExpressError.RouteNotFound(path: head.path)
         }
-        return true
-    })
+        transaction.handleAction(action)
+        try! transaction.dataEnd()
+    }
 }
 
 private func server_thread(pm: UnsafeMutablePointer<Void>) -> UnsafeMutablePointer<Void> {
@@ -119,20 +132,25 @@ private func server_thread(pm: UnsafeMutablePointer<Void>) -> UnsafeMutablePoint
 }
 
 class HttpServer : ServerType {
-    let router:RouterType
+    let port:UInt16
+    let app:Express
     let thread: UnsafeMutablePointer<pthread_t>
     
-    func start(port:UInt16) -> Future<Void, NoError> {
-        let params = ServerParams(promise: Promise<Void, NoError>(), port: port, router: router)
+    func start() -> Future<ServerType, NoError> {
+        let params = ServerParams(promise: Promise<Void, NoError>(), port: port, app: app)
         
         pthread_create(thread, nil, server_thread, UnsafeMutablePointer<Void>(Unmanaged.passRetained(params).toOpaque()))
-        return params.promise.future
+        return params.promise.future.map {
+            self
+        }
     }
     
-    required init(router:RouterType) {
-        self.router = router
+    required init(app:Express, port:UInt16) {
+        self.port = port
+        self.app = app
         self.thread = UnsafeMutablePointer<pthread_t>.alloc(1)
     }
+    
     deinit {
         self.thread.destroy()
         self.thread.dealloc(1)

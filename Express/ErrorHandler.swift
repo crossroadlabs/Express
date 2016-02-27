@@ -78,6 +78,15 @@ public class AggregateErrorHandler : ErrorHandlerType {
         register(FunctionErrorHandler(fun: f))
     }
     
+    public func register<E: ErrorType>(f:E -> AbstractActionType?) {
+        register { e in
+            guard let e = e as? E else {
+                return nil
+            }
+            return f(e)
+        }
+    }
+    
     public func handle(e:ErrorType) -> AbstractActionType? {
         for handler in handlers {
             if let action = handler.handle(e) {

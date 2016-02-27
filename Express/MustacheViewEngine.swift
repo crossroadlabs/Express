@@ -50,7 +50,7 @@ private let warning = "Warning: " + message
             self.template = template
         }
         
-        func render<Context>(context:Context?) throws -> AbstractActionType {
+        func render<Context>(context:Context?) throws -> FlushableContentType {
             do {
                 let anyContext = context.flatMap { (i)->AnyObject? in
                     if let obj = i as? AnyObject {
@@ -63,7 +63,7 @@ private let warning = "Warning: " + message
                 }
                 let box = Box(anyContext as? MustacheBoxable)
                 let render = try template.render(box)
-                return Action<AnyContent>.ok(AnyContent(str:render, contentType: "text/html"))
+                return AnyContent(str:render, contentType: "text/html")!
             } catch let e as MustacheError {
                 switch e.kind {
                     //TODO: double check no such error can be found at this place

@@ -35,10 +35,37 @@ private protocol StencilCookable {
     func cook() -> StencilEdible
 }
 
+private protocol StencilNormalizable {
+    func normalizeValue(value:Any) -> Any
+    func normalize() -> Any
+}
+
+extension StencilNormalizable {
+    func normalizeValue(value:Any) -> Any {
+        let normalizable = value as? StencilNormalizable
+        return normalizable.map {$0.normalize()} .getOrElse(value)
+    }
+}
+
+extension Array : StencilNormalizable {
+    func normalize() -> Any {
+        return self.map(normalizeValue)
+    }
+}
+
+extension Dictionary : StencilNormalizable {
+    func normalize() -> Any {
+        let normalized = self.map { (k, v) in
+            (k, normalizeValue(v))
+        }
+        return toMap(normalized)
+    }
+}
+
 extension Dictionary : StencilCookable {
     func cook() -> StencilEdible {
         return self.map { (k,v) in
-            (String(k), v)
+            return (String(k), normalizeValue(v))
         }
     }
 }
@@ -54,7 +81,7 @@ class StencilView : ViewType {
         self.loader = loader
     }
     
-    func render<C>(context:C?) throws -> AbstractActionType {
+    func render<C>(context:C?) throws -> FlushableContentType {
         do {
             let edibleOption = context.flatMap{$0 as? StencilCookable }?.cook()
             let contextSupplied:[String:Any] = edibleOption.getOrElse(Dictionary())
@@ -76,7 +103,7 @@ class StencilView : ViewType {
             
             let stencilContext = Context(dictionary: finalContext)
             let render = try template.render(stencilContext)
-            return Action<AnyContent>.ok(AnyContent(str:render, contentType: "text/html"))
+            return AnyContent(str:render, contentType: "text/html")!
         } catch let e as TemplateSyntaxError {
             throw ExpressError.Render(description: e.description, line: nil, cause: e)
         }

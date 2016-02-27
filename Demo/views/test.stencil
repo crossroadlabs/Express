@@ -4,7 +4,7 @@
 <h1>Test Stencil: {{test}}</h1>
 <h2>
 {% for item in items %}
-{% include "colored2.stencil" %}
+{% include "colored.stencil" %}
 {% endfor %}
 </h2>
 </body>

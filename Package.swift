@@ -23,6 +23,7 @@ import PackageDescription
 
 let package = Package(
     name: "Express",
+    exclude: ["doc"],
     targets: [
         Target(
             name: "Express"
@@ -33,8 +34,8 @@ let package = Package(
         )
     ],
     dependencies: [
-    	.Package(url: "https://github.com/crossroadlabs/BrightFutures.git", majorVersion: 3),
-    	.Package(url: "https://github.com/crossroadlabs/TidyJSON.git", majorVersion: 1),
+    	.Package(url: "https://github.com/crossroadlabs/BrightFutures.git", majorVersion: 0, minor: 4),
+    	.Package(url: "https://github.com/crossroadlabs/TidyJSON.git", majorVersion: 1, minor: 1),
     	.Package(url: "https://github.com/crossroadlabs/PathToRegex.git", majorVersion: 0),
     	.Package(url: "https://github.com/crossroadlabs/Regex.git", majorVersion: 0),
     	.Package(url: "https://github.com/crossroadlabs/Stencil.git", majorVersion: 0),

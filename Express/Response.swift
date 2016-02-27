@@ -28,14 +28,25 @@ protocol HeadersAdjuster {
     static func adjustHeaders(headers:Dictionary<String, String>, c:Content?) -> Dictionary<String, String>
 }
 
-public class Response<C : FlushableContentType> : HttpResponseHead, HeadersAdjuster {
+public protocol ResponseType : HttpResponseHeadType {
+    var content:FlushableContentType? {get}
+}
+
+public class Response<C : FlushableContentType> : HttpResponseHead, HeadersAdjuster, ResponseType {
     typealias Content = C
     
-    let content:C?
+    /// swift limitation
+    public let typesafeContent:C?
+    public let content:FlushableContentType?
     
-    public init(status:UInt16, content:C? = nil, headers h:Dictionary<String, String> = Dictionary()) {
+    public convenience init(status:StatusCode, content:C? = nil, headers:Dictionary<String, String> = Dictionary()) {
+        self.init(status: status.rawValue, content: content, headers: headers)
+    }
+    
+    public init(status:UInt16, content:C? = nil, headers:Dictionary<String, String> = Dictionary()) {
+        self.typesafeContent = content
         self.content = content
-        super.init(status: status, headers:Response<C>.adjustHeaders(h, c: content))
+        super.init(status: status, headers:Response<C>.adjustHeaders(headers, c: typesafeContent))
     }
     
     public override func flushTo(out:DataConsumerType) -> Future<Void, AnyError> {
@@ -65,5 +76,14 @@ public class Response<C : FlushableContentType> : HttpResponseHead, HeadersAdjus
             return mHeaders
         }
         return h.getOrElse(headers)
+    }
+}
+
+extension Response where C : FlushableContent {
+    convenience init(status:StatusCode, content:FlushableContentType?, headers:Dictionary<String, String> = Dictionary()) {
+        let content = content.map { content in
+            C(content: content)
+        }
+        self.init(status: status, content: content, headers: headers)
     }
 }

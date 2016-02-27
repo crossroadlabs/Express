@@ -52,17 +52,38 @@ class ResponseAction<C : FlushableContentType> : Action<C>, FlushableAction {
     }
 }
 
+extension ResponseAction where C : FlushableContent {
+    convenience init(response:ResponseType) {
+        let content = response.content.map { content in
+            C(content: content)
+        }
+        let mappedResponse = Response<C>(status: response.status, content: content, headers: response.headers)
+        self.init(response: mappedResponse)
+    }
+}
+
 class RenderAction<C : FlushableContentType, Context> : Action<C>, IntermediateActionType {
     let view:String
     let context:Context?
+    let status:StatusCode
+    let headers:Dictionary<String, String>
     
-    init(view:String, context:Context?) {
+    init(view:String, context:Context?, status:StatusCode = .Ok, headers:Dictionary<String, String> = Dictionary()) {
         self.view = view
         self.context = context
+        self.status = status
+        self.headers = headers
+    }
+    
+    private func response<RC:FlushableContentType>(status:StatusCode, content:RC?, headers:Dictionary<String, String>) -> Response<RC> {
+        return Response(status: status, content: content, headers: headers)
     }
     
     func nextAction<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<AbstractActionType, AnyError> {
-        return app.views.render(view, context: context)
+        return app.views.render(view, context: context).map { content in
+            let response = Response(status: self.status, content: content, headers: self.headers)
+            return ResponseAction(response: response)
+        }
     }
 }
 
@@ -110,6 +131,11 @@ public extension Action {
         return ResponseAction(response: response)
     }
     
+    internal class func routeNotFound(path:String) -> Action<AnyContent> {
+        let response = Response<AnyContent>(status: 404, content: AnyContent(str: "404 Route Not Found\n\n\tpath: " + path), headers: Dictionary())
+        return ResponseAction(response: response)
+    }
+    
     internal class func internalServerError(description:String) -> Action<AnyContent> {
         let response = Response<AnyContent>(status: 500, content: AnyContent(str: "500 Internal Server Error\n\n" + description), headers: Dictionary())
         return ResponseAction(response: response)
@@ -127,8 +153,54 @@ public extension Action {
         return chain(nilRequest())
     }
     
-    public class func render<Context>(view:String, context:Context? = nil) -> Action<C> {
-        return RenderAction(view: view, context: context)
+    public class func render<Context>(view:String, context:Context? = nil, status:StatusCode = .Ok, headers:Dictionary<String, String> = Dictionary()) -> Action<C> {
+        return RenderAction(view: view, context: context, status: status, headers: headers)
+    }
+    
+    public class func response(response:Response<C>) -> Action<C> {
+        return ResponseAction(response: response)
+    }
+    
+    public class func response(status:UInt16, content:C? = nil, headers:Dictionary<String, String> = Dictionary()) -> Action<C> {
+        return response(Response(status: status, content: content, headers: headers))
+    }
+    
+    public class func response(status:StatusCode, content:C? = nil, headers:Dictionary<String, String> = Dictionary()) -> Action<C> {
+        return response(status.rawValue, content: content, headers: headers)
+    }
+    
+    public class func status(status:UInt16) -> Action<C> {
+        return response(status)
+    }
+    
+    public class func status(status:StatusCode) -> Action<C> {
+        return self.status(status.rawValue)
+    }
+    
+    public class func redirect(url:String, status:RedirectStatusCode) -> Action<C> {
+        let headers = ["Location": url]
+        return response(status.rawValue, headers: headers)
+    }
+    
+    public class func redirect(url:String, permanent:Bool = false) -> Action<C> {
+        let code:RedirectStatusCode = permanent ? .MovedPermanently : .TemporaryRedirect
+        return redirect(url, status: code)
+    }
+    
+    public class func found(url:String) -> Action<C> {
+        return redirect(url, status: .Found)
+    }
+    
+    public class func movedPermanently(url:String) -> Action<C> {
+        return redirect(url, status: .MovedPermanently)
+    }
+    
+    public class func seeOther(url:String) -> Action<C> {
+        return redirect(url, status: .SeeOther)
+    }
+    
+    public class func temporaryRedirect(url:String) -> Action<C> {
+        return redirect(url, status: .TemporaryRedirect)
     }
 }
 
