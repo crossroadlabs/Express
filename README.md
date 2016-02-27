@@ -262,7 +262,7 @@ Let us know if we are on the right path! Influence the project, create feature r
 * Simple routing mechanism
 * Request handlers chaining
 * Easy error handling
-* Templeates: [Stencil](https://github.com/kylef/Stencil) and  [Mustache](https://mustache.github.io)
+* Templeates: [Stencil](https://github.com/kylef/Stencil) and [Mustache](https://mustache.github.io)
 * Built-in [JSON](http://www.json.org) support
 * Easy creation of [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) APIs
 * Built-in static files serving
@@ -272,7 +272,6 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 ## Roadmap
 
-* v0.3: Linux support
 * v0.4: proper streaming APIs
 * v0.5: more content types available out of the box
 * v0.6: Web Sockets
@@ -281,6 +280,15 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 ## Changelog
 
+* v0.3: linux support
+	* Runs on linux with and without [Dispatch](https://swift.org/core-libraries/#libdispatch) support (see [installation section](./doc/gettingstarted/installing.md#linux-))
+	* FormUrlEncoded ContentType support
+	* Merged Query (params from both query string and form-url-encoded body merged together)
+	* Utility methods (redirect, status, etc)
+	* [Stencil](https://github.com/kylef/Stencil) Templete Engine Support
+	* Replaced [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON) with [TidyJSON](https://github.com/benloong/TidyJSON)
+	* [Typesafe Error Handlers](./doc/gettingstarted/errorhandling.md)
+	* Better Demo app
 * v0.2.1: minor changes
 	* Swift modules are installed via Carthage
 	* Enabled binary builds on OS X
