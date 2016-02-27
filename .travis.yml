@@ -20,7 +20,7 @@ matrix:
         # you can remove if you don't have dependencies
         - carthage bootstrap --platform osx
       before_deploy:
-        - carthage build --no-skip-current
+        - carthage build --no-skip-current --platform osx
         - carthage archive $MODULE_NAME
       deploy:
         provider: releases
@@ -40,28 +40,14 @@ matrix:
         # install original swift distribution
         - wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
         - cd ..
-        - export SWIFT_VERSION=swift-DEVELOPMENT-SNAPSHOT-2016-02-08-a
+        - export SWIFT_VERSION=swift-DEVELOPMENT-SNAPSHOT-2016-02-25-a
         - wget https://swift.org/builds/development/ubuntu1404/$SWIFT_VERSION/$SWIFT_VERSION-ubuntu14.04.tar.gz
         - tar xzf $SWIFT_VERSION-ubuntu14.04.tar.gz
         - export PATH="${PWD}/${SWIFT_VERSION}-ubuntu14.04/usr/bin:${PATH}"
-        # install latest package manager with `swift-test`
-        - git clone https://github.com/apple/swift-package-manager
-        - cd swift-package-manager
-        - Utilities/bootstrap
-        - export SWIFT_BUILD_PATH=`pwd`
-        - export PATH=$SWIFT_BUILD_PATH/.build/debug:$PATH
-        - cd ..
         # express dependencies
-        # - sudo apt-get install libevhtp-dev libevent-dev libssl-dev //libevhtp-dev is not available on trusty
+        - sudo add-apt-repository ppa:swiftexpress/swiftexpress --yes
         - sudo apt-get update
-        - sudo apt-get install libevent-dev libssl-dev
-        - git clone https://github.com/ellzey/libevhtp.git
-        - cd libevhtp
-        - git checkout tags/1.2.10
-        - cmake -DEVHTP_DISABLE_REGEX:STRING=ON -DEVHTP_BUILD_SHARED:STRING=ON -DCMAKE_INSTALL_PREFIX:STRING=/usr
-        - make
-        - sudo make install
-        - cd ..
+        - sudo apt-get install libevhtp-dev libevent-dev libssl-dev
         # get back home
         - cd $MODULE_NAME
         # get crossroad build script
