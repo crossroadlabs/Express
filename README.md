@@ -255,17 +255,18 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 ## Features
 
+* 🐧 Linux support with and without [Dispatch](https://swift.org/core-libraries/#libdispatch)
 * 100% asynchronous (Future-based API)
 * Flexible and extensible
 * Full [MVC](https://ru.wikipedia.org/wiki/Model-View-Controller) support
-* Swift 2.1 compatible
-* Simple routing mechanism
+* Swift 2.1 and 2.2 compatible
+* [Simple routing mechanism](./doc/gettingstarted/routing.md)
 * Request handlers chaining
-* Easy error handling
+* [Typesafe Error Handlers](./doc/gettingstarted/errorhandling.md)
 * Templeates: [Stencil](https://github.com/kylef/Stencil) and [Mustache](https://mustache.github.io)
 * Built-in [JSON](http://www.json.org) support
 * Easy creation of [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) APIs
-* Built-in static files serving
+* Built-in [static files serving](./doc/gettingstarted/static.md)
 * Multiple contents types built-in support
 
 ### And heah, the most important feature: [Highly passionate development team](http://www.crossroadlabs.xyz/)
