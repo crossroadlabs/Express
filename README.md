@@ -211,15 +211,15 @@ First of all you need to switch the template engine on:
 
 ```swift
 //we recommend mustache template engine
-app.views.register(MustacheViewEngine())
+app.views.register(StencilViewEngine())
 ```
 
-Now create a file called `hello.mustache` in the `views` directory:
+Now create a file called `hello.stencil` in the `views` directory:
 
-```mustache
+```stencil
 <html>
 <body>
-<h1>Hello: {{user}}</h1>
+<h1>Hello from Stencil: {{user}}</h1>
 </body>
 </html>
 ```
@@ -262,7 +262,7 @@ Let us know if we are on the right path! Influence the project, create feature r
 * Simple routing mechanism
 * Request handlers chaining
 * Easy error handling
-* [Mustache](https://mustache.github.io) templates
+* Templeates: [Stencil](https://github.com/kylef/Stencil) and  [Mustache](https://mustache.github.io)
 * Built-in [JSON](http://www.json.org) support
 * Easy creation of [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) APIs
 * Built-in static files serving
