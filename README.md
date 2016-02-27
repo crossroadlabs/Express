@@ -76,7 +76,7 @@ brew install swift-express
 
 #### [Linux ![Linux](https://cdn1.iconfinder.com/data/icons/system-shade-circles/512/linux_tox-16.png)](http://www.linux.org/)
 
-##### We are almost there! Checkout this branch: [feature-linux](https://github.com/crossroadlabs/Express/tree/feature-linux).
+##### For instructions on how to get [Express](http://swiftexpress.io/) installed on Linux, please, refer to the [installation section](./doc/gettingstarted/installing.md#linux-) in the [ducumentation](./doc/index.md).
 
 ## Examples
 
@@ -211,15 +211,15 @@ First of all you need to switch the template engine on:
 
 ```swift
 //we recommend mustache template engine
-app.views.register(MustacheViewEngine())
+app.views.register(StencilViewEngine())
 ```
 
-Now create a file called `hello.mustache` in the `views` directory:
+Now create a file called `hello.stencil` in the `views` directory:
 
-```mustache
+```stencil
 <html>
 <body>
-<h1>Hello: {{user}}</h1>
+<h1>Hello from Stencil: {{user}}</h1>
 </body>
 </html>
 ```
@@ -255,24 +255,24 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 ## Features
 
+* 🐧 Linux support with and without [Dispatch](https://swift.org/core-libraries/#libdispatch)
 * 100% asynchronous (Future-based API)
 * Flexible and extensible
 * Full [MVC](https://ru.wikipedia.org/wiki/Model-View-Controller) support
-* Swift 2.1 compatible
-* Simple routing mechanism
+* Swift 2.1 and 2.2 compatible
+* [Simple routing mechanism](./doc/gettingstarted/routing.md)
 * Request handlers chaining
-* Easy error handling
-* [Mustache](https://mustache.github.io) templates
+* [Typesafe Error Handlers](./doc/gettingstarted/errorhandling.md)
+* Templeates: [Stencil](https://github.com/kylef/Stencil) and [Mustache](https://mustache.github.io)
 * Built-in [JSON](http://www.json.org) support
 * Easy creation of [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) APIs
-* Built-in static files serving
+* Built-in [static files serving](./doc/gettingstarted/static.md)
 * Multiple contents types built-in support
 
 ### And heah, the most important feature: [Highly passionate development team](http://www.crossroadlabs.xyz/)
 
 ## Roadmap
 
-* v0.3: Linux support
 * v0.4: proper streaming APIs
 * v0.5: more content types available out of the box
 * v0.6: Web Sockets
@@ -281,6 +281,15 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 ## Changelog
 
+* v0.3: linux support
+	* Runs on linux with and without [Dispatch](https://swift.org/core-libraries/#libdispatch) support (see [installation section](./doc/gettingstarted/installing.md#linux-) and [building in production](./doc/gettingstarted/buildrun.md#production-build))
+	* FormUrlEncoded ContentType support
+	* Merged Query (params from both query string and form-url-encoded body merged together)
+	* Utility methods (redirect, status, etc)
+	* [Stencil](https://github.com/kylef/Stencil) Templete Engine Support
+	* Replaced [SwiftyJSON](https://github.com/SwiftyJSON/SwiftyJSON) with [TidyJSON](https://github.com/benloong/TidyJSON)
+	* [Typesafe Error Handlers](./doc/gettingstarted/errorhandling.md)
+	* Better Demo app
 * v0.2.1: minor changes
 	* Swift modules are installed via Carthage
 	* Enabled binary builds on OS X
