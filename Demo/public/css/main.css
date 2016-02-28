@@ -21,6 +21,11 @@ h1 {
     font-weight: 700;
 }
 
+.example-link {
+    display: inline-block;
+    width: 100%;
+}
+
 .right-triangle {
     width: 60px;
 }

@@ -17,7 +17,7 @@
                                     <div class="panel-heading d-table" role="tab" id="heading{{example.id}}">
                                         <div class="d-table-cell">
                                             <h4 class="panel-title">
-                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{example.id}}" aria-expanded="false" aria-controls="collapse{{example.id}}">
+                                                <a class="example-link" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{example.id}}" aria-expanded="false" aria-controls="collapse{{example.id}}">
                                                     {{example.title}}
                                                 </a>
                                             </h4>
