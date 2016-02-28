@@ -22,6 +22,24 @@ h1 {
 }
 
 .right-triangle {
-    margin-top: -6px;
-    float: right;
+    width: 60px;
+}
+
+.d-table {
+    display: table;
+    width: 100%;
+}
+
+.d-table-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.panel-heading {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.panel-title {
+    padding-right: 5px;
 }
