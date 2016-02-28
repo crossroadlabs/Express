@@ -54,6 +54,24 @@ public class StaticAction : Action<AnyContent>, IntermediateActionType {
                 return Action<AnyContent>.chain()
             }
             
+            let attributes = try fm.attributesOfItemAtPath(file)
+            
+            var headers = [String: String]()
+            
+            if let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) {
+                let timestamp = UInt64(modificationDate.timeIntervalSinceReferenceDate * 1000 * 1000)
+                //TODO: use MD5 of fileFromURI + timestamp
+                let etag = "\"" + String(timestamp) + "\""
+                
+                headers.updateValue(etag, forKey: "ETag")
+                
+                if let requestETag = request.headers["If-None-Match"] {
+                    if requestETag == etag {
+                        return Action<AnyContent>.response(.NotModified, content: nil, headers: headers)
+                    }
+                }
+            }
+            
             //TODO: get rid of NS
             guard let data = NSData(contentsOfFile: file) else {
                 return Action<AnyContent>.chain()
@@ -69,7 +87,7 @@ public class StaticAction : Action<AnyContent>, IntermediateActionType {
             //TODO: implement mime types
             let content = AnyContent(data: array, contentType: MIME.extMime[ext])
             
-            return Action<AnyContent>.ok(content)
+            return Action<AnyContent>.ok(content, headers: headers)
         }
     }
 }
