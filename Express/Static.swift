@@ -63,7 +63,7 @@ public class StaticAction : Action<AnyContent>, IntermediateActionType {
             headers.updateWithHeader(self.cacheControl)
             
             if let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) {
-                let timestamp = UInt64(modificationDate.timeIntervalSinceReferenceDate * 1000 * 1000)
+                let timestamp = UInt64(modificationDate.timeIntervalSince1970 * 1000 * 1000)
                 //TODO: use MD5 of fileFromURI + timestamp
                 let etag = "\"" + String(timestamp) + "\""
                 
