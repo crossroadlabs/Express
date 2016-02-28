@@ -36,14 +36,8 @@ public class StaticAction : Action<AnyContent>, IntermediateActionType {
             if request.method != HttpMethod.Get.rawValue {
                 return Action<AnyContent>.chain()
             }
-            //yes here we are completely sure route id exists
-            let route = app.routeForId(routeId)!
             
-            guard let match = route.matcher.match(request.method, path: request.path) else {
-                return Action<AnyContent>.chain()
-            }
-            
-            guard let fileFromURI = match[self.param] else {
+            guard let fileFromURI = request.params[self.param] else {
                 print("Can not find ", self.param, " group in regex")
                 return Action<AnyContent>.chain()
             }
