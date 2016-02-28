@@ -1,0 +1,6 @@
+app.get("/test/redirect") { request in
+    return future {
+        let to = request.query["to"].flatMap{$0.first}.getOrElse("../render.html")
+        return Action.redirect(to)
+    }
+}

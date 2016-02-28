@@ -21,6 +21,7 @@ h1 {
     font-weight: 700;
 }
 
-.swift {
-    color: #f74d37;
+.right-triangle {
+    margin-top: -6px;
+    float: right;
 }

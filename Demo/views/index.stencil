@@ -4,16 +4,30 @@
         {% include "css.stencil" %}
     </head>
     <body>
-        <img class="logo" src="/assets/logo.png" />
+        <a href="http://swiftexpress.io"><img class="logo" src="/assets/logo.png" /></a>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xs-0 col-sm-1 col-md-2 col-lg-3"></div>
                 <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading"><h3 class="panel-title">Examples:</h3></div>
-                        <div class="list-group">
+                    <div class="well">
+                        <h2>Examples:</h2>
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                             {% for example in examples %}
-                                <a href="{{example.link}}" class="list-group-item">{{example.title}}</a>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="heading{{example.id}}">
+                                        <h4 class="panel-title">
+                                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{example.id}}" aria-expanded="false" aria-controls="collapse{{example.id}}">
+                                                {{example.title}}
+                                            </a>
+                                            <a class="btn btn-default right-triangle" href="{{example.link}}"><span class="glyphicon glyphicon-chevron-right"></span></a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapse{{example.id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{example.id}}">
+                                        <div class="panel-body">
+                                            <pre class="code swift">{% include example.code %}</pre>
+                                        </div>
+                                    </div>
+                                </div>
                             {% endfor %}
                         </div>
                     </div>
@@ -22,5 +36,11 @@
             </div>
         </div>
         {% include "js.stencil" %}
+        <script>
+            //hljs.configure({useBR: true});
+            $('pre.code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
+        </script>
     </body>
 </html>
