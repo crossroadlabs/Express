@@ -25,10 +25,12 @@ import BrightFutures
 public class StaticAction : Action<AnyContent>, IntermediateActionType {
     let path:String
     let param:String
+    let cacheControl:CacheControl
     
-    public init(path:String, param:String) {
+    public init(path:String, param:String, cacheControl:CacheControl = .NoCache) {
         self.path = path
         self.param = param
+        self.cacheControl = cacheControl
     }
     
     public func nextAction<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<AbstractActionType, AnyError> {
@@ -57,6 +59,8 @@ public class StaticAction : Action<AnyContent>, IntermediateActionType {
             let attributes = try fm.attributesOfItemAtPath(file)
             
             var headers = [String: String]()
+            
+            headers.updateWithHeader(self.cacheControl)
             
             if let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) {
                 let timestamp = UInt64(modificationDate.timeIntervalSinceReferenceDate * 1000 * 1000)
