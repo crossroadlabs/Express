@@ -2,9 +2,9 @@
 app.errorHandler.register { (e:ExpressError) in
     switch e {
     case .PageNotFound(let path):
-        return Action<AnyContent>.render("404", context: ["path": path], status: .NotFound)
+        return Action&lt;AnyContent&gt;.render("404", context: ["path": path], status: .NotFound)
     case  .RouteNotFound(let path):
-        return Action<AnyContent>.render("404", context: ["path": path], status: .NotFound)
+        return Action&lt;AnyContent&gt;.render("404", context: ["path": path], status: .NotFound)
     default:
         return nil
     }

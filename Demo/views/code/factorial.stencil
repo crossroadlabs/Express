@@ -2,7 +2,7 @@ func factorial(n: Double) -> Double {
     return n == 0 ? 1 : n * factorial(n - 1)
 }
 
-func calcFactorial(num:Double) -> Future<Double, AnyError> {
+func calcFactorial(num:Double) -> Future&lt;Double, AnyError&gt; {
     return future {
         return factorial(num)
     }
@@ -10,7 +10,7 @@ func calcFactorial(num:Double) -> Future<Double, AnyError> {
 
 // (request -> Future<Action<AnyContent>, AnyError> in) - this is required to tell swift you want to return a Future
 // hopefully inference in swift will get better eventually and just "request in" will be enough
-app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
+app.get("/factorial/:num(\\d+)") { request -> Future&lt;Action&lt;AnyContent&gt;, AnyError&gt; in
     // get the number from the url
     let num = request.params["num"].flatMap{Double($0)}.getOrElse(0)
 
