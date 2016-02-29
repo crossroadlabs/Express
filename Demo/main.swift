@@ -28,6 +28,10 @@ enum NastyError : ErrorType {
     case Fatal(reason:String)
 }
 
+app.get("/error/recovered") { request in
+    return Action.render("error-recovered", context: [])
+}
+
 app.get("/error/:fatal?") { request in
     guard let fatal = request.params["fatal"] else {
         throw NastyError.Recoverable
@@ -36,10 +40,12 @@ app.get("/error/:fatal?") { request in
     throw NastyError.Fatal(reason: fatal)
 }
 
+
+
 app.errorHandler.register { (e:NastyError) in
     switch e {
     case .Recoverable:
-        return Action<AnyContent>.redirect("/")
+        return Action<AnyContent>.redirect("/error/recovered")
     case .Fatal(let reason):
         let content = AnyContent(str: "Unrecoverable nasty error happened. Reason: " + reason)
         return Action<AnyContent>.response(.InternalServerError, content: content)
@@ -156,7 +162,7 @@ app.get("/") { request in
         ["title": "Hello Express", "link": "/hello", "id":"hello", "code": "code/hello.stencil"],
         ["title": "Echo", "link": "/echo?call=hello", "id":"echo", "code": "code/echo.stencil"],
         ["title": "Echo with param", "link": "/echo/hello", "id":"echo-param", "code": "code/echo-param.stencil"],
-        ["title": "Error recoverable (will redirect back)", "link": "/error", "id":"error", "code": "code/error.stencil"],
+        ["title": "Error recoverable (will redirect to recover page)", "link": "/error", "id":"error", "code": "code/error.stencil"],
         ["title": "Error fatal", "link": "/error/thebigbanghappened", "id":"error-fatal", "code": "code/error.stencil"],
         ["title": "Custom 404", "link": "/thisfiledoesnotexist", "id":"404", "code": "code/404.stencil"],
         ["title": "Hello [username]. You can put your name instead", "link": "/hello/username.html", "id":"hello-username", "code": "code/hello-user.stencil"],
