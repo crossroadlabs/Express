@@ -1,0 +1,3 @@
+app.all("/merged/query") { request in
+    Action.render(JsonView.name, context: request.mergedQuery())
+}

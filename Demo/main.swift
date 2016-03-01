@@ -28,6 +28,10 @@ enum NastyError : ErrorType {
     case Fatal(reason:String)
 }
 
+app.get("/error/recovered") { request in
+    return Action.render("error-recovered", context: [String:Any]())
+}
+
 app.get("/error/:fatal?") { request in
     guard let fatal = request.params["fatal"] else {
         throw NastyError.Recoverable
@@ -36,10 +40,12 @@ app.get("/error/:fatal?") { request in
     throw NastyError.Fatal(reason: fatal)
 }
 
+
+
 app.errorHandler.register { (e:NastyError) in
     switch e {
     case .Recoverable:
-        return Action<AnyContent>.redirect("/")
+        return Action<AnyContent>.redirect("/error/recovered")
     case .Fatal(let reason):
         let content = AnyContent(str: "Unrecoverable nasty error happened. Reason: " + reason)
         return Action<AnyContent>.response(.InternalServerError, content: content)
@@ -153,18 +159,18 @@ app.get("/render.html") { request in
 //TODO: make a list of pages
 app.get("/") { request in
     let examples:[Any] = [
-        ["title": "Hello Express", "link": "/hello"],
-        ["title": "Echo", "link": "/echo?call=hello"],
-        ["title": "Echo with param", "link": "/echo/hello"],
-        ["title": "Error recoverable (will redirect back)", "link": "/error"],
-        ["title": "Error fatal", "link": "/error/thebigbanghappened"],
-        ["title": "Custom 404", "link": "/thisfiledoesnotexist"],
-        ["title": "Hello [username]. You can put your name instead", "link": "/hello/username.html"],
+        ["title": "Hello Express", "link": "/hello", "id":"hello", "code": "code/hello.stencil"],
+        ["title": "Echo", "link": "/echo?call=hello", "id":"echo", "code": "code/echo.stencil"],
+        ["title": "Echo with param", "link": "/echo/hello", "id":"echo-param", "code": "code/echo-param.stencil"],
+        ["title": "Error recoverable (will redirect to recover page)", "link": "/error", "id":"error", "code": "code/error.stencil"],
+        ["title": "Error fatal", "link": "/error/thebigbanghappened", "id":"error-fatal", "code": "code/error.stencil"],
+        ["title": "Custom 404", "link": "/thisfiledoesnotexist", "id":"404", "code": "code/404.stencil"],
+        ["title": "Hello [username]. You can put your name instead", "link": "/hello/username.html", "id":"hello-username", "code": "code/hello-user.stencil"],
         ///api/user - implement JSON post form
-        ["title": "Asynchronous factorial", "link": "/factorial/100"],
-        ["title": "Render", "link": "/render.html?sun=yellow&clouds=lightgray"],
-        ["title": "Redirect", "link": "/test/redirect"],
-        ["title": "Merged query (form url encoded and query string)", "link": "/merged/query?some=param&another=param2"],
+        ["title": "Asynchronous factorial", "link": "/factorial/100", "id":"factorial", "code": "code/factorial.stencil"],
+        ["title": "Render", "link": "/render.html?sun=yellow&clouds=lightgray", "id":"render", "code": "code/render.stencil"],
+        ["title": "Redirect", "link": "/test/redirect", "id":"redirect", "code": "code/redirect.stencil"],
+        ["title": "Merged query (form url encoded and query string)", "link": "/merged/query?some=param&another=param2", "id":"query", "code": "code/query.stencil"],
     ]
     
     let context:[String: Any] = ["examples": examples]

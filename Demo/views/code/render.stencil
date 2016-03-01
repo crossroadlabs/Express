@@ -1,0 +1,21 @@
+func testItems(request:Request<AnyContent>) throws -> [String: Any] {
+    let newItems = request.query.map { (k, v) in
+        (k, v.first!)
+    }
+    let items = ["sky": "blue", "fire": "red", "grass": "green"] ++ newItems
+
+    let viewItems = items.map { (k, v) in
+        ["name": k, "color": v]
+    }
+
+    if let reason = request.query["throw"]?.first {
+        throw NastyError.Fatal(reason: reason)
+    }
+
+    return ["test": "ok", "items": viewItems]
+}
+
+app.get("/render.html") { request in
+    let items = try testItems(request)
+    return Action.render("test", context: items)
+}

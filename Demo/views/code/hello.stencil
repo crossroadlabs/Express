@@ -1,0 +1,8 @@
+app.get("/hello") { request in
+    return Action.ok(
+        AnyContent(
+            str: "&lt;h1&gt;&lt;center&gt;Hello Express!!!&lt;/center&gt;&lt;/h1&gt;",
+            contentType: "text/html"
+        )
+    )
+}

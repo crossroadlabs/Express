@@ -1,6 +1,6 @@
 [//]: https://www.iconfinder.com/icons/383207/doc_tag_icon#size=64
 <p align="center">
-	<a href="#swift-express">
+	<a href="http://swiftexpress.io/">
 		<img src ="./logo-full.png" height=256/>
 	</a>
 	<a href="./doc/index.md">
@@ -10,6 +10,9 @@
 </p>
 [<h5 align="right">Live 🐧 server running Demo  <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/34/play-circle-32.png" height=16/>
 		</h5>](http://demo.swiftexpress.io/)
+
+[<h5 align="right">Eating our own dog food  <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/147/globe-full-32.png" height=16/>
+		</h5>](http://swiftexpress.io/)
 
 # Swift Express
 

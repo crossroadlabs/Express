@@ -4,7 +4,7 @@
         {% include "css.stencil" %}
     </head>
     <body>
-        <img class="logo" src="/assets/logo.png" />
+        <a href="/"><img class="logo" src="/assets/logo.png" /></a>
         <div class="container-fluid">
             <div class="row">
                 <div class="col-xs-0 col-sm-1 col-md-2 col-lg-3"></div>
