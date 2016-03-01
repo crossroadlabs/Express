@@ -1,0 +1,27 @@
+enum NastyError : ErrorType {
+    case Recoverable
+    case Fatal(reason:String)
+}
+
+app.get("/error/recovered") { request in
+    return Action.render("error-recovered", context: [String:Any]())
+}
+
+app.get("/error/:fatal?") { request in
+    guard let fatal = request.params["fatal"] else {
+        throw NastyError.Recoverable
+    }
+    throw NastyError.Fatal(reason: fatal)
+}
+
+app.errorHandler.register { (e:NastyError) in
+    switch e {
+    case .Recoverable:
+        return Action<AnyContent>.redirect("/error/recovered")
+    case .Fatal(let reason):
+        let content = AnyContent(
+            str: "Unrecoverable nasty error happened. Reason: " + reason
+        )
+        return Action<AnyContent>.response(.InternalServerError, content: content)
+    }
+}

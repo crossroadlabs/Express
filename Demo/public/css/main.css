@@ -21,6 +21,30 @@ h1 {
     font-weight: 700;
 }
 
-.swift {
-    color: #f74d37;
+.example-link {
+    display: inline-block;
+    width: 100%;
+}
+
+.right-triangle {
+    width: 60px;
+}
+
+.d-table {
+    display: table;
+    width: 100%;
+}
+
+.d-table-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.panel-heading {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.panel-title {
+    padding-right: 5px;
 }
