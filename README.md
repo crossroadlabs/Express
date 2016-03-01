@@ -266,7 +266,7 @@ Let us know if we are on the right path! Influence the project, create feature r
 * [Simple routing mechanism](./doc/gettingstarted/routing.md)
 * Request handlers chaining
 * [Typesafe Error Handlers](./doc/gettingstarted/errorhandling.md)
-* Templeates: [Stencil](https://github.com/kylef/Stencil) and [Mustache](https://mustache.github.io)
+* Templates: [Stencil](https://github.com/kylef/Stencil) and [Mustache](https://mustache.github.io)
 * Built-in [JSON](http://www.json.org) support
 * Easy creation of [RESTful](https://en.wikipedia.org/wiki/Representational_state_transfer) APIs
 * Built-in [static files serving](./doc/gettingstarted/static.md)
