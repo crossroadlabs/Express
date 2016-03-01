@@ -29,7 +29,7 @@ enum NastyError : ErrorType {
 }
 
 app.get("/error/recovered") { request in
-    return Action.render("error-recovered", context: nil)
+    return Action.render("error-recovered", context: [String:Any]())
 }
 
 app.get("/error/:fatal?") { request in
