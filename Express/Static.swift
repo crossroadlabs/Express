@@ -24,7 +24,7 @@ import BrightFutures
 
 public protocol StaticDataProviderType {
     func etag(file:String) throws -> String
-    func data(file:String) throws -> FlushableContentType
+    func data(app:Express, file:String) throws -> FlushableContentType
 }
 
 public class StaticFileProvider : StaticDataProviderType {
@@ -57,7 +57,7 @@ public class StaticFileProvider : StaticDataProviderType {
         return etag
     }
     
-    public func data(file:String) throws -> FlushableContentType {
+    public func data(app:Express, file:String) throws -> FlushableContentType {
         let file = fullPath(file)
         
         var isDir = ObjCBool(false)
@@ -124,7 +124,7 @@ public class BaseStaticAction<C : FlushableContentType> : Action<C>, Intermediat
                     }
                 }
                 
-                let content = try self.dataProvider.data(fileFromURI)
+                let content = try self.dataProvider.data(app, file: fileFromURI)
                 
                 let flushableContent = FlushableContent(content: content)
                 
