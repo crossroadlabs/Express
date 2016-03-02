@@ -22,14 +22,82 @@
 import Foundation
 import BrightFutures
 
-public class StaticAction : Action<AnyContent>, IntermediateActionType {
-    let path:String
+public protocol StaticDataProviderType {
+    init(root:String)
+    
+    func etag(file:String) throws -> String
+    func data(file:String) throws -> FlushableContentType
+}
+
+public class StaticFileProvider : StaticDataProviderType {
+    let root:String
+    let fm = NSFileManager.defaultManager()
+    
+    public required init(root:String) {
+        self.root = root
+    }
+    
+    func fullPath(file:String) -> String {
+        return root.bridge().stringByAppendingPathComponent(file)
+    }
+    
+    public func etag(file:String) throws -> String {
+        let file = fullPath(file)
+        
+        let attributes = try fm.attributesOfItemAtPath(file)
+        
+        guard let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) else {
+            //TODO: throw different error
+            throw ExpressError.PageNotFound(path: file)
+        }
+        
+        let timestamp = UInt64(modificationDate.timeIntervalSince1970 * 1000 * 1000)
+        
+        //TODO: use MD5 of fileFromURI + timestamp
+        let etag = "\"" + String(timestamp) + "\""
+        
+        return etag
+    }
+    
+    public func data(file:String) throws -> FlushableContentType {
+        let file = fullPath(file)
+        
+        var isDir = ObjCBool(false)
+        if !fm.fileExistsAtPath(file, isDirectory: &isDir) || isDir.boolValue {
+            //TODO: implement file directory index (WebDav)
+            throw ExpressError.PageNotFound(path: file)
+        }
+        
+        //TODO: get rid of NS
+        guard let data = NSData(contentsOfFile: file) else {
+            throw ExpressError.FileNotFound(filename: file)
+        }
+        
+        let count = data.length / sizeof(UInt8)
+        // create array of appropriate length:
+        var array = [UInt8](count: count, repeatedValue: 0)
+        
+        // copy bytes into array
+        data.getBytes(&array, length:count * sizeof(UInt8))
+        
+        let ext = file.bridge().pathExtension
+        
+        guard let content = AnyContent(data: array, contentType: MIME.extMime[ext]) else {
+            throw ExpressError.FileNotFound(filename: file)
+        }
+        
+        return content
+    }
+}
+
+public class BaseStaticAction<C : FlushableContentType> : Action<C>, IntermediateActionType {
     let param:String
+    let dataProvider:StaticDataProviderType
     let cacheControl:CacheControl
     
-    public init(path:String, param:String, cacheControl:CacheControl = .NoCache) {
-        self.path = path
+    public init(param:String, dataProvider:StaticDataProviderType, cacheControl:CacheControl = .NoCache) {
         self.param = param
+        self.dataProvider = dataProvider
         self.cacheControl = cacheControl
     }
     
@@ -44,29 +112,12 @@ public class StaticAction : Action<AnyContent>, IntermediateActionType {
                 return Action<AnyContent>.chain()
             }
             
-            //TODO: get rid of NSs
-            let file = self.path.bridge().stringByAppendingPathComponent(fileFromURI)
-            let ext = file.bridge().pathExtension
-            
-            let fm = NSFileManager.defaultManager()
-            
-            var isDir = ObjCBool(false)
-            if !fm.fileExistsAtPath(file, isDirectory: &isDir) || isDir.boolValue {
-                //TODO: implement file directory index (WebDav)
-                return Action<AnyContent>.chain()
-            }
-            
-            let attributes = try fm.attributesOfItemAtPath(file)
-            
             var headers = [String: String]()
             
             headers.updateWithHeader(self.cacheControl)
             
-            if let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) {
-                let timestamp = UInt64(modificationDate.timeIntervalSince1970 * 1000 * 1000)
-                //TODO: use MD5 of fileFromURI + timestamp
-                let etag = "\"" + String(timestamp) + "\""
-                
+            do {
+                let etag = try self.dataProvider.etag(fileFromURI)
                 headers.updateValue(etag, forKey: "ETag")
                 
                 if let requestETag = request.headers["If-None-Match"] {
@@ -74,24 +125,26 @@ public class StaticAction : Action<AnyContent>, IntermediateActionType {
                         return Action<AnyContent>.response(.NotModified, content: nil, headers: headers)
                     }
                 }
-            }
-            
-            //TODO: get rid of NS
-            guard let data = NSData(contentsOfFile: file) else {
+                
+                let content = try self.dataProvider.data(fileFromURI)
+                
+                let flushableContent = FlushableContent(content: content)
+                
+                return Action.ok(flushableContent, headers: headers)
+            } catch ExpressError.PageNotFound(path: _) {
+                return Action<AnyContent>.chain()
+            } catch ExpressError.FileNotFound(filename: _) {
                 return Action<AnyContent>.chain()
             }
-            
-            let count = data.length / sizeof(UInt8)
-            // create array of appropriate length:
-            var array = [UInt8](count: count, repeatedValue: 0)
-            
-            // copy bytes into array
-            data.getBytes(&array, length:count * sizeof(UInt8))
-            
-            //TODO: implement mime types
-            let content = AnyContent(data: array, contentType: MIME.extMime[ext])
-            
-            return Action<AnyContent>.ok(content, headers: headers)
         }
     }
+}
+
+public class StaticAction : BaseStaticAction<AnyContent> {
+
+    public init(path:String, param:String, cacheControl:CacheControl = .NoCache) {
+        let dataProvider = StaticFileProvider(root: path)
+        super.init(param: param, dataProvider: dataProvider, cacheControl: cacheControl)
+    }
+    
 }
