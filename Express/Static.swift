@@ -23,8 +23,6 @@ import Foundation
 import BrightFutures
 
 public protocol StaticDataProviderType {
-    init(root:String)
-    
     func etag(file:String) throws -> String
     func data(file:String) throws -> FlushableContentType
 }
@@ -33,7 +31,7 @@ public class StaticFileProvider : StaticDataProviderType {
     let root:String
     let fm = NSFileManager.defaultManager()
     
-    public required init(root:String) {
+    public init(root:String) {
         self.root = root
     }
     
