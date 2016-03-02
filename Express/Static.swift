@@ -21,10 +21,11 @@
 
 import Foundation
 import BrightFutures
+import ExecutionContext
 
 public protocol StaticDataProviderType {
-    func etag(file:String) throws -> String
-    func data(app:Express, file:String) throws -> FlushableContentType
+    func etag(file:String) -> Future<String, AnyError>
+    func data(app:Express, file:String) -> Future<FlushableContentType, AnyError>
 }
 
 public class StaticFileProvider : StaticDataProviderType {
@@ -39,52 +40,56 @@ public class StaticFileProvider : StaticDataProviderType {
         return root.bridge().stringByAppendingPathComponent(file)
     }
     
-    public func etag(file:String) throws -> String {
+    public func etag(file:String) -> Future<String, AnyError> {
         let file = fullPath(file)
         
-        let attributes = try fm.attributesOfItemAtPath(file)
-        
-        guard let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) else {
-            //TODO: throw different error
-            throw ExpressError.PageNotFound(path: file)
+        return future {
+            let attributes = try self.fm.attributesOfItemAtPath(file)
+            
+            guard let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) else {
+                //TODO: throw different error
+                throw ExpressError.PageNotFound(path: file)
+            }
+            
+            let timestamp = UInt64(modificationDate.timeIntervalSince1970 * 1000 * 1000)
+            
+            //TODO: use MD5 of fileFromURI + timestamp
+            let etag = "\"" + String(timestamp) + "\""
+            
+            return etag
         }
-        
-        let timestamp = UInt64(modificationDate.timeIntervalSince1970 * 1000 * 1000)
-        
-        //TODO: use MD5 of fileFromURI + timestamp
-        let etag = "\"" + String(timestamp) + "\""
-        
-        return etag
     }
     
-    public func data(app:Express, file:String) throws -> FlushableContentType {
+    public func data(app:Express, file:String) -> Future<FlushableContentType, AnyError> {
         let file = fullPath(file)
         
-        var isDir = ObjCBool(false)
-        if !fm.fileExistsAtPath(file, isDirectory: &isDir) || isDir.boolValue {
-            //TODO: implement file directory index (WebDav)
-            throw ExpressError.PageNotFound(path: file)
+        return future {
+            var isDir = ObjCBool(false)
+            if !self.fm.fileExistsAtPath(file, isDirectory: &isDir) || isDir.boolValue {
+                //TODO: implement file directory index (WebDav)
+                throw ExpressError.PageNotFound(path: file)
+            }
+            
+            //TODO: get rid of NS
+            guard let data = NSData(contentsOfFile: file) else {
+                throw ExpressError.FileNotFound(filename: file)
+            }
+            
+            let count = data.length / sizeof(UInt8)
+            // create array of appropriate length:
+            var array = [UInt8](count: count, repeatedValue: 0)
+            
+            // copy bytes into array
+            data.getBytes(&array, length:count * sizeof(UInt8))
+            
+            let ext = file.bridge().pathExtension
+            
+            guard let content = AnyContent(data: array, contentType: MIME.extMime[ext]) else {
+                throw ExpressError.FileNotFound(filename: file)
+            }
+            
+            return content
         }
-        
-        //TODO: get rid of NS
-        guard let data = NSData(contentsOfFile: file) else {
-            throw ExpressError.FileNotFound(filename: file)
-        }
-        
-        let count = data.length / sizeof(UInt8)
-        // create array of appropriate length:
-        var array = [UInt8](count: count, repeatedValue: 0)
-        
-        // copy bytes into array
-        data.getBytes(&array, length:count * sizeof(UInt8))
-        
-        let ext = file.bridge().pathExtension
-        
-        guard let content = AnyContent(data: array, contentType: MIME.extMime[ext]) else {
-            throw ExpressError.FileNotFound(filename: file)
-        }
-        
-        return content
     }
 }
 
@@ -92,47 +97,56 @@ public class BaseStaticAction<C : FlushableContentType> : Action<C>, Intermediat
     let param:String
     let dataProvider:StaticDataProviderType
     let cacheControl:CacheControl
+    let headers:[String: String]
     
     public init(param:String, dataProvider:StaticDataProviderType, cacheControl:CacheControl = .NoCache) {
         self.param = param
         self.dataProvider = dataProvider
         self.cacheControl = cacheControl
+        
+        var headers = [String: String]()
+        headers.updateWithHeader(self.cacheControl)
+        
+        self.headers = headers
     }
     
     public func nextAction<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<AbstractActionType, AnyError> {
-        return future { ()->AbstractActionType in
-            if request.method != HttpMethod.Get.rawValue {
-                return Action<AnyContent>.chain()
-            }
+        
+        if request.method != HttpMethod.Get.rawValue {
+            return Future<AbstractActionType, AnyError>(value: Action<AnyContent>.chain())
+        }
+        
+        guard let fileFromURI = request.params[self.param] else {
+            print("Can not find ", self.param, " group in regex")
+            return Future<AbstractActionType, AnyError>(value: Action<AnyContent>.chain())
+        }
+        
+        let etag = self.dataProvider.etag(fileFromURI)
+        
+        return etag.flatMap { etag -> Future<AbstractActionType, AnyError> in
+            let headers = self.headers ++ ["ETag": etag]
             
-            guard let fileFromURI = request.params[self.param] else {
-                print("Can not find ", self.param, " group in regex")
-                return Action<AnyContent>.chain()
-            }
-            
-            var headers = [String: String]()
-            
-            headers.updateWithHeader(self.cacheControl)
-            
-            do {
-                let etag = try self.dataProvider.etag(fileFromURI)
-                headers.updateValue(etag, forKey: "ETag")
-                
-                if let requestETag = request.headers["If-None-Match"] {
-                    if requestETag == etag {
-                        return Action<AnyContent>.response(.NotModified, content: nil, headers: headers)
-                    }
+            if let requestETag = request.headers["If-None-Match"] {
+                if requestETag == etag {
+                    let action = Action<AnyContent>.response(.NotModified, content: nil, headers: headers)
+                    return Future<AbstractActionType, AnyError>(value: action)
                 }
-                
-                let content = try self.dataProvider.data(app, file: fileFromURI)
-                
+            }
+            
+            let content = self.dataProvider.data(app, file: fileFromURI)
+            
+            return content.map { content in
                 let flushableContent = FlushableContent(content: content)
                 
                 return Action.ok(flushableContent, headers: headers)
-            } catch ExpressError.PageNotFound(path: _) {
-                return Action<AnyContent>.chain()
-            } catch ExpressError.FileNotFound(filename: _) {
-                return Action<AnyContent>.chain()
+            }
+        }.recoverWith { e in
+            switch e {
+            case ExpressError.PageNotFound(path: _): fallthrough
+            case ExpressError.FileNotFound(filename: _):
+                return Future(value: Action<AnyContent>.chain())
+            default:
+                return Future(error: AnyError(cause: e))
             }
         }
     }
