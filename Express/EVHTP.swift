@@ -19,8 +19,13 @@
 //
 //===----------------------------------------------------------------------===//
 
+import Foundation
 import CEVHTP
+import Result
 import BrightFutures
+#if os(Linux)
+    import Glibc
+#endif
 
 internal typealias EVHTPp = UnsafeMutablePointer<evhtp_t>
 internal typealias EVHTPRequest = UnsafeMutablePointer<evhtp_request_t>
@@ -139,13 +144,32 @@ private class RepeatingHeaderDict {
     }
     
     private func addHeader(key: UnsafeMutablePointer<Int8>, klen: Int, val: UnsafeMutablePointer<Int8>, vlen: Int) {
-        let k = String(bytesNoCopy: key, length: klen, encoding: NSUTF8StringEncoding, freeWhenDone: false)
-        let v = String(bytesNoCopy: val, length: vlen, encoding: NSUTF8StringEncoding, freeWhenDone: false)
+        var unk = UnsafeMutablePointer<UInt8>.alloc(klen)
+        var unv = UnsafeMutablePointer<UInt8>.alloc(vlen)
+        
+        var k:String?
+        var v:String?
+        
+        if evhtp_unescape_string(&unk, UnsafeMutablePointer<UInt8>(key), klen) == 0 {
+            k = String(bytesNoCopy: unk, length: strnlen(UnsafePointer<Int8>(unk), klen), encoding: NSUTF8StringEncoding, freeWhenDone: false)
+        } else {
+            k = String(bytesNoCopy: key, length: klen, encoding: NSUTF8StringEncoding, freeWhenDone: false)
+        }
+        if evhtp_unescape_string(&unv, UnsafeMutablePointer<UInt8>(val), vlen) == 0 {
+            v = String(bytesNoCopy: unv, length: strnlen(UnsafePointer<Int8>(unv), vlen), encoding: NSUTF8StringEncoding, freeWhenDone: false)
+        } else {
+            v = String(bytesNoCopy: val, length: vlen, encoding: NSUTF8StringEncoding, freeWhenDone: false)
+        }
+
         if var a = dict[k!] {
             a.append(v!)
         } else {
             dict[k!] = [v!]
         }
+        unk.destroy()
+        unk.dealloc(klen)
+        unv.destroy()
+        unv.dealloc(vlen)
     }
 }
 
@@ -164,9 +188,27 @@ private func request_callback(req: EVHTPRequest, callbk: UnsafeMutablePointer<Vo
     evhtp_request_pause(req)
 }
 
+private func sockaddr_size(saddr: UnsafeMutablePointer<sockaddr>) -> Int {
+    #if os(Linux)
+        switch Int32(saddr.memory.sa_family) {
+            case AF_INET:
+                return strideof(sockaddr_in)
+            case AF_INET6:
+                return strideof(sockaddr_in6)
+            case AF_LOCAL:
+                return strideof(sockaddr_un)
+            default:
+                return 0
+        }
+    #else
+        return Int(saddr.memory.sa_len)
+    #endif
+}
 
 internal class EVHTPRequestInfo {
     private let req:EVHTPRequest
+
+
     
     var headers: Dictionary<String, String> {
         get {
@@ -294,7 +336,7 @@ internal class EVHTPRequestInfo {
     var remoteIp: String {
         get {
             let mbuf = UnsafeMutablePointer<Int8>.alloc(Int(INET6_ADDRSTRLEN))
-            let err = getnameinfo(req.memory.conn.memory.saddr, UInt32(req.memory.conn.memory.saddr.memory.sa_len), mbuf, UInt32(INET6_ADDRSTRLEN), nil, 0, NI_NUMERICHOST)
+            let err = getnameinfo(req.memory.conn.memory.saddr, UInt32(sockaddr_size(req.memory.conn.memory.saddr)), mbuf, UInt32(INET6_ADDRSTRLEN), nil, 0, NI_NUMERICHOST)
             var res = ""
             if err == 0 {
                 let t = String.fromCString(mbuf)
@@ -331,7 +373,9 @@ internal class _evhtp {
     }
     
     func create_htp(base: COpaquePointer) -> EVHTPp {
-        return evhtp_new(base, nil)
+        let htp = evhtp_new(base, nil)
+        evhtp_set_parser_flags(htp, EVHTP_PARSE_QUERY_FLAG_IGNORE_HEX | EVHTP_PARSE_QUERY_FLAG_ALLOW_EMPTY_VALS | EVHTP_PARSE_QUERY_FLAG_ALLOW_NULL_VALS | EVHTP_PARSE_QUERY_FLAG_TREAT_SEMICOLON_AS_SEP)
+        return htp
     }
     
     func bind_address(htp: EVHTPp, host: String, port: UInt16) {
@@ -403,3 +447,11 @@ internal class _evhtp {
 }
 
 internal let EVHTP = _evhtp()
+
+func evhtp_parse_query(query:String) -> [String: [String]] {
+    let parsed = evhtp_parse_query_wflags(query, query.utf8.count,EVHTP_PARSE_QUERY_FLAG_IGNORE_HEX | EVHTP_PARSE_QUERY_FLAG_ALLOW_EMPTY_VALS | EVHTP_PARSE_QUERY_FLAG_ALLOW_NULL_VALS | EVHTP_PARSE_QUERY_FLAG_TREAT_SEMICOLON_AS_SEP)
+    defer {
+        evhtp_kvs_free(parsed)
+    }
+    return RepeatingHeaderDict.fromHeaders(parsed).dict
+}

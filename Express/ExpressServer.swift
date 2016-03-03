@@ -20,15 +20,20 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
+import Result
+import ExecutionContext
 import BrightFutures
 
 public extension Express {
-    func listen(port:UInt16) -> Future<Void, NoError> {
-        let server = HttpServer(router: self)
-        return server.start(port)
+    func listen(port:UInt16) -> Future<ServerType, NoError> {
+        let server = HttpServer(app: self, port: port)
+        return server.start()
     }
     
     @noreturn func run() {
+        #if os(Linux) && !dispatch
+            print("Note: You have built Express without dispatch support. We have implemented this mode to support Linux developers while Dispatch for Linux is not available out of the box. Consider it to be development mode only and not suitable for production as it might cause occasional hanging and crashes. Still, there is a possibility to build Express with dispatch support (recommended for production use). Follow this link for more info: https://github.com/crossroadlabs/Express")
+        #endif
         ExecutionContext.run()
     }
 }

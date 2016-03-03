@@ -22,7 +22,39 @@
 import Foundation
 
 public extension AnyContent {
-    func asFormUrlEncoded() throws -> Dictionary<String, Array<String>>? {
-        throw ExpressError.NotImplemented(description: "form url encoded parsing is not implemented yet")
+    func asFormUrlEncoded() -> Dictionary<String, Array<String>>? {
+        for ct in contentType {
+            //TODO: move to constants
+            if "application/x-www-form-urlencoded" == ct {
+                return asText().map(evhtp_parse_query)
+            }
+        }
+        return nil
+    }
+}
+
+public extension Request where C : AnyContent {
+    public func mergedQuery() -> Dictionary<String, Array<String>> {
+        guard let bodyQuery = body?.asFormUrlEncoded() else {
+            return query
+        }
+        
+        let urlKeys = Set(query.keys)
+        let keys = Array(urlKeys.union(bodyQuery.keys))
+        
+        let merged = keys.map { key -> (String, Array<String>) in
+            let allValues = query[key].map { urlValues in
+                bodyQuery[key].flatMap { bodyValues in
+                    return urlValues + bodyValues
+                }.getOrElse {
+                    urlValues
+                }
+            }.getOrElse {
+                bodyQuery[key]!
+            }
+            
+            return (key, allValues)
+        }
+        return toMap(merged)
     }
 }

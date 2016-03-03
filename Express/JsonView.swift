@@ -20,23 +20,73 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import SwiftyJSON
+import TidyJSON
+
+public protocol JSONConvertible {
+    func toJSON() -> JSON?
+}
+
+extension Bool : JSONConvertible {
+    public func toJSON() -> JSON? {
+        return JSON(self)
+    }
+}
+
+extension Double : JSONConvertible {
+    public func toJSON() -> JSON? {
+        return JSON(self)
+    }
+}
+
+extension Int : JSONConvertible {
+    public func toJSON() -> JSON? {
+        return JSON(self)
+    }
+}
+
+extension String : JSONConvertible {
+    public func toJSON() -> JSON? {
+        return JSON(self)
+    }
+}
+
+extension Array : JSONConvertible {
+    public func toJSON() -> JSON? {
+        return JSON(self.flatMap { $0 as? JSONConvertible }.flatMap {$0.toJSON()})
+    }
+}
+
+extension Dictionary : JSONConvertible {
+    public func toJSON() -> JSON? {
+        let normalized = self.map {(String($0), $1)}.flatMap { (k, v) in
+            (v as? JSONConvertible).map {(k, $0)}
+        }
+        return JSON(toMap(normalized.flatMap { (k, v) in
+            v.toJSON().map {(k, $0)}
+        }))
+    }
+}
+
+extension Optional {
+    public func toJSON() -> JSON? {
+        return self.flatMap{$0 as? JSONConvertible}.flatMap{$0.toJSON()}.getOrElse(JSON.Null)
+    }
+}
 
 public class JsonView : NamedViewType {
-    public let name:String = "json"
+    public static let name:String = "json"
+    public let name:String = JsonView.name
     
     public init() {
     }
     
-    public func render(context:AnyObject?) throws -> AbstractActionType {
+    public func render<Context>(context:Context?) throws -> FlushableContentType {
         //TODO: implement reflection
-        let json = context.map { context in
-            JSON(context)
-        }.getOrElse(JSON(Dictionary()))
+        let json = context.flatMap{$0 as? JSONConvertible}.flatMap { $0.toJSON() }
         //TODO: avoid string path
-        guard let render = json.rawString() else {
-            throw ExpressError.Render(description: "unable to render json: " + (context?.description).getOrElse("None"), line: nil, cause: nil)
+        guard let render = json?.dump() else {
+            throw ExpressError.Render(description: "unable to render json: " + context.flatMap{String($0)}.getOrElse("None"), line: nil, cause: nil)
         }
-        return Action<AnyContent>.ok(AnyContent(str:render, contentType: "application/json"))
+        return AnyContent(str:render, contentType: "application/json")!
     }
 }

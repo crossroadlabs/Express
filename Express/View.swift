@@ -22,7 +22,7 @@
 import Foundation
 
 public protocol ViewType {
-    func render(context:AnyObject?) throws -> AbstractActionType
+    func render<Context>(context:Context?) throws -> FlushableContentType
 }
 
 public protocol NamedViewType : ViewType {

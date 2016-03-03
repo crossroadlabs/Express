@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Swift Express Demo - Revoered Error</title>
+        {% include "css.stencil" %}
+    </head>
+    <body>
+        <a href="/"><img class="logo" src="/assets/logo.png" /></a>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-0 col-sm-1 col-md-2 col-lg-3"></div>
+                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="alert alert-success"><span class="text-big">Redirected from error recovering method</span></h3></div>
+                </div>
+                <div class="col-xs-0 col-sm-1 col-md-2 col-lg-3"></div>
+            </div>
+        </div>
+        {% include "js.stencil" %}
+    </body>
+</html>

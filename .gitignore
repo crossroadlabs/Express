@@ -1,6 +1,11 @@
+# Xcode
 *.xcworkspace
 xcuserdata
 
+# Carthage
 Cartfile.resolved
 Carthage
 
+# SPM
+.build
+Packages

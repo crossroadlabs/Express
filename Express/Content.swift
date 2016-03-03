@@ -32,6 +32,7 @@ public protocol ContentFactoryType : DataConsumerType {
 }
 
 public protocol ContentType {
+    var contentType:String? {get}
 }
 
 public protocol ConstructableContentType : ContentType {
@@ -47,6 +48,23 @@ public class ContentFactoryBase {
 }
 
 public protocol FlushableContentType : ContentType, FlushableType {
+}
+
+public class FlushableContent : FlushableContentType {
+    let content:FlushableContentType
+    public var contentType:String? {
+        get {
+            return content.contentType
+        }
+    }
+    
+    public required init(content:FlushableContentType) {
+        self.content = content
+    }
+    
+    public func flushTo(out:DataConsumerType) -> Future<Void, AnyError> {
+        return content.flushTo(out)
+    }
 }
 
 public class AbstractContentFactory<T> : ContentFactoryBase, ContentFactoryType {

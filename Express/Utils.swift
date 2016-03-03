@@ -1,4 +1,4 @@
-//===--- module.map -------------------------------------------------------===//
+//===--- Utils.swift -------------------------------------------===//
 //
 //Copyright (c) 2015-2016 Daniel Leping (dileping)
 //
@@ -19,8 +19,12 @@
 //
 //===----------------------------------------------------------------------===//
 
-module CPThread [system] {
-	header "/usr/include/pthread.h"
-	link "pthread"
-	export *
-}
+import Foundation
+
+#if !os(Linux)
+    public extension String {
+        func bridge() -> NSString {
+            return self as NSString
+        }
+    }
+#endif

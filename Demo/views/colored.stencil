@@ -1,0 +1,1 @@
+<li class="list-group-item">Item: <span class="text-bold" style="color:{{item.color}}">{{item.name}}</span></li>

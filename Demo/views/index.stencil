@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>Swift Express Demo</title>
+        {% include "css.stencil" %}
+    </head>
+    <body>
+        <a href="//swiftexpress.io"><img class="logo" src="/assets/logo.png" /></a>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-0 col-sm-0 col-md-1 col-lg-2"></div>
+                <div class="col-xs-12 col-sm-12 col-md-10 col-lg-8">
+                    <div class="well">
+                        <h2>Examples:</h2>
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                            {% for example in examples %}
+                                <div class="panel panel-default">
+                                    <div class="panel-heading d-table" role="tab" id="heading{{example.id}}">
+                                        <div class="d-table-cell">
+                                            <h4 class="panel-title">
+                                                <a class="example-link" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{example.id}}" aria-expanded="false" aria-controls="collapse{{example.id}}">
+                                                    {{example.title}}
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <a class="btn btn-default btn-sm d-table-cell right-triangle" href="{{example.link}}">Try It! <span class="glyphicon glyphicon-chevron-right"></span></a>
+                                    </div>
+                                    <div id="collapse{{example.id}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{example.id}}">
+                                        <div class="panel-body">
+                                            <pre class="code swift">{% include example.code %}</pre>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xs-0 col-sm-0 col-md-1 col-lg-2"></div>
+            </div>
+        </div>
+        {% include "js.stencil" %}
+        <script>
+            //hljs.configure({useBR: true});
+            $('pre.code').each(function(i, block) {
+                hljs.highlightBlock(block);
+            });
+        </script>
+    </body>
+</html>

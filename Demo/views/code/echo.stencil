@@ -1,0 +1,3 @@
+app.get("/echo") { request in
+    return Action.ok(request.query["call"]?.first)
+}

@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Swift Express Demo - Test Stencil: {{test}}</title>
+        {% include "css.stencil" %}
+    </head>
+    <body>
+        <a href="/"><img class="logo" src="/assets/logo.png" /></a>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xs-0 col-sm-1 col-md-2 col-lg-3"></div>
+                <div class="col-xs-12 col-sm-10 col-md-8 col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"><h3 class="panel-title">Test Stencil: {{test}}</h3></div>
+                        <ul class="list-group">
+                            {% for item in items %}
+                                {% include "colored.stencil" %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xs-0 col-sm-1 col-md-2 col-lg-3"></div>
+            </div>
+        </div>
+        {% include "js.stencil" %}
+    </body>
+</html>

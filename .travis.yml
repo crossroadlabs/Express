@@ -1,0 +1,58 @@
+env:
+  global:
+    - MODULE_NAME=Express
+matrix:
+  include:
+    - script:
+        - xcodebuild build -project $MODULE_NAME.xcodeproj -scheme $MODULE_NAME
+      os: osx
+      osx_image: xcode7.2
+      language: objective-c
+      before_install:
+        - brew update
+        - brew unlink carthage
+        - brew install carthage
+        - brew link carthage
+        - brew tap crossroadlabs/tap
+        - brew install libevhtp --without-oniguruma --with-shared
+      before_script:
+        # bootstrap the dependencies for the project
+        # you can remove if you don't have dependencies
+        - carthage bootstrap --platform osx
+      before_deploy:
+        - carthage build --no-skip-current --platform osx
+        - carthage archive $MODULE_NAME
+      deploy:
+        provider: releases
+        api_key:
+          secure: NxWvEe4nqcI99oKbtcFtmpz3AVkQiC+4kFu4OcCusAoKimMxx3WJ4+B6anDLG5dj/5rhsl4rQdKr/WIneHodyPrIFQPsRLUV2KFxgd+vbKrXLRRw+sZb//r0j89E7tCEUPdModIKWN4OCR7UWHvZ5syVQFfsP4MH1r+OJcBiewVVVPhgXzvndkxVlgXonyrJ++NAW/g+jO+CYNU9Y3KkyK7BaPMw6/oSC2Ly3A3zU1El++MFz+ew6YDGxiEiw7y20q7/qTT4pdl2HWem1P04UwPyJ2fUw/nD0C+fvX6tnFYX0s9p9VPSnrWXkhSHKT9IGlr8sveRPuQIaJcXcbkMHF8rnCmMpJJ63+YeXV88krW0q2ZyVpSodh/NaJ76PqbXij9WBSZ8AmNJsBlBsjhAgPCfZZkJ3vjrSSH2XP4k0ICLI8sxYmELXzR0MU1LaexE/4KKMDUcl4zuHWQBTJTMvtDyl+AJk+GdPBSGEpCQvHjXAwuW9OAz/sqZrLQy8eQJmji8DVhMJYlCK+krBQFZIekA6Wun5VTmATrtcwd6qwXyMOYeoblh3308zhzgyjBQwfJVpWxLLqB+dyQNLEOYhMcCcTwWNMvz7RYbEMcplkIu5azuUL400pPk2g2wp6U522vsAmH7bra3+VyA0qYG0ckLiwBaBKVCxD7EzkAy5CA=
+        file: $MODULE_NAME.framework.zip
+        skip_cleanup: true
+        on:
+          repo: crossroadlabs/Express
+          tags: true
+    - script:
+        - ./build
+      sudo: required
+      dist: trusty
+      language: generic
+      before_install:
+        # install original swift distribution
+        - wget -q -O - https://swift.org/keys/all-keys.asc | gpg --import -
+        - cd ..
+        - export SWIFT_VERSION=swift-DEVELOPMENT-SNAPSHOT-2016-02-25-a
+        - wget https://swift.org/builds/development/ubuntu1404/$SWIFT_VERSION/$SWIFT_VERSION-ubuntu14.04.tar.gz
+        - tar xzf $SWIFT_VERSION-ubuntu14.04.tar.gz
+        - export PATH="${PWD}/${SWIFT_VERSION}-ubuntu14.04/usr/bin:${PATH}"
+        # express dependencies
+        - sudo add-apt-repository ppa:swiftexpress/swiftexpress --yes
+        - sudo apt-get update
+        - sudo apt-get install libevhtp-dev libevent-dev libssl-dev
+        # get back home
+        - cd $MODULE_NAME
+        # get crossroad build script
+        - wget https://raw.githubusercontent.com/crossroadlabs/utils/master/build
+        - chmod +x build
+notifications:
+  email: false
+  

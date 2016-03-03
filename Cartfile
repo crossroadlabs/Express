@@ -1,5 +1,7 @@
-#github "crossroadlabs/BrightFutures" "master" #due to bug 1100 in carthage 0.12
-github "crossroadlabs/BrightFutures" "5127b928524887ce3ad33b7d741f49511902cb03"
-github "SwiftyJSON/SwiftyJSON"
-#github "groue/GRMustache.swift" "Swift2.1" #due to bug 1100 in carthage 0.12
-github "groue/GRMustache.swift" "bf7d6031d7e0dd862519eaba2b36b2e11a0d25a9"
+github "crossroadlabs/BrightFutures" ~> 0.4
+github "crossroadlabs/TidyJSON" ~> 1.1
+github "groue/GRMustache.swift" "Swift2.1"
+github "crossroadlabs/Regex" ~> 0.5
+github "crossroadlabs/PathToRegex" ~> 0.2
+github "crossroadlabs/CEVHTP" ~> 0.1
+github "crossroadlabs/Stencil" ~> 0.5

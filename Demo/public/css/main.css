@@ -1,0 +1,50 @@
+body {
+    background-color: #e4e4e4;
+}
+
+.logo {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 256px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.text-big {
+    font-size: 24pt;
+}
+
+.text-bold {
+    font-weight: 700;
+}
+
+.example-link {
+    display: inline-block;
+    width: 100%;
+}
+
+.right-triangle {
+    width: 60px;
+}
+
+.d-table {
+    display: table;
+    width: 100%;
+}
+
+.d-table-cell {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.panel-heading {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.panel-title {
+    padding-right: 5px;
+}

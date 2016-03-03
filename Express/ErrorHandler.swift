@@ -57,9 +57,12 @@ public class AggregateErrorHandler : ErrorHandlerType {
         register { e in
             //this is the only way to check. Otherwise it will just always tall-free bridge to NSError
             if e.dynamicType == NSError.self {
-                let e = e as NSError
-                //TODO: generalize this shit
-                return Action<AnyContent>.internalServerError(e.description)
+                //stupid autobridging
+                switch e {
+                case let e as NSError:
+                    return Action<AnyContent>.internalServerError(e.description)
+                default: return nil
+                }
             } else {
                 return nil
             }
@@ -73,6 +76,15 @@ public class AggregateErrorHandler : ErrorHandlerType {
     
     public func register(f: ErrorHandlerFunction) {
         register(FunctionErrorHandler(fun: f))
+    }
+    
+    public func register<E: ErrorType>(f:E -> AbstractActionType?) {
+        register { e in
+            guard let e = e as? E else {
+                return nil
+            }
+            return f(e)
+        }
     }
     
     public func handle(e:ErrorType) -> AbstractActionType? {

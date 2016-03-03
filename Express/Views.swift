@@ -20,6 +20,7 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
+import ExecutionContext
 import BrightFutures
 import Result
 
@@ -89,7 +90,7 @@ public class Views {
                 
                 let combinedData = self.paths.map { path in
                     exts.map { ext in
-                        (ext, (path as NSString).stringByAppendingPathComponent(viewName) + "." + ext)
+                        (ext, path.bridge().stringByAppendingPathComponent(viewName) + "." + ext)
                     }
                 }.flatten()
                 
@@ -120,7 +121,7 @@ public class Views {
         }
     }
     
-    func render(view:String, context:AnyObject?) -> Future<AbstractActionType, AnyError> {
+    public func render<Context>(view:String, context:Context?) -> Future<FlushableContentType, AnyError> {
         return self.view(view).map(renderContext) { view in
             try view.render(context)
         }

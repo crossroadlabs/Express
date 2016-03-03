@@ -17,49 +17,124 @@ let app = express()
 
 app.views.register(JsonView())
 app.views.register(MustacheViewEngine())
+app.views.register(StencilViewEngine())
 
-enum TestError {
-    case Test
-    case Test2
+app.get("/echo") { request in
+    return Action.ok(request.query["call"]?.first)
+}
+
+enum NastyError : ErrorType {
+    case Recoverable
+    case Fatal(reason:String)
+}
+
+app.get("/error/recovered") { request in
+    return Action.render("error-recovered", context: [String:Any]())
+}
+
+app.get("/error/:fatal?") { request in
+    guard let fatal = request.params["fatal"] else {
+        throw NastyError.Recoverable
+    }
     
-    func items() -> Dictionary<String, String> {
-        switch self {
-            case .Test: return ["blood": "red"]
-            case .Test2: return ["sickness": "purple"]
-        }
+    throw NastyError.Fatal(reason: fatal)
+}
+
+
+
+app.errorHandler.register { (e:NastyError) in
+    switch e {
+    case .Recoverable:
+        return Action<AnyContent>.redirect("/error/recovered")
+    case .Fatal(let reason):
+        let content = AnyContent(str: "Unrecoverable nasty error happened. Reason: " + reason)
+        return Action<AnyContent>.response(.InternalServerError, content: content)
     }
 }
 
-extension TestError : ErrorType {
-}
-
-func test() throws -> Action<AnyContent> {
-    throw TestError.Test2
-}
-
-app.errorHandler.register { e in
-    guard let e = e as? TestError else {
+/// Custom page not found error handler
+app.errorHandler.register { (e:ExpressError) in
+    switch e {
+    case .PageNotFound(let path):
+        return Action<AnyContent>.render("404", context: ["path": path], status: .NotFound)
+    case  .RouteNotFound(let path):
+        return Action<AnyContent>.render("404", context: ["path": path], status: .NotFound)
+    default:
         return nil
     }
-    
-    let items = e.items()
-    
-    let viewItems = items.map { (k, v) in
-        ["name": k, "color": v]
-    }
-    
-    return Action<AnyContent>.render("test", context: ["test": "error", "items": viewItems])
 }
 
-app.get("/*", action: StaticAction(path: "public"))
+/// StaticAction is just a predefined configurable handler for serving static files.
+/// It's important to pass exactly the same param name to it from the url pattern.
+app.get("/assets/:file+", action: StaticAction(path: "public", param:"file"))
 
-app.get("/test") { req in
+app.get("/hello") { request in
+    return Action.ok(AnyContent(str: "<h1><center>Hello Express!!!</center></h1>", contentType: "text/html"))
+}
+
+//user as an url param
+app.get("/hello/:user.html") { request in
+    //get user
+    let user = request.params["user"]
+    //if there is a user - create our context. If there is no user, context will remain nil
+    let context = user.map {["user": $0]}
+    //render our template named "hello"
+    return Action.render("hello", context: context)
+}
+
+app.post("/api/user") { request in
+    //check if JSON has arrived
+    guard let json = request.body?.asJSON() else {
+        return Action.ok("Invalid request")
+    }
+    //check if JSON object has username field
+    guard let username = json["username"].string else {
+        return Action.ok("Invalid request")
+    }
+    //compose the response as a simple dictionary
+    let response =
+        ["status": "ok",
+        "description": "User with username '" + username + "' created succesfully"]
+    
+    //render disctionary as json (remember the one we've registered above?)
+    return Action.render(JsonView.name, context: response)
+}
+
+//:param - this is how you define a part of URL you want to receive through request object
+app.get("/echo/:param") { request in
+    //here you get the param from request: request.params["param"]
+    return Action.ok(request.params["param"])
+}
+
+func factorial(n: Double) -> Double {
+    return n == 0 ? 1 : n * factorial(n - 1)
+}
+
+func calcFactorial(num:Double) -> Future<Double, AnyError> {
     return future {
-        return try test()
+        return factorial(num)
     }
 }
 
-app.get("/test.html") { (request:Request<AnyContent>)->Action<AnyContent> in
+// (request -> Future<Action<AnyContent>, AnyError> in) - this is required to tell swift you want to return a Future
+// hopefully inference in swift will get better eventually and just "request in" will be enough
+app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
+    // get the number from the url
+    let num = request.params["num"].flatMap{Double($0)}.getOrElse(0)
+    
+    // get the factorial Future. Returns immediately - non-blocking
+    let factorial = calcFactorial(num)
+    
+    //map the result of future to Express Action
+    let future = factorial.map { fac in
+        Action.ok(String(fac))
+    }
+    
+    //return the future
+    return future
+}
+
+func testItems(request:Request<AnyContent>) throws -> [String: Any] {
     let newItems = request.query.map { (k, v) in
         (k, v.first!)
     }
@@ -69,90 +144,53 @@ app.get("/test.html") { (request:Request<AnyContent>)->Action<AnyContent> in
         ["name": k, "color": v]
     }
     
-    if ((request.query["throw"]?.first) != nil) {
-        throw TestError.Test
+    if let reason = request.query["throw"]?.first {
+        throw NastyError.Fatal(reason: reason)
     }
     
-    return Action<AnyContent>.render("test", context: ["test": "ok", "items": viewItems])
+    return ["test": "ok", "items": viewItems]
 }
 
-app.get("/echo") { request in
-    return Action<AnyContent>.chain()
+app.get("/render.html") { request in
+    let items = try testItems(request)
+    return Action.render("test", context: items)
 }
 
-app.get("/myecho") { request in
-    return Action<AnyContent>.ok(AnyContent(str: request.query["message"]?.first))
-}
-
-app.get("/hello") { request in
-    return Action<AnyContent>.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
-}
-
-app.get("/") { (request:Request<AnyContent>)->Action<AnyContent> in
-    for me in request.body?.asJSON().map({$0["test"]}) {
-        print(me)
-    }
-    return Action<AnyContent>.ok(AnyContent(str:"{\"response\": \"hey hey\"}", contentType: "application/json"))
-}
-
-func echoData(request:Request<AnyContent>) -> Dictionary<String, String> {
-    let call = request.body?.asJSON().map({$0["say"]})?.string
-    let response = call.getOrElse("I don't hear you!")
-    return ["said": response]
-}
-
-func echo(request:Request<AnyContent>) -> Action<AnyContent> {
-    let data = echoData(request)
-    let tuple = data.first!
-    let str = "{\"" + tuple.0 + "\": \"" + tuple.1 + "\"}"
+//TODO: make a list of pages
+app.get("/") { request in
+    let examples:[Any] = [
+        ["title": "Hello Express", "link": "/hello", "id":"hello", "code": "code/hello.stencil"],
+        ["title": "Echo", "link": "/echo?call=hello", "id":"echo", "code": "code/echo.stencil"],
+        ["title": "Echo with param", "link": "/echo/hello", "id":"echo-param", "code": "code/echo-param.stencil"],
+        ["title": "Error recoverable (will redirect to recover page)", "link": "/error", "id":"error", "code": "code/error.stencil"],
+        ["title": "Error fatal", "link": "/error/thebigbanghappened", "id":"error-fatal", "code": "code/error.stencil"],
+        ["title": "Custom 404", "link": "/thisfiledoesnotexist", "id":"404", "code": "code/404.stencil"],
+        ["title": "Hello [username]. You can put your name instead", "link": "/hello/username.html", "id":"hello-username", "code": "code/hello-user.stencil"],
+        ///api/user - implement JSON post form
+        ["title": "Asynchronous factorial", "link": "/factorial/100", "id":"factorial", "code": "code/factorial.stencil"],
+        ["title": "Render", "link": "/render.html?sun=yellow&clouds=lightgray", "id":"render", "code": "code/render.stencil"],
+        ["title": "Redirect", "link": "/test/redirect", "id":"redirect", "code": "code/redirect.stencil"],
+        ["title": "Merged query (form url encoded and query string)", "link": "/merged/query?some=param&another=param2", "id":"query", "code": "code/query.stencil"],
+    ]
     
-    return Action<AnyContent>.ok(AnyContent(str:str, contentType: "application/json"))
-}
-
-func echoRender(request:Request<AnyContent>) -> Action<AnyContent> {
-    var data = echoData(request)
-    data["hey"] = "Hello from render"
-    return Action.render("json", context: data)
-}
-
-app.post("/echo/inline") { (request:Request<AnyContent>)->Action<AnyContent> in
-    let call = request.body?.asJSON().map({$0["say"]})?.string
-    let response = call.getOrElse("I don't hear you!")
+    let context:[String: Any] = ["examples": examples]
     
-    return Action<AnyContent>.ok(AnyContent(str:"{\"said\": \"" + response + "\"}", contentType: "application/json"))
+    return Action.render("index", context: context)
 }
 
-app.get("/echo") { request in
-    return echo(request)
-}
-
-app.get("/echo/render", handler: echoRender)
-app.post("/echo/render", handler: echoRender)
-
-app.post("/echo") { request in
-    return echo(request)
-}
-
-app.post("/echo2") { request in
-    return Action.ok(AnyContent(str: request.body?.asText().map {"Text echo: " + $0},
-        contentType: request.contentType))
-}
-
-app.post("/echo3") { request in
-    return Action.ok(AnyContent(data: request.body?.asRaw(),
-        contentType: request.contentType))
-}
-
-app.handle(HttpMethod.Any.rawValue, path: "/async/echo") { request in
+app.get("/test/redirect") { request in
     return future {
-        return echo(request)
+        let to = request.query["to"].flatMap{$0.first}.getOrElse("../render.html")
+        return Action.redirect(to)
     }
 }
 
-app.listen(9999).onSuccess {
-    print("Successfully launched server")
+app.all("/merged/query") { request in
+    Action.render(JsonView.name, context: request.mergedQuery())
+}
+
+app.listen(9999).onSuccess { server in
+    print("Express was successfully launched on port", server.port)
 }
 
 app.run()
-
-//TODO: proper error handling for sync requests

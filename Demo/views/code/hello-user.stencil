@@ -1,0 +1,9 @@
+//user as an url param
+app.get("/hello/:user.html") { request in
+    //get user
+    let user = request.params["user"]
+    //if there is a user - create our context. If there is no user, context will remain nil
+    let context = user.map {["user": $0]}
+    //render our template named "hello"
+    return Action.render("hello", context: context)
+}
