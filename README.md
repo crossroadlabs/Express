@@ -1,7 +1,7 @@
 [//]: https://www.iconfinder.com/icons/383207/doc_tag_icon#size=64
 <p align="center">
 	<a href="http://swiftexpress.io/">
-		<img src ="./logo-full.png" height=256/>
+		<img alt="Swift Express" src ="./logo-full.png" height=256/>
 	</a>
 	<a href="./doc/index.md">
 		<h5 align="right">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/>
@@ -13,8 +13,6 @@
 
 [<h5 align="right">Eating our own dog food  <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/147/globe-full-32.png" height=16/>
 		</h5>](http://swiftexpress.io/)
-
-# Swift Express
 
 ![🐧 linux: ready](https://img.shields.io/badge/%F0%9F%90%A7%20linux-ready-red.svg)
 [![Build Status](https://travis-ci.org/crossroadlabs/Express.svg?branch=master)](https://travis-ci.org/crossroadlabs/Express)
