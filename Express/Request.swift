@@ -100,18 +100,20 @@ public class RequestHead : HttpHead, RequestHeadType {
     }
 }
 
-public protocol RequestType : RequestHeadType {
+public protocol RequestType : RequestHeadType, AppContext {
     typealias Content
     
     var body:Content? {get}
 }
 
 public class Request<C> : RequestHead, RequestType {
+    public let app:Express
     public let body:Content?
     
     public typealias Content = C
     
-    init(head: RequestHeadType, body:Content?) {
+    init(app:Express, head: RequestHeadType, body:Content?) {
+        self.app = app
         self.body = body
         super.init(head: head)
     }

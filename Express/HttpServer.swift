@@ -108,7 +108,7 @@ private func handle_request(req: EVHTPRequest, serv:ServerParams) {
         let action = future(immediate) { () throws -> AbstractActionType in
             throw ExpressError.RouteNotFound(path: head.path)
         }
-        transaction.handleAction(action)
+        transaction.handleAction(action, request: Optional<Request<AnyContent>>.None)
         try! transaction.dataEnd()
     }
 }

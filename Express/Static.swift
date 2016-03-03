@@ -44,19 +44,23 @@ public class StaticFileProvider : StaticDataProviderType {
         let file = fullPath(file)
         
         return future {
-            let attributes = try self.fm.attributesOfItemAtPath(file)
-            
-            guard let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) else {
-                //TODO: throw different error
-                throw ExpressError.PageNotFound(path: file)
+            do {
+                let attributes = try self.fm.attributesOfItemAtPath(file)
+                
+                guard let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) else {
+                    //TODO: throw different error
+                    throw ExpressError.PageNotFound(path: file)
+                }
+                
+                let timestamp = UInt64(modificationDate.timeIntervalSince1970 * 1000 * 1000)
+                
+                //TODO: use MD5 of fileFromURI + timestamp
+                let etag = "\"" + String(timestamp) + "\""
+                
+                return etag
+            } catch _ as NSError {
+                throw ExpressError.FileNotFound(filename: file)
             }
-            
-            let timestamp = UInt64(modificationDate.timeIntervalSince1970 * 1000 * 1000)
-            
-            //TODO: use MD5 of fileFromURI + timestamp
-            let etag = "\"" + String(timestamp) + "\""
-            
-            return etag
         }
     }
     
@@ -110,41 +114,41 @@ public class BaseStaticAction<C : FlushableContentType> : Action<C>, Intermediat
         self.headers = headers
     }
     
-    public func nextAction<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<AbstractActionType, AnyError> {
+    public func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?), AnyError> {
         
         if request.method != HttpMethod.Get.rawValue {
-            return Future<AbstractActionType, AnyError>(value: Action<AnyContent>.chain())
+            return Future<(AbstractActionType, Request<RequestContent>?), AnyError>(value: (Action<AnyContent>.chain(), nil))
         }
         
         guard let fileFromURI = request.params[self.param] else {
             print("Can not find ", self.param, " group in regex")
-            return Future<AbstractActionType, AnyError>(value: Action<AnyContent>.chain())
+            return Future<(AbstractActionType, Request<RequestContent>?), AnyError>(value: (Action<AnyContent>.chain(), nil))
         }
         
         let etag = self.dataProvider.etag(fileFromURI)
         
-        return etag.flatMap { etag -> Future<AbstractActionType, AnyError> in
+        return etag.flatMap { etag -> Future<(AbstractActionType, Request<RequestContent>?), AnyError> in
             let headers = self.headers ++ ["ETag": etag]
             
             if let requestETag = request.headers["If-None-Match"] {
                 if requestETag == etag {
                     let action = Action<AnyContent>.response(.NotModified, content: nil, headers: headers)
-                    return Future<AbstractActionType, AnyError>(value: action)
+                    return Future<(AbstractActionType, Request<RequestContent>?), AnyError>(value: (action, nil))
                 }
             }
             
-            let content = self.dataProvider.data(app, file: fileFromURI)
+            let content = self.dataProvider.data(request.app, file: fileFromURI)
             
             return content.map { content in
                 let flushableContent = FlushableContent(content: content)
                 
-                return Action.ok(flushableContent, headers: headers)
+                return (Action.ok(flushableContent, headers: headers), nil)
             }
         }.recoverWith { e in
             switch e {
             case ExpressError.PageNotFound(path: _): fallthrough
             case ExpressError.FileNotFound(filename: _):
-                return Future(value: Action<AnyContent>.chain())
+                return Future(value: (Action<AnyContent>.chain(), nil))
             default:
                 return Future(error: AnyError(cause: e))
             }
