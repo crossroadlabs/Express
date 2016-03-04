@@ -16,9 +16,9 @@ Using [Express](http://swiftexpress.io) is rather easy. To create a project you 
 swift-express init YourProject
 ```
 
-ant it will create you the whole directory structure along with xCode project.
+and it will create the whole directory structure along with an Xcode project.
 
-You can run your project by typing following test while in the project folder:
+You can run your project by typing the following while in the project folder:
 
 ```sh
 swift-express run
