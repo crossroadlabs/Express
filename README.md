@@ -1,7 +1,7 @@
 [//]: https://www.iconfinder.com/icons/383207/doc_tag_icon#size=64
 <p align="center">
 	<a href="http://swiftexpress.io/">
-		<img src ="./logo-full.png" height=256/>
+		<img alt="Swift Express" src ="./logo-full.png" height=256/>
 	</a>
 	<a href="./doc/index.md">
 		<h5 align="right">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/>
