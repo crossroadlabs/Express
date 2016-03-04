@@ -59,10 +59,16 @@ public class StaticFileProvider : StaticDataProviderType {
                 
                 return etag
             } catch let e {
-                switch e {
-                case _ as NSError:
-                    throw ExpressError.FileNotFound(filename: file)
-                default:
+                //this is the only way to check. Otherwise it will just always tall-free bridge to NSError
+                if e.dynamicType == NSError.self {
+                    //stupid autobridging
+                    switch e {
+                    case _ as NSError:
+                        throw ExpressError.FileNotFound(filename: file)
+                    default:
+                        throw e
+                    }
+                } else {
                     throw e
                 }
             }
