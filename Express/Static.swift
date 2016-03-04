@@ -58,8 +58,13 @@ public class StaticFileProvider : StaticDataProviderType {
                 let etag = "\"" + String(timestamp) + "\""
                 
                 return etag
-            } catch _ as NSError {
-                throw ExpressError.FileNotFound(filename: file)
+            } catch let e {
+                switch e {
+                case _ as NSError:
+                    throw ExpressError.FileNotFound(filename: file)
+                default:
+                    throw e
+                }
             }
         }
     }
