@@ -40,7 +40,7 @@ public class StaticFileProvider : StaticDataProviderType {
         return root.bridge().stringByAppendingPathComponent(file)
     }
     
-    private func attributes(file:String) throws -> [String : AnyObject] {
+    private func attributes(file:String) throws -> [String : Any] {
         do {
             return try self.fm.attributesOfItemAtPath(file)
         } catch {
