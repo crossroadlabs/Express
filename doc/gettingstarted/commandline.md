@@ -18,6 +18,19 @@ swift-express init YourProject
 
 ant it will create you the whole directory structure along with xCode project.
 
+No you need to fetch and build the dependencies:
+
+```sh
+cd YourProject
+swift-express bootstrap
+```
+
+Build the project:
+
+```sh
+swift-express build
+```
+
 You can run your project by typing following test while in the project folder:
 
 ```sh

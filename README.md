@@ -37,6 +37,7 @@ First make sure, please, you have followed the [installation](#installation) sec
 ```sh
 swift-express init HelloExpress
 cd HelloExpress
+swift-express bootstrap
 open HelloExpress.xcodeproj
 ```
 
@@ -51,6 +52,7 @@ app.get("/myecho") { request in
 ##### Run from xCode or command line with:
 
 ```sh
+swift-express build
 swift-express run
 ```
 
