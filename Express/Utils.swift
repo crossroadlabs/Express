@@ -22,7 +22,7 @@
 import Foundation
 
 #if !os(Linux)
-    extension String {
+    public extension String {
         func bridge() -> NSString {
             return self as NSString
         }

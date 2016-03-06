@@ -84,3 +84,7 @@ public extension Express {
     }
 }
 
+public protocol AppContext {
+    var app:Express {get}
+}
+

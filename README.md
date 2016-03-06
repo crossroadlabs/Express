@@ -1,7 +1,7 @@
 [//]: https://www.iconfinder.com/icons/383207/doc_tag_icon#size=64
 <p align="center">
 	<a href="http://swiftexpress.io/">
-		<img src ="./logo-full.png" height=256/>
+		<img alt="Swift Express" src ="./logo-full.png" height=256/>
 	</a>
 	<a href="./doc/index.md">
 		<h5 align="right">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/>
@@ -16,11 +16,12 @@
 
 # Swift Express
 
-[![GitHub license](https://img.shields.io/badge/license-LGPL v3-green.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
+![🐧 linux: ready](https://img.shields.io/badge/%F0%9F%90%A7%20linux-ready-red.svg)
 [![Build Status](https://travis-ci.org/crossroadlabs/Express.svg?branch=master)](https://travis-ci.org/crossroadlabs/Express)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ![Platform OS X | Linux](https://img.shields.io/badge/platform-OS%20X%20%7C%20Linux-orange.svg)
 ![Swift version](https://img.shields.io/badge/Swift-2.1 | 2.2-blue.svg)
+[![GitHub license](https://img.shields.io/badge/license-LGPL v3-green.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/crossroadlabs/Express.svg)](https://github.com/crossroadlabs/Express/releases)
 
 ### Being [perfectionists](http://www.crossroadlabs.xyz), we took the best from what we think is the best: power of [Play Framework](https://www.playframework.com/) and simplicity of [Express.js](http://expressjs.com/)
@@ -36,6 +37,7 @@ First make sure, please, you have followed the [installation](#installation) sec
 ```sh
 swift-express init HelloExpress
 cd HelloExpress
+swift-express bootstrap
 open HelloExpress.xcodeproj
 ```
 
@@ -50,6 +52,7 @@ app.get("/myecho") { request in
 ##### Run from xCode or command line with:
 
 ```sh
+swift-express build
 swift-express run
 ```
 

@@ -54,7 +54,7 @@ class Transaction<RequestContent : ConstructableContentType, ResponseContent : F
         self.action = actionPromise.future
         self.request = Promise<Request<RequestContent>, NoError>()
         content.onSuccess(ExecutionContext.user) { content in
-            let request = Request<RequestContent>(head: head, body: content as? RequestContent)
+            let request = Request<RequestContent>(app: app, head: head, body: content as? RequestContent)
             self.request.success(request)
         }
         content.onFailure { e in
@@ -82,36 +82,55 @@ class Transaction<RequestContent : ConstructableContentType, ResponseContent : F
         self.actionPromise.failure(AnyError(cause: e))
     }
     
-    func handleAction(action:Future<AbstractActionType, AnyError>) {
+    func handleActionWithRequest<C : ConstructableContentType>(actionAndRequest:Future<(AbstractActionType, Request<C>?), AnyError>) {
+        actionAndRequest.onComplete { result in
+            let action = Future(result: result.map {$0.0})
+            self.handleAction(action, request: result.value?.1)
+        }
+    }
+    
+    func handleAction<C : ConstructableContentType>(action:Future<AbstractActionType, AnyError>, request:Request<C>?) {
         action.onSuccess(ExecutionContext.action) { action in
-            //yes we certainly have request here
-            for request in self.request.future.value {
+            if let request = request {
                 self.processAction(action, request: request)
+            } else {
+                //yes we certainly have request here
+                for request in self.request.future.value {
+                    self.processAction(action, request: request)
+                }
             }
         }
         action.onFailure { e in
             //yes, we always have at least the default error handler
             let next = self.app.errorHandler.handle(e)!
             
-            //FIXME: get the request from intermediate action somehow as well, it could have changed
-            self.request.future.onSuccess { request in
+            if let request = request {
                 self.processAction(next, request: request)
+            } else {
+                self.request.future.onSuccess { request in
+                    self.processAction(next, request: request)
+                }
             }
         }
     }
     
     func selfProcess() {
-        handleAction(action)
+        handleAction(action, request: Optional<Request<RequestContent>>.None)
     }
     
     func processAction<C : ConstructableContentType>(action:AbstractActionType, request:Request<C>) {
         switch action {
             case let flushableAction as FlushableAction: flushableAction.flushTo(out)
             case let intermediateAction as IntermediateActionType:
-                let act = intermediateAction.nextAction(app, routeId: routeId, request: request, out: out)
-                //FIXME: get the request from intermediate action somehow as well, it could have changed
-                handleAction(act)
+                let actAndReq = intermediateAction.nextAction(request)
+                handleActionWithRequest(actAndReq)
+            case let selfSufficientAction as SelfSufficientActionType:
+                selfSufficientAction.handle(app, routeId: routeId, request: request, out: out).onFailure { e in
+                    let action = Future<AbstractActionType, AnyError>(error: AnyError(cause: e))
+                    self.handleAction(action, request: request)
+                }
             default:
+                //TODO: handle server error
                 print("wierd action... can do nothing with it")
         }
     }
