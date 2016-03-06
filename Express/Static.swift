@@ -42,7 +42,9 @@ public class StaticFileProvider : StaticDataProviderType {
     
     private func attributes(file:String) throws -> [String : Any] {
         do {
-            return try self.fm.attributesOfItemAtPath(file)
+            return try self.fm.attributesOfItemAtPath(file).map { (k, v) in
+                (k, v as Any)
+            }
         } catch {
             throw ExpressError.FileNotFound(filename: file)
         }
