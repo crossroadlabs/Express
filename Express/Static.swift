@@ -40,27 +40,33 @@ public class StaticFileProvider : StaticDataProviderType {
         return root.bridge().stringByAppendingPathComponent(file)
     }
     
+    private func attributes(file:String) throws -> [String : Any] {
+        do {
+            return try self.fm.attributesOfItemAtPath(file).map { (k, v) in
+                (k, v as Any)
+            }
+        } catch {
+            throw ExpressError.FileNotFound(filename: file)
+        }
+    }
+    
     public func etag(file:String) -> Future<String, AnyError> {
         let file = fullPath(file)
         
         return future {
-            do {
-                let attributes = try self.fm.attributesOfItemAtPath(file)
-                
-                guard let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) else {
-                    //TODO: throw different error
-                    throw ExpressError.PageNotFound(path: file)
-                }
-                
-                let timestamp = UInt64(modificationDate.timeIntervalSince1970 * 1000 * 1000)
-                
-                //TODO: use MD5 of fileFromURI + timestamp
-                let etag = "\"" + String(timestamp) + "\""
-                
-                return etag
-            } catch _ as NSError {
-                throw ExpressError.FileNotFound(filename: file)
+            let attributes = try self.attributes(file)
+            
+            guard let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) else {
+                //TODO: throw different error
+                throw ExpressError.PageNotFound(path: file)
             }
+            
+            let timestamp = UInt64(modificationDate.timeIntervalSince1970 * 1000 * 1000)
+            
+            //TODO: use MD5 of fileFromURI + timestamp
+            let etag = "\"" + String(timestamp) + "\""
+            
+            return etag
         }
     }
     
