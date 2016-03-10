@@ -3,18 +3,18 @@
 	<a href="http://swiftexpress.io/">
 		<img alt="Swift Express" src ="./logo-full.png" height=256/>
 	</a>
-	<a href="./doc/index.md">
-		<h5 align="right">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/>
-		</h5>
-	</a>
 </p>
+
+[<h5 align="right">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/>
+		</h5>](./doc/index.md)
+
 [<h5 align="right">Live 🐧 server running Demo  <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/34/play-circle-32.png" height=16/>
 		</h5>](http://demo.swiftexpress.io/)
 
 [<h5 align="right">Eating our own dog food  <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/147/globe-full-32.png" height=16/>
 		</h5>](http://swiftexpress.io/)
 
-# Swift Express
+# [<img src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-twitter-circle-128.png" height=64 alt="Twitter"/>](https://twitter.com/swift_express) [<img src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-facebook-circle-128.png" height=64 alt="Facebook"/>](https://www.facebook.com/Swift-Express-115263988868017) [<img src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-128.png" height=64 alt="LinkedIn"/>](https://www.linkedin.com/company/swift-express) [<img src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-01-128.png" height=64 alt="Web site"/>](http://swiftexpress.io)
 
 ![🐧 linux: ready](https://img.shields.io/badge/%F0%9F%90%A7%20linux-ready-red.svg)
 [![Build Status](https://travis-ci.org/crossroadlabs/Express.svg?branch=master)](https://travis-ci.org/crossroadlabs/Express)
