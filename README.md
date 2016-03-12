@@ -7,11 +7,11 @@
 
 <p>
 	<p align=left>
-		<a href="https://twitter.com/swift_express" target="_blank"><img align="left" hspace=5 vspace=47 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-twitter-circle-128.png" height=64 alt="Twitter"/></a>
-		<a href="https://www.facebook.com/swiftexpress.io" target="_blank"><img align="left" hspace=5 vspace=47 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-facebook-circle-128.png" height=64 alt="Facebook"/></a>
-		<a href="https://www.linkedin.com/company/swift-express" target="_blank"><img align="left" hspace=5 vspace=47 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-128.png" height=64 alt="LinkedIn"/></a>
-		<a href="http://swiftexpress.io" target="_blank"><img align="left" hspace=5 vspace=47 src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-01-128.png" height=64 alt="Web site"/></a>
-		<a href="mailto:slack@swiftexpress.io?Subject=Add me to Slack" target="_blank"><img vspace=40 align="left" src="https://cdn0.iconfinder.com/data/icons/picons-social/57/109-slack-128.png" height=72 alt="Slack"/></a>
+		<a href="https://twitter.com/swift_express" target="_blank"><img align="left" vspace=42 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-twitter-circle-128.png" height=64 alt="Twitter"/></a>
+		<a href="https://www.facebook.com/swiftexpress.io" target="_blank"><img align="left" vspace=42 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-facebook-circle-128.png" height=64 alt="Facebook"/></a>
+		<a href="https://www.linkedin.com/company/swift-express" target="_blank"><img align="left" vspace=42 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-128.png" height=64 alt="LinkedIn"/></a>
+		<a href="http://swiftexpress.io" target="_blank"><img align="left" vspace=42 src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-01-128.png" height=64 alt="Web site"/></a>
+		<a href="mailto:slack@swiftexpress.io?Subject=Add me to Slack" target="_blank"><img vspace=35 align="left" src="https://cdn0.iconfinder.com/data/icons/picons-social/57/109-slack-128.png" height=72 alt="Slack"/></a>
 	</p>
 	<p>
 		<h5 align="right"><a href="./doc/index.md">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/></a></h5>
