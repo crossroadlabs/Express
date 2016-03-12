@@ -25,7 +25,7 @@ import BrightFutures
 //TODO: refactor
 protocol HeadersAdjuster {
     typealias Content : FlushableContentType
-    static func adjustHeaders(headers:Dictionary<String, String>, c:Content?) -> Dictionary<String, String>
+    static func adjustHeaders(headers:Dictionary<String, String>, c:ContentType?) -> Dictionary<String, String>
 }
 
 public protocol ResponseType : HttpResponseHeadType {
@@ -35,8 +35,6 @@ public protocol ResponseType : HttpResponseHeadType {
 public class Response<C : FlushableContentType> : HttpResponseHead, HeadersAdjuster, ResponseType {
     typealias Content = C
     
-    /// swift limitation
-    public let typesafeContent:C?
     public let content:FlushableContentType?
     
     public convenience init(status:StatusCode, content:C? = nil, headers:Dictionary<String, String> = Dictionary()) {
@@ -44,9 +42,8 @@ public class Response<C : FlushableContentType> : HttpResponseHead, HeadersAdjus
     }
     
     public init(status:UInt16, content:C? = nil, headers:Dictionary<String, String> = Dictionary()) {
-        self.typesafeContent = content
         self.content = content
-        super.init(status: status, headers:Response<C>.adjustHeaders(headers, c: typesafeContent))
+        super.init(status: status, headers:Response<C>.adjustHeaders(headers, c: content))
     }
     
     public override func flushTo(out:DataConsumerType) -> Future<Void, AnyError> {
@@ -63,12 +60,9 @@ public class Response<C : FlushableContentType> : HttpResponseHead, HeadersAdjus
         }
     }
     
-    static func adjustHeaders(headers:Dictionary<String, String>, c:Content?) -> Dictionary<String, String> {
+    static func adjustHeaders(headers:Dictionary<String, String>, c:ContentType?) -> Dictionary<String, String> {
         let cType:String? = c.flatMap { content in
-            switch content {
-                case let ac as AnyContent: return ac.contentType
-                default: return nil
-            }
+            content.contentType
         }
         let h:Dictionary<String, String>? = cType.map { ct in
             var mHeaders = headers
