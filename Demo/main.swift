@@ -7,8 +7,9 @@
 //
 
 import Foundation
+
 import Express
-import BrightFutures
+import Future
 
 let app = express()
 
@@ -73,7 +74,7 @@ app.get("/hello") { request in
 }
 
 //user as an url param
-app.get("/hello/:user.html") { request in
+app.get("/hello/:user.html") { request throws in
     //get user
     let user = request.params["user"]
     //if there is a user - create our context. If there is no user, context will remain nil
@@ -82,7 +83,7 @@ app.get("/hello/:user.html") { request in
     return Action.render("hello", context: context)
 }
 
-app.post("/api/user") { request in
+app.post("/api/user") { request throws in
     //check if JSON has arrived
     guard let json = request.body?.asJSON() else {
         return Action.ok("Invalid request")
@@ -110,7 +111,7 @@ func factorial(n: Double) -> Double {
     return n == 0 ? 1 : n * factorial(n - 1)
 }
 
-func calcFactorial(num:Double) -> Future<Double, AnyError> {
+func calcFactorial(num:Double) -> Future<Double> {
     return future {
         return factorial(num)
     }
@@ -118,7 +119,7 @@ func calcFactorial(num:Double) -> Future<Double, AnyError> {
 
 // (request -> Future<Action<AnyContent>, AnyError> in) - this is required to tell swift you want to return a Future
 // hopefully inference in swift will get better eventually and just "request in" will be enough
-app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
+app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>> in
     // get the number from the url
     let num = request.params["num"].flatMap{Double($0)}.getOrElse(0)
     
@@ -157,7 +158,7 @@ app.get("/render.html") { request in
 }
 
 //TODO: make a list of pages
-app.get("/") { request in
+app.get("/") { request throws in
     let examples:[Any] = [
         ["title": "Hello Express", "link": "/hello", "id":"hello", "code": "code/hello.stencil"],
         ["title": "Echo", "link": "/echo?call=hello", "id":"echo", "code": "code/echo.stencil"],

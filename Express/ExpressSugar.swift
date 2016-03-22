@@ -20,7 +20,8 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+
+import Future
 import Regex
 
 private func defaultUrlMatcher(path:String, method:String = HttpMethod.Any.rawValue) -> UrlMatcherType {
@@ -68,39 +69,39 @@ public extension Express {
     
     //async
     //we need it to avoid recursion
-    internal func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(method:String, path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    internal func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>>) -> Void {
         handleInternal(defaultUrlMatcher(path, method: method), handler: handler)
     }
     
-    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(method:String, path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>>) -> Void {
         handleInternal(method, path: path, handler: handler)
     }
     
-    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(method:String, regex:Regex, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, regex:Regex, handler:Request<RequestContent> -> Future<Action<ResponseContent>>) -> Void {
         self.handle(RegexUrlMatcher(method: method, regex: regex), handler: handler)
     }
     
-    func all<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func all<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>>) -> Void {
         handle(HttpMethod.Any.rawValue, path: path, handler: handler)
     }
     
-    func get<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func get<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>>) -> Void {
         handle(HttpMethod.Get.rawValue, path: path, handler: handler)
     }
     
-    func post<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func post<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>>) -> Void {
         handle(HttpMethod.Post.rawValue, path: path, handler: handler)
     }
     
-    func put<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func put<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>>) -> Void {
         handle(HttpMethod.Put.rawValue, path: path, handler: handler)
     }
     
-    func delete<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func delete<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>>) -> Void {
         handle(HttpMethod.Delete.rawValue, path: path, handler: handler)
     }
     
-    func patch<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func patch<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<ResponseContent>>) -> Void {
         handle(HttpMethod.Patch.rawValue, path: path, handler: handler)
     }
     
@@ -163,31 +164,31 @@ public extension Express {
     }
     
     //async - simple req
-    func handle<ResponseContent : FlushableContentType, E: ErrorType>(method:String, path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func handle<ResponseContent : FlushableContentType>(method:String, path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>>) -> Void {
         self.handleInternal(method, path: path, handler: handler)
     }
     
-    func all<ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func all<ResponseContent : FlushableContentType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>>) -> Void {
         self.handle(HttpMethod.Any.rawValue, path: path, handler: handler)
     }
     
-    func get<ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func get<ResponseContent : FlushableContentType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>>) -> Void {
         self.handle(HttpMethod.Get.rawValue, path: path, handler: handler)
     }
     
-    func post<ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func post<ResponseContent : FlushableContentType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>>) -> Void {
         self.handle(HttpMethod.Post.rawValue, path: path, handler: handler)
     }
     
-    func put<ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func put<ResponseContent : FlushableContentType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>>) -> Void {
         self.handle(HttpMethod.Put.rawValue, path: path, handler: handler)
     }
     
-    func delete<ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func delete<ResponseContent : FlushableContentType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>>) -> Void {
         self.handle(HttpMethod.Delete.rawValue, path: path, handler: handler)
     }
     
-    func patch<ResponseContent : FlushableContentType, E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func patch<ResponseContent : FlushableContentType>(path:String, handler:Request<AnyContent> -> Future<Action<ResponseContent>>) -> Void {
         self.handle(HttpMethod.Patch.rawValue, path: path, handler: handler)
     }
     
@@ -221,31 +222,31 @@ public extension Express {
     }
     
     //async - simple res
-    func handle<RequestContent : ConstructableContentType, E: ErrorType>(method:String, path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func handle<RequestContent : ConstructableContentType>(method:String, path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>>) -> Void {
         self.handleInternal(method, path: path, handler: handler)
     }
     
-    func all<RequestContent : ConstructableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func all<RequestContent : ConstructableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Any.rawValue, path: path, handler: handler)
     }
     
-    func get<RequestContent : ConstructableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func get<RequestContent : ConstructableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Get.rawValue, path: path, handler: handler)
     }
     
-    func post<RequestContent : ConstructableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func post<RequestContent : ConstructableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Post.rawValue, path: path, handler: handler)
     }
     
-    func put<RequestContent : ConstructableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func put<RequestContent : ConstructableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Put.rawValue, path: path, handler: handler)
     }
     
-    func delete<RequestContent : ConstructableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func delete<RequestContent : ConstructableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Delete.rawValue, path: path, handler: handler)
     }
     
-    func patch<RequestContent : ConstructableContentType, E: ErrorType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func patch<RequestContent : ConstructableContentType>(path:String, handler:Request<RequestContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Patch.rawValue, path: path, handler: handler)
     }
     
@@ -279,31 +280,31 @@ public extension Express {
     }
     
     //async - simple all
-    func handle<E: ErrorType>(method:String, path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func handle(method:String, path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>>) -> Void {
         self.handleInternal(method, path: path, handler: handler)
     }
     
-    func all<E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func all(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Any.rawValue, path: path, handler: handler)
     }
     
-    func get<E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func get(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Get.rawValue, path: path, handler: handler)
     }
     
-    func post<E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func post(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Post.rawValue, path: path, handler: handler)
     }
     
-    func put<E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func put(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Put.rawValue, path: path, handler: handler)
     }
     
-    func delete<E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func delete(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Delete.rawValue, path: path, handler: handler)
     }
     
-    func patch<E: ErrorType>(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>, E>) -> Void {
+    func patch(path:String, handler:Request<AnyContent> -> Future<Action<AnyContent>>) -> Void {
         self.handle(HttpMethod.Patch.rawValue, path: path, handler: handler)
     }
 }

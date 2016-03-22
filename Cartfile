@@ -1,4 +1,4 @@
-github "crossroadlabs/BrightFutures" ~> 0.4
+github "crossroadlabs/Future" "master"
 github "crossroadlabs/TidyJSON" ~> 1.1
 github "groue/GRMustache.swift" "Swift2.1"
 github "crossroadlabs/Regex" ~> 0.5

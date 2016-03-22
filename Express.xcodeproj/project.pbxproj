@@ -39,12 +39,21 @@
 		657C1A701C24C8FF0037041F /* ViewEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C1A6F1C24C8FF0037041F /* ViewEngine.swift */; };
 		657C1A721C24DD1D0037041F /* MustacheViewEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657C1A711C24DD1D0037041F /* MustacheViewEngine.swift */; };
 		657CDBCF1C2A07C5005261BA /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CDBCE1C2A07C5005261BA /* Errors.swift */; };
+		65847EA41C99925500156919 /* Boilerplate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA01C99925500156919 /* Boilerplate.framework */; };
+		65847EA51C99925500156919 /* Future.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA11C99925500156919 /* Future.framework */; };
+		65847EA61C99925500156919 /* RunLoop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA21C99925500156919 /* RunLoop.framework */; };
+		65847EA71C99925500156919 /* UV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA31C99925500156919 /* UV.framework */; };
+		65847EA81C99928300156919 /* Boilerplate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA01C99925500156919 /* Boilerplate.framework */; };
+		65847EA91C99928300156919 /* Boilerplate.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA01C99925500156919 /* Boilerplate.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		65847EAA1C99928300156919 /* Future.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA11C99925500156919 /* Future.framework */; };
+		65847EAB1C99928300156919 /* Future.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA11C99925500156919 /* Future.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		65847EAC1C99928300156919 /* RunLoop.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA21C99925500156919 /* RunLoop.framework */; };
+		65847EAD1C99928300156919 /* RunLoop.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA21C99925500156919 /* RunLoop.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		65847EAE1C99928300156919 /* UV.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA31C99925500156919 /* UV.framework */; };
+		65847EAF1C99928300156919 /* UV.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 65847EA31C99925500156919 /* UV.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6589201B1C7A2982008EEE37 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6589201A1C7A2982008EEE37 /* Utils.swift */; };
-		658DBDA31C221A2A00BE8AA9 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */; };
 		658DBDA41C221A2A00BE8AA9 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DBDA11C221A2A00BE8AA9 /* Result.framework */; };
-		658DBDA71C221B0D00BE8AA9 /* BrightFutures.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */; };
 		658DBDA81C221B0D00BE8AA9 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 658DBDA11C221A2A00BE8AA9 /* Result.framework */; };
-		658DBDAB1C221B3400BE8AA9 /* BrightFutures.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		658DBDAC1C221B3400BE8AA9 /* Result.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 658DBDA11C221A2A00BE8AA9 /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		658DBDAF1C22218100BE8AA9 /* Headers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658DBDAE1C22218100BE8AA9 /* Headers.swift */; };
 		658DBDB11C2228F000BE8AA9 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 658DBDB01C2228F000BE8AA9 /* Response.swift */; };
@@ -88,14 +97,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				65E646E71C79A5010036D028 /* PathKit.framework in Copy Frameworks */,
+				65847EA91C99928300156919 /* Boilerplate.framework in Copy Frameworks */,
 				65E646E81C79A5010036D028 /* Stencil.framework in Copy Frameworks */,
 				65E646DB1C79878E0036D028 /* ExecutionContext.framework in Copy Frameworks */,
 				659E80AD1C7756DD00DE85B1 /* TidyJSON.framework in Copy Frameworks */,
 				65DEAFF61C6A8F3900EBA47F /* PathToRegex.framework in Copy Frameworks */,
 				65DEAFF71C6A8F3900EBA47F /* Regex.framework in Copy Frameworks */,
+				65847EAF1C99928300156919 /* UV.framework in Copy Frameworks */,
+				65847EAB1C99928300156919 /* Future.framework in Copy Frameworks */,
 				6525AC561C24E3E700131F58 /* Mustache.framework in Copy Frameworks */,
-				658DBDAB1C221B3400BE8AA9 /* BrightFutures.framework in Copy Frameworks */,
 				658DBDAC1C221B3400BE8AA9 /* Result.framework in Copy Frameworks */,
+				65847EAD1C99928300156919 /* RunLoop.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -136,8 +148,11 @@
 		657C1A6F1C24C8FF0037041F /* ViewEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewEngine.swift; sourceTree = "<group>"; };
 		657C1A711C24DD1D0037041F /* MustacheViewEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MustacheViewEngine.swift; sourceTree = "<group>"; };
 		657CDBCE1C2A07C5005261BA /* Errors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
+		65847EA01C99925500156919 /* Boilerplate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Boilerplate.framework; path = Carthage/Build/Mac/Boilerplate.framework; sourceTree = "<group>"; };
+		65847EA11C99925500156919 /* Future.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Future.framework; path = Carthage/Build/Mac/Future.framework; sourceTree = "<group>"; };
+		65847EA21C99925500156919 /* RunLoop.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RunLoop.framework; path = Carthage/Build/Mac/RunLoop.framework; sourceTree = "<group>"; };
+		65847EA31C99925500156919 /* UV.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UV.framework; path = Carthage/Build/Mac/UV.framework; sourceTree = "<group>"; };
 		6589201A1C7A2982008EEE37 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BrightFutures.framework; path = Carthage/Build/Mac/BrightFutures.framework; sourceTree = "<group>"; };
 		658DBDA11C221A2A00BE8AA9 /* Result.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Result.framework; path = Carthage/Build/Mac/Result.framework; sourceTree = "<group>"; };
 		658DBDAE1C22218100BE8AA9 /* Headers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Headers.swift; sourceTree = "<group>"; };
 		658DBDB01C2228F000BE8AA9 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
@@ -170,17 +185,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65847EA71C99925500156919 /* UV.framework in Frameworks */,
 				65E646E31C79A4EB0036D028 /* PathKit.framework in Frameworks */,
 				65E646E41C79A4EB0036D028 /* Stencil.framework in Frameworks */,
 				659E80AB1C7756C200DE85B1 /* TidyJSON.framework in Frameworks */,
 				65DEAFF21C6A8EA700EBA47F /* PathToRegex.framework in Frameworks */,
+				65847EA41C99925500156919 /* Boilerplate.framework in Frameworks */,
 				65DEAFF31C6A8EA700EBA47F /* Regex.framework in Frameworks */,
-				658DBDA31C221A2A00BE8AA9 /* BrightFutures.framework in Frameworks */,
 				6525AC541C24E3C600131F58 /* Mustache.framework in Frameworks */,
+				65847EA51C99925500156919 /* Future.framework in Frameworks */,
 				658DBDA41C221A2A00BE8AA9 /* Result.framework in Frameworks */,
 				96E0C0541C6D4A9600CA926F /* libevhtp.dylib in Frameworks */,
 				968A3BAE1C63983700E4AFCC /* libssl.dylib in Frameworks */,
 				968A3BB01C63984400E4AFCC /* libcrypto.dylib in Frameworks */,
+				65847EA61C99925500156919 /* RunLoop.framework in Frameworks */,
 				961B9E8B1C23229A000506D2 /* libevent.dylib in Frameworks */,
 				964C0FDF1C243A0700D59840 /* libevent_pthreads.dylib in Frameworks */,
 				961B9E8F1C2322CA000506D2 /* libevent_openssl.dylib in Frameworks */,
@@ -192,14 +210,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				659E80AC1C7756D000DE85B1 /* TidyJSON.framework in Frameworks */,
-				658DBDA71C221B0D00BE8AA9 /* BrightFutures.framework in Frameworks */,
+				65847EA81C99928300156919 /* Boilerplate.framework in Frameworks */,
 				6525AC551C24E3E000131F58 /* Mustache.framework in Frameworks */,
 				65DEAFF41C6A8F1900EBA47F /* PathToRegex.framework in Frameworks */,
 				65DEAFF51C6A8F1900EBA47F /* Regex.framework in Frameworks */,
 				658DBDA81C221B0D00BE8AA9 /* Result.framework in Frameworks */,
 				651826801C2208A800E49AC5 /* Express.framework in Frameworks */,
+				65847EAE1C99928300156919 /* UV.framework in Frameworks */,
+				65847EAA1C99928300156919 /* Future.framework in Frameworks */,
 				65E646E51C79A4FA0036D028 /* PathKit.framework in Frameworks */,
 				65E646E61C79A4FA0036D028 /* Stencil.framework in Frameworks */,
+				65847EAC1C99928300156919 /* RunLoop.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +306,10 @@
 		658DBDA61C221AEB00BE8AA9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				65847EA01C99925500156919 /* Boilerplate.framework */,
+				65847EA11C99925500156919 /* Future.framework */,
+				65847EA21C99925500156919 /* RunLoop.framework */,
+				65847EA31C99925500156919 /* UV.framework */,
 				65E646E11C79A4EB0036D028 /* PathKit.framework */,
 				65E646E21C79A4EB0036D028 /* Stencil.framework */,
 				65E646DA1C79878E0036D028 /* ExecutionContext.framework */,
@@ -292,7 +317,6 @@
 				65DEAFF01C6A8EA700EBA47F /* PathToRegex.framework */,
 				65DEAFF11C6A8EA700EBA47F /* Regex.framework */,
 				658DBDA11C221A2A00BE8AA9 /* Result.framework */,
-				658DBDA01C221A2A00BE8AA9 /* BrightFutures.framework */,
 				6525AC531C24E3C600131F58 /* Mustache.framework */,
 				96E0C0531C6D4A9600CA926F /* libevhtp.dylib */,
 				968A3BAF1C63984400E4AFCC /* libcrypto.dylib */,
@@ -643,8 +667,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
+				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				PRODUCT_BUNDLE_IDENTIFIER = io.swiftexpress.Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -659,8 +685,10 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
 				);
+				HEADER_SEARCH_PATHS = /usr/local/include;
 				INFOPLIST_FILE = Demo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				PRODUCT_BUNDLE_IDENTIFIER = io.swiftexpress.Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

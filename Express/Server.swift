@@ -20,8 +20,9 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+
 import Result
+import Future
 
 public protocol ServerType {
     var port:UInt16 {get}
@@ -30,7 +31,7 @@ public protocol ServerType {
         get
     }
     
-    func start() -> Future<ServerType, NoError>
+    func start() -> Future<ServerType>
     
     init(app:Express, port:UInt16)
 }

@@ -20,12 +20,13 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
+
 import Result
 import ExecutionContext
-import BrightFutures
+import Future
 
 public extension Express {
-    func listen(port:UInt16) -> Future<ServerType, NoError> {
+    func listen(port:UInt16) -> Future<ServerType> {
         let server = HttpServer(app: self, port: port)
         return server.start()
     }

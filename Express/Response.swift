@@ -20,7 +20,9 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+
+import ExecutionContext
+import Future
 
 //TODO: refactor
 protocol HeadersAdjuster {
@@ -46,15 +48,15 @@ public class Response<C : FlushableContentType> : HttpResponseHead, HeadersAdjus
         super.init(status: status, headers:Response<C>.adjustHeaders(headers, c: content))
     }
     
-    public override func flushTo(out:DataConsumerType) -> Future<Void, AnyError> {
+    public override func flushTo(out:DataConsumerType) -> Future<Void> {
         
-        return super.flushTo(out).flatMap { ()->Future<Void,AnyError> in
+        return super.flushTo(out).flatMap { ()->Future<Void> in
             for c in self.content {
                 return c.flushTo(out)
             }
             return Future(value: ())
-        }.flatMap { ()->Future<Void,AnyError> in
-            return future(ImmediateExecutionContext) {
+        }.flatMap { ()->Future<Void> in
+            return future(immediate) {
                 try out.dataEnd()
             }
         }

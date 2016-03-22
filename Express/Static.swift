@@ -20,12 +20,13 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+
 import ExecutionContext
+import Future
 
 public protocol StaticDataProviderType {
-    func etag(file:String) -> Future<String, AnyError>
-    func data(app:Express, file:String) -> Future<FlushableContentType, AnyError>
+    func etag(file:String) -> Future<String>
+    func data(app:Express, file:String) -> Future<FlushableContentType>
 }
 
 public class StaticFileProvider : StaticDataProviderType {
@@ -50,7 +51,7 @@ public class StaticFileProvider : StaticDataProviderType {
         }
     }
     
-    public func etag(file:String) -> Future<String, AnyError> {
+    public func etag(file:String) -> Future<String> {
         let file = fullPath(file)
         
         return future {
@@ -70,7 +71,7 @@ public class StaticFileProvider : StaticDataProviderType {
         }
     }
     
-    public func data(app:Express, file:String) -> Future<FlushableContentType, AnyError> {
+    public func data(app:Express, file:String) -> Future<FlushableContentType> {
         let file = fullPath(file)
         
         return future {
@@ -120,26 +121,26 @@ public class BaseStaticAction<C : FlushableContentType> : Action<C>, Intermediat
         self.headers = headers
     }
     
-    public func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?), AnyError> {
+    public func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?)> {
         
         if request.method != HttpMethod.Get.rawValue {
-            return Future<(AbstractActionType, Request<RequestContent>?), AnyError>(value: (Action<AnyContent>.chain(), nil))
+            return Future<(AbstractActionType, Request<RequestContent>?)>(value: (Action<AnyContent>.chain(), nil))
         }
         
         guard let fileFromURI = request.params[self.param] else {
             print("Can not find ", self.param, " group in regex")
-            return Future<(AbstractActionType, Request<RequestContent>?), AnyError>(value: (Action<AnyContent>.chain(), nil))
+            return Future<(AbstractActionType, Request<RequestContent>?)>(value: (Action<AnyContent>.chain(), nil))
         }
         
         let etag = self.dataProvider.etag(fileFromURI)
         
-        return etag.flatMap { etag -> Future<(AbstractActionType, Request<RequestContent>?), AnyError> in
+        return etag.flatMap { etag -> Future<(AbstractActionType, Request<RequestContent>?)> in
             let headers = self.headers ++ ["ETag": etag]
             
             if let requestETag = request.headers["If-None-Match"] {
                 if requestETag == etag {
                     let action = Action<AnyContent>.response(.NotModified, content: nil, headers: headers)
-                    return Future<(AbstractActionType, Request<RequestContent>?), AnyError>(value: (action, nil))
+                    return Future<(AbstractActionType, Request<RequestContent>?)>(value: (action, nil))
                 }
             }
             
@@ -156,7 +157,7 @@ public class BaseStaticAction<C : FlushableContentType> : Action<C>, Intermediat
             case ExpressError.FileNotFound(filename: _):
                 return Future(value: (Action<AnyContent>.chain(), nil))
             default:
-                return Future(error: AnyError(cause: e))
+                return Future(error: e)
             }
         }
     }

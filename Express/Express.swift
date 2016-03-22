@@ -20,8 +20,9 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
+
 import ExecutionContext
-import BrightFutures
+import Future
 
 public func express() -> Express {
     return Express()
@@ -40,7 +41,7 @@ public class Express : RouterType {
         }
     }
     
-    func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(matcher:UrlMatcherType, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(matcher:UrlMatcherType, handler:Request<RequestContent> -> Future<Action<ResponseContent>>) -> Void {
         
         let routeId = NSUUID().UUIDString
         
@@ -72,7 +73,7 @@ public extension Express {
     }
     
     //async
-    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(matcher:UrlMatcherType, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(matcher:UrlMatcherType, handler:Request<RequestContent> -> Future<Action<ResponseContent>>) -> Void {
         handleInternal(matcher, handler: handler)
     }
     

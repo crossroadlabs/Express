@@ -20,9 +20,11 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import ExecutionContext
-import BrightFutures
+
 import Result
+import Boilerplate
+import ExecutionContext
+import Future
 
 public class Views {
     //TODO: move hardcode to config
@@ -33,16 +35,13 @@ public class Views {
     internal let renderContext = ExecutionContext.render
     
     public var cache:Bool = false
-    func cacheView(viewName:String, view:Future<ViewType, AnyError>) -> Future<ViewType, AnyError> {
+    func cacheView(viewName:String, view:Future<ViewType>) -> Future<ViewType> {
         if cache {
-            return view.andThen(context: self.viewContext) { result in
-                if let val = try? result.dematerialize() {
-                    self.views[viewName] = val
-                }
+            view.onSuccess(self.viewContext) { view in
+                self.views[viewName] = view
             }
-        } else {
-            return view
         }
+        return view
     }
     
     public func register(path:String) {
@@ -70,21 +69,21 @@ public class Views {
         }
     }
     
-    func view(viewName:String, resolver: (String)->Future<ViewType, AnyError>) -> Future<ViewType, AnyError> {
-        return future(context: viewContext) {
-            Result<ViewType?, AnyError>(value: self.views[viewName])
-        }.flatMap { (view:ViewType?) -> Future<ViewType, AnyError> in
+    func view(viewName:String, resolver: (String)->Future<ViewType>) -> Future<ViewType> {
+        return future(viewContext) {
+            self.views[viewName]
+        }.flatMap { view in
             return view.map { view in
-                Future<ViewType, AnyError>(value: view)
+                Future<ViewType>(value: view)
             }.getOrElse {
                 return self.cacheView(viewName, view: resolver(viewName))
             }
         }
     }
     
-    func view(viewName:String) -> Future<ViewType, AnyError> {
+    func view(viewName:String) -> Future<ViewType> {
         return view(viewName) { viewName in
-            return future(context: self.viewContext) {
+            return future(self.viewContext) {
                 let fileManager = NSFileManager.defaultManager()
                 let exts = self.engines.keys
                 
@@ -110,18 +109,20 @@ public class Views {
                         return Result(value: try engine.view(file))
                     } catch let e as ExpressError {
                         switch e {
-                            case ExpressError.FileNotFound(let filename): return Result(error: AnyError(cause: ExpressError.NoSuchView(name: filename)))
-                            default: return Result(error: AnyError(cause: e))
+                            case ExpressError.FileNotFound(let filename): return Result(error: AnyError(ExpressError.NoSuchView(name: filename)))
+                            default: return Result(error: AnyError(e))
                         }
                     } catch let e {
-                        return Result(error: AnyError(cause: e))
+                        return Result(error: AnyError(e))
                     }
-                }.getOrElse(Result(error: AnyError(cause: ExpressError.NoSuchView(name: viewName))))
+                }.getOrElse(Result(error: AnyError(ExpressError.NoSuchView(name: viewName))))
+            }.map { (result:Result<ViewType, AnyError>) in
+                return try result.dematerializeAny()
             }
         }
     }
     
-    public func render<Context>(view:String, context:Context?) -> Future<FlushableContentType, AnyError> {
+    public func render<Context>(view:String, context:Context?) -> Future<FlushableContentType> {
         return self.view(view).map(renderContext) { view in
             try view.render(context)
         }

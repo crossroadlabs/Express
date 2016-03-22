@@ -20,7 +20,8 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+
+import Future
 
 public protocol ErrorHandlerType {
     func handle(e:ErrorType) -> AbstractActionType?

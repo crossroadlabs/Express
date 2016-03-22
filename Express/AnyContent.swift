@@ -20,7 +20,9 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+
+import ExecutionContext
+import Future
 
 public class AnyContentFactory : AbstractContentFactory<AnyContent> {
     private var data:Array<UInt8> = []
@@ -33,8 +35,8 @@ public class AnyContentFactory : AbstractContentFactory<AnyContent> {
         promise.trySuccess(AnyContent(data: self.data, contentType: head.contentType)!)
     }
     
-    public override func consume(data:Array<UInt8>) -> Future<Void, AnyError> {
-        return future(ImmediateExecutionContext) {
+    public override func consume(data:Array<UInt8>) -> Future<Void> {
+        return future(immediate) {
             self.data += data
             for length in self.head.contentLength {
                 if(self.data.count >= length) {
@@ -64,7 +66,7 @@ public class AnyContent : ConstructableContentType, FlushableContentType {
         self.contentType = contentType
     }
     
-    public func flushTo(out: DataConsumerType) -> Future<Void, AnyError> {
+    public func flushTo(out: DataConsumerType) -> Future<Void> {
         return out.consume(data)
     }
 }

@@ -20,12 +20,13 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import CEVHTP
-import Result
-import BrightFutures
 #if os(Linux)
     import Glibc
 #endif
+
+import CEVHTP
+import Result
+import Future
 
 internal typealias EVHTPp = UnsafeMutablePointer<evhtp_t>
 internal typealias EVHTPRequest = UnsafeMutablePointer<evhtp_request_t>
@@ -174,9 +175,9 @@ private class RepeatingHeaderDict {
 }
 
 private class DataReadParams {
-    let end: Promise<Void, NoError>
+    let end: Promise<Void>
     let consumer: DataConsumerType
-    init(consumer: DataConsumerType, end: Promise<Void, NoError>) {
+    init(consumer: DataConsumerType, end: Promise<Void>) {
         self.consumer = consumer
         self.end = end
     }
@@ -386,11 +387,11 @@ internal class _evhtp {
         event_base_dispatch(base)
     }
     
-    func start_event(base: COpaquePointer) -> Future<Void, NoError> {
-        let p = Promise<Void, NoError>()
+    func start_event(base: COpaquePointer) -> Future<Void> {
+        let p = Promise<Void>()
         
         event_base_once(base, -1, EV_TIMEOUT, { (fd: Int32, what: Int16, arg: UnsafeMutablePointer<Void>) in
-            Unmanaged<Promise<Void, NoError>>.fromOpaque(COpaquePointer(arg)).takeRetainedValue().success()
+            try! Unmanaged<Promise<Void>>.fromOpaque(COpaquePointer(arg)).takeRetainedValue().success()
         }, UnsafeMutablePointer<Void>(Unmanaged.passRetained(p).toOpaque()), nil)
         
         return p.future

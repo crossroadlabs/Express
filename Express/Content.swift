@@ -20,7 +20,9 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+
+import ExecutionContext
+import Future
 
 public protocol ContentFactoryType : DataConsumerType {
     typealias Content
@@ -28,7 +30,7 @@ public protocol ContentFactoryType : DataConsumerType {
     init(response:RequestHeadType)
     
     func tryConsume(content:ContentType) -> Bool
-    func content() -> Future<Content, AnyError>
+    func content() -> Future<Content>
 }
 
 public protocol ContentType {
@@ -62,22 +64,22 @@ public class FlushableContent : FlushableContentType {
         self.content = content
     }
     
-    public func flushTo(out:DataConsumerType) -> Future<Void, AnyError> {
+    public func flushTo(out:DataConsumerType) -> Future<Void> {
         return content.flushTo(out)
     }
 }
 
 public class AbstractContentFactory<T> : ContentFactoryBase, ContentFactoryType {
     public typealias Content = T
-    var promise:Promise<Content, AnyError>
+    var promise:Promise<Content>
     
     public required init(response:RequestHeadType) {
         promise = Promise()
         super.init(response: response)
     }
     
-    public func consume(data:Array<UInt8>) -> Future<Void, AnyError> {
-        return future(ImmediateExecutionContext) {
+    public func consume(data:Array<UInt8>) -> Future<Void> {
+        return future(immediate) {
             throw ExpressError.NotImplemented(description: "Not implemented consume in " + Mirror(reflecting: self).description)
         }
     }
@@ -89,14 +91,14 @@ public class AbstractContentFactory<T> : ContentFactoryBase, ContentFactoryType 
     public func tryConsume(content: ContentType) -> Bool {
         switch content {
         case let match as Content:
-            promise.success(match)
+            try! promise.success(match)
             return true
         default:
             return false
         }
     }
     
-    public func content() -> Future<Content, AnyError> {
+    public func content() -> Future<Content> {
         return promise.future
     }
 }

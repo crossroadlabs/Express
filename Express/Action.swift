@@ -20,7 +20,9 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+
+import ExecutionContext
+import Future
 
 public protocol AbstractActionType {
 }
@@ -33,11 +35,11 @@ public protocol FlushableAction : AbstractActionType, FlushableType {
 }
 
 public protocol IntermediateActionType : AbstractActionType {
-    func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?), AnyError>
+    func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?)>
 }
 
 public protocol SelfSufficientActionType : AbstractActionType {
-    func handle<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<Void, AnyError>
+    func handle<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<Void>
 }
 
 public class Action<C : FlushableContentType> : ActionType, AbstractActionType {
@@ -51,7 +53,7 @@ class ResponseAction<C : FlushableContentType> : Action<C>, FlushableAction {
         self.response = response
     }
     
-    func flushTo(out: DataConsumerType) -> Future<Void, AnyError> {
+    func flushTo(out: DataConsumerType) -> Future<Void> {
         return response.flushTo(out)
     }
 }
@@ -83,7 +85,7 @@ class RenderAction<C : FlushableContentType, Context> : Action<C>, IntermediateA
         return Response(status: status, content: content, headers: headers)
     }
     
-    func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?), AnyError> {
+    func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?)> {
         return request.app.views.render(view, context: context).map { content in
             let response = Response(status: self.status, content: content, headers: self.headers)
             return (ResponseAction(response: response), nil)
@@ -98,12 +100,12 @@ class ChainAction<C : FlushableContentType, ReqC: ConstructableContentType> : Ac
         self.request = request
     }
     
-    func handle<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<Void, AnyError> {
+    func handle<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<Void> {
         let req = self.request.map {$0 as RequestHeadType} .getOrElse(request)
         let body = self.request.map {$0.body.map {$0 as ContentType}} .getOrElse(request.body)
         
         let route = app.nextRoute(routeId, request: request)
-        return route.map { (r:(RouteType, [String: String]))->Future<Void, AnyError> in
+        return route.map { (r:(RouteType, [String: String]))->Future<Void> in
             let req = req.withParams(r.1)
             let transaction = r.0.factory(req, out)
             for b in body {
@@ -116,9 +118,9 @@ class ChainAction<C : FlushableContentType, ReqC: ConstructableContentType> : Ac
                 }
             }
             transaction.selfProcess()
-            return Future()
+            return Future(value: ())
         }.getOrElse {
-            future(ImmediateExecutionContext) { ()->Void in
+            future(immediate) { ()->Void in
                 throw ExpressError.PageNotFound(path: request.path)
             }
         }
