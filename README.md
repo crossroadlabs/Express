@@ -109,7 +109,7 @@ Launch the app and follow the link: [http://localhost:9999/hello?message=Hello](
 
 ### Synchronous vs Asynchronous
 
-If you don't know what this is you might want to better skip it for now to the next section: [Url params](#url-params). To get more information see [this](http://cs.brown.edu/courses/cs168/s12/handouts/async.pdf) first. We have our APIs based on [Future pattern](https://en.wikipedia.org/wiki/Futures_and_promises). Our implementation is based on [BrightFutures](https://github.com/Thomvis/BrightFutures), thanks @Thomvis!
+If you don't know what this is you might want to better skip it for now to the next section: [URL params](#url-params). To get more information see [this](http://cs.brown.edu/courses/cs168/s12/handouts/async.pdf) first. We have our APIs based on [Future pattern](https://en.wikipedia.org/wiki/Futures_and_promises). Our implementation is based on [BrightFutures](https://github.com/Thomvis/BrightFutures), thanks @Thomvis!
 
 Express can handle it both ways. All your syncronous code will be executed in a separate queue in a traditional way, so if you are a fan of this approach - it will work (like in "Hello Express" example above).
 
@@ -144,7 +144,7 @@ app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyErro
 }
 ```
 
-### Url params
+### URL params
 
 Let's get our echo example from [Getting Started](#getting-started) a bit further. Our routing engine, which is largely based on NodeJS analog [path-to-regex](https://github.com/pillarjs/path-to-regexp). You can read the complete documentation on how to use path patterns [here](https://github.com/pillarjs/path-to-regexp). Now an example with URL param:
 
