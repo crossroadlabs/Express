@@ -1,27 +1,15 @@
 [//]: https://www.iconfinder.com/icons/383207/doc_tag_icon#size=64
-<p align="center">
-	<a href="http://swiftexpress.io/">
-		<img alt="Swift Express" src ="./logo-full.png" height=256/>
-	</a>
+<p align="left">
+  <a href="http://swiftexpress.io/">
+    <img alt="Swift Express" src ="./logo-full.png" />
+  </a>
 </p>
 
-<p>
-	<p align=left>
-		<a href="https://twitter.com/swift_express" target="_blank"><img align="left" vspace=42 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-twitter-circle-128.png" height=64 alt="Twitter"/></a>
-		<a href="https://www.facebook.com/swiftexpress.io" target="_blank"><img align="left" vspace=42 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-facebook-circle-128.png" height=64 alt="Facebook"/></a>
-		<a href="https://www.linkedin.com/company/swift-express" target="_blank"><img align="left" vspace=42 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-128.png" height=64 alt="LinkedIn"/></a>
-		<a href="http://swiftexpress.io" target="_blank"><img align="left" vspace=42 src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-01-128.png" height=64 alt="Web site"/></a>
-		<a href="mailto:slack@swiftexpress.io?Subject=Add me to Slack" target="_blank"><img vspace=35 align="left" src="https://cdn0.iconfinder.com/data/icons/picons-social/57/109-slack-128.png" height=72 alt="Slack"/></a>
-	</p>
-	<p>
-		<h5 align="right"><a href="./doc/index.md">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/></a></h5>
-		
-		<h5 align="right"><a href="http://demo.swiftexpress.io/">Live 🐧 server running Demo  <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/34/play-circle-32.png" height=16/></a></h5>
-		
-		<h5 align="right"><a href="http://swiftexpress.io/">Eating our own dog food  <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/147/globe-full-32.png" height=16/></a></h5>
-		<br/>
-	</p>
-</p>
+<h5>
+<a href="./doc/index.md"><img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16 /> Documentation</a>&nbsp;&nbsp;&nbsp;
+<a href="http://demo.swiftexpress.io/"><img src="https://cdn0.iconfinder.com/data/icons/glyphpack/34/play-circle-32.png" height=16 /> Live linux server running Demo</a>&nbsp;&nbsp;&nbsp;
+<a href="http://swiftexpress.io/" /><img src="https://cdn0.iconfinder.com/data/icons/glyphpack/147/globe-full-32.png" height=16/> Eating our own dog food</a>
+</h5>
 
 ![🐧 linux: ready](https://img.shields.io/badge/%F0%9F%90%A7%20linux-ready-red.svg)
 [![Build Status](https://travis-ci.org/crossroadlabs/Express.svg?branch=master)](https://travis-ci.org/crossroadlabs/Express)
@@ -30,10 +18,20 @@
 ![Swift version](https://img.shields.io/badge/Swift-2.1 | 2.2-blue.svg)
 [![GitHub license](https://img.shields.io/badge/license-LGPL v3-green.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/crossroadlabs/Express.svg)](https://github.com/crossroadlabs/Express/releases)
+<br />
 
-### Being [perfectionists](http://www.crossroadlabs.xyz), we took the best from what we think is the best: power of [Play Framework](https://www.playframework.com/) and simplicity of [Express.js](http://expressjs.com/)
+Being [perfectionists](http://www.crossroadlabs.xyz), we took the best from what we think is the best: power of [Play Framework](https://www.playframework.com/) and simplicity of [Express.js](http://expressjs.com/)
 
-#### Express is an asynchronous, simple, powerful, yet unopinionated web application server written in Swift
+Express is an asynchronous, simple, powerful, yet unopinionated web application server written in Swift.
+
+<p>
+  <a href="https://twitter.com/swift_express" target="_blank"><img align="left" vspace=5 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-twitter-circle-128.png" height=25 alt="Twitter"/></a>
+  <a href="https://www.facebook.com/swiftexpress.io" target="_blank"><img align="left" vspace=5 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-facebook-circle-128.png" height=25 alt="Facebook"/></a>
+  <a href="https://www.linkedin.com/company/swift-express" target="_blank"><img align="left" vspace=5 src="https://cdn4.iconfinder.com/data/icons/social-messaging-ui-color-shapes-2-free/128/social-linkedin-circle-128.png" height=25 alt="LinkedIn"/></a>
+  <a href="http://swiftexpress.io" target="_blank"><img align="left" vspace=5 src="https://cdn3.iconfinder.com/data/icons/internet-and-web-4/78/internt_web_technology-01-128.png" height=25 alt="Web site"/></a>
+  <a href="mailto:slack@swiftexpress.io?Subject=Add me to Slack" target="_blank"><img vspace=2 align="left" src="https://cdn0.iconfinder.com/data/icons/picons-social/57/109-slack-128.png" height=29 alt="Slack"/></a>
+</p>
+<br /><br />
 
 ## Getting started
 
@@ -72,7 +70,7 @@ Test it in the browser: [http://localhost:9999/myecho?message=Hello](http://loca
 
 [//]: # (Icons are here: https://www.iconfinder.com/icons/395228/linux_tox_icon#size=16)
 
-### [OS X ![OS X](https://cdn1.iconfinder.com/data/icons/system-shade-circles/512/mac_os_X-16.png)](http://www.apple.com/osx/)
+#### OS X
 
 ##### First install the following components (if you have not yet):
 
@@ -87,7 +85,7 @@ brew tap crossroadlabs/tap
 brew install swift-express
 ```
 
-#### [Linux ![Linux](https://cdn1.iconfinder.com/data/icons/system-shade-circles/512/linux_tox-16.png)](http://www.linux.org/)
+#### Linux
 
 ##### For instructions on how to get [Express](http://swiftexpress.io/) installed on Linux, please, refer to the [installation section](./doc/gettingstarted/installing.md#linux-) in the [ducumentation](./doc/index.md).
 
@@ -130,15 +128,15 @@ it's a purely asyncronous function that returns future. It would be really nice 
 app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
     // get the number from the url
     let num = request.params["num"].flatMap{Double($0)}.getOrElse(0)
-    
+
     // get the factorial Future. Returns immediately - non-blocking
     let factorial = calcFactorial(num)
-    
+
     //map the result of future to Express Action
     let future = factorial.map { fac in
         Action.ok(String(fac))
     }
-    
+
     //return the future
     return future
 }
@@ -195,7 +193,7 @@ app.post("/api/user") { request in
     let response =
         ["status": "ok",
         "description": "User with username '" + username + "' created succesfully"]
-    
+
     //render disctionary as json (remember the one we've registered above?)
     return Action.render(JsonView.name, context: response)
 }
