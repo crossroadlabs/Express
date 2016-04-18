@@ -38,7 +38,7 @@ let package = Package(
     	.Package(url: "https://github.com/crossroadlabs/TidyJSON.git", majorVersion: 1, minor: 1),
     	.Package(url: "https://github.com/crossroadlabs/PathToRegex.git", majorVersion: 0, minor: 2),
     	.Package(url: "https://github.com/crossroadlabs/Regex.git", majorVersion: 0, minor: 5),
-    	.Package(url: "https://github.com/crossroadlabs/Stencil.git", majorVersion: 0),
+    	.Package(url: "https://github.com/crossroadlabs/Stencil.git", majorVersion: 0, minor: 5),
     ]
 )
 
