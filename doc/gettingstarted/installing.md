@@ -25,7 +25,7 @@ brew install swift-express
 	* We have exprerienced some dependencies missing if installing by original instructions from [swift.org](http://swift.org/). Install these dependencies first, please:
 
 ```sh
-apt-get install clang binutils libicu-dev
+apt-get install clang binutils libicu-dev libpthread-workqueue-dev
 ```
 	
 * [Swift](https://swift.org/), the latest development snapshot from [here](https://swift.org/download/#latest-development-snapshots)
