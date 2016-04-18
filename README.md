@@ -33,7 +33,7 @@
 
 <table bgcolor="#ff0000">
 <tr><td>
-<img src="https://www.iconfinder.com/icons/728979/download/png/256" height=64 align="left"/>Virsion 0.3.x (current stable) notice: Current version works with Xcode 7.2, 7.3 and Linux dist released on 03.01.2016. Upcoming version (0.4.x) will fully support Swift 3.0 and will maintain compatibility with Swift 2.2 (Xcode 7.3).
+<img src="https://www.iconfinder.com/icons/728979/download/png/256" height=64 align="left"/>Virsion 0.3.x (current stable) notice: Current version works with Xcode 7.2, 7.3 and Linux dist released on 03.01.2016. Upcoming version (0.4.x) will fully support Swift 3.0 and will maintain compatibility with Swift 2.2 (Xcode 7.3). Stay tuned by following us on social networks.
 </td></tr>
 </table>
 
