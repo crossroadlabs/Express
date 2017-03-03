@@ -20,7 +20,7 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import TidyJSON
+import SwiftyJSON
 
 public extension AnyContent {
     func asJSON() -> JSON? {
@@ -31,9 +31,10 @@ public extension AnyContent {
                     guard let text = self.asText() else {
                         return nil
                     }
-                    let json = try JSON.parse(text)
+                    
+                    let json = try JSON.parse(string: text)
                     return json
-                } catch let e as TidyJSON.ParseError {
+                } catch let e as SwiftyJSONError {
                     print(e)
                     return nil
                 } catch let e {

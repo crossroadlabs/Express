@@ -40,7 +40,7 @@ extension String : StringType {
 
 public extension Dictionary where Key : StringType, Value : StringType {
     public mutating func updateWithHeader(header:HeaderType) {
-        self.updateValue(Value.fromString(header.value), forKey: Key.fromString(header.key))
+        self.updateValue(Value.fromString(string: header.value), forKey: Key.fromString(string: header.key))
     }
 }
 

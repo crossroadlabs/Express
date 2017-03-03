@@ -20,13 +20,13 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+import Future
 
 public protocol DataConsumerType {
-    func consume(data:Array<UInt8>) -> Future<Void, AnyError>
+    func consume(data:Array<UInt8>) -> Future<Void>
     func dataEnd() throws
 }
 
 public protocol FlushableType {
-    func flushTo(out:DataConsumerType) -> Future<Void, AnyError>
+    func flushTo(out:DataConsumerType) -> Future<Void>
 }

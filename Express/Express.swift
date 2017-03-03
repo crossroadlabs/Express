@@ -21,7 +21,7 @@
 
 import Foundation
 import ExecutionContext
-import BrightFutures
+import Future
 
 public func express() -> Express {
     return Express()
@@ -40,9 +40,9 @@ public class Express : RouterType {
         }
     }
     
-    func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(matcher:UrlMatcherType, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
+    func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(matcher:UrlMatcherType, handler:@escaping (Request<RequestContent>) -> Future<Action<ResponseContent>>) -> Void {
         
-        let routeId = NSUUID().UUIDString
+        let routeId = NSUUID().uuidString
         
         let factory:TransactionFactory = { head, out in
             return Transaction(app: self, routeId: routeId, head: head, out: out, handler: handler)
@@ -53,11 +53,11 @@ public class Express : RouterType {
         routes.append(route)
     }
     
-    func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(matcher:UrlMatcherType, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
+    func handleInternal<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(matcher:UrlMatcherType, handler:@escaping (Request<RequestContent>) throws -> Action<ResponseContent>) -> Void {
         
-        handleInternal(matcher) { request in
+        handleInternal(matcher: matcher) { request in
             //execute synchronous request aside from main queue (on a user queue)
-            future(ExecutionContext.user) {
+            future(context: ExecutionContext.user) {
                 return try handler(request)
             }
         }
@@ -67,18 +67,18 @@ public class Express : RouterType {
 public extension Express {
 
     //sync
-    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(matcher:UrlMatcherType, handler:Request<RequestContent> throws -> Action<ResponseContent>) -> Void {
-        handleInternal(matcher, handler: handler)
+    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(matcher:UrlMatcherType, handler:@escaping (Request<RequestContent>) throws -> Action<ResponseContent>) -> Void {
+        handleInternal(matcher: matcher, handler: handler)
     }
     
     //async
-    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType>(matcher:UrlMatcherType, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) -> Void {
-        handleInternal(matcher, handler: handler)
+    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(matcher:UrlMatcherType, handler: @escaping (Request<RequestContent>) -> Future<Action<ResponseContent>>) -> Void {
+        handleInternal(matcher: matcher, handler: handler)
     }
     
     //action
     func handle<ResponseContent : FlushableContentType>(matcher:UrlMatcherType, action:Action<ResponseContent>) -> Void {
-        return handle(matcher) { (request:Request<AnyContent>) -> Action<ResponseContent> in
+        return handle(matcher: matcher) { (request:Request<AnyContent>) -> Action<ResponseContent> in
             return action
         }
     }

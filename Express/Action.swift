@@ -20,24 +20,25 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+import Future
+import ExecutionContext
 
 public protocol AbstractActionType {
 }
 
 public protocol ActionType : AbstractActionType {
-    typealias Content
+    associatedtype Content
 }
 
 public protocol FlushableAction : AbstractActionType, FlushableType {
 }
 
 public protocol IntermediateActionType : AbstractActionType {
-    func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?), AnyError>
+    func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?)>
 }
 
 public protocol SelfSufficientActionType : AbstractActionType {
-    func handle<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<Void, AnyError>
+    func handle<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<Void>
 }
 
 public class Action<C : FlushableContentType> : ActionType, AbstractActionType {
@@ -51,8 +52,8 @@ class ResponseAction<C : FlushableContentType> : Action<C>, FlushableAction {
         self.response = response
     }
     
-    func flushTo(out: DataConsumerType) -> Future<Void, AnyError> {
-        return response.flushTo(out)
+    func flushTo(out: DataConsumerType) -> Future<Void> {
+        return response.flushTo(out: out)
     }
 }
 
@@ -83,8 +84,8 @@ class RenderAction<C : FlushableContentType, Context> : Action<C>, IntermediateA
         return Response(status: status, content: content, headers: headers)
     }
     
-    func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?), AnyError> {
-        return request.app.views.render(view, context: context).map { content in
+    func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?)> {
+        return request.app.views.render(view: view, context: context).map { content in
             let response = Response(status: self.status, content: content, headers: self.headers)
             return (ResponseAction(response: response), nil)
         }
@@ -98,27 +99,27 @@ class ChainAction<C : FlushableContentType, ReqC: ConstructableContentType> : Ac
         self.request = request
     }
     
-    func handle<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<Void, AnyError> {
-        let req = self.request.map {$0 as RequestHeadType} .getOrElse(request)
-        let body = self.request.map {$0.body.map {$0 as ContentType}} .getOrElse(request.body)
+    func handle<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<Void> {
+        let req = self.request.map {$0 as RequestHeadType} .getOrElse(el: request)
+        let body = self.request.map {$0.body.map {$0 as ContentType}} .getOrElse(el: request.body)
         
-        let route = app.nextRoute(routeId, request: request)
-        return route.map { (r:(RouteType, [String: String]))->Future<Void, AnyError> in
-            let req = req.withParams(r.1)
+        let route = app.nextRoute(routeId: routeId, request: request)
+        return route.map { (r:(RouteType, [String: String]))->Future<Void> in
+            let req = req.withParams(params: r.1)
             let transaction = r.0.factory(req, out)
             for b in body {
-                if !transaction.tryConsume(b) {
+                if !transaction.tryConsume(content: b) {
                     if let flushableBody = b as? FlushableContentType {
-                        flushableBody.flushTo(transaction)
+                        flushableBody.flushTo(out: transaction)
                     } else {
                         print("Can not chain this action")
                     }
                 }
             }
             transaction.selfProcess()
-            return Future()
+            return Future<Void>(value: ())
         }.getOrElse {
-            future(ImmediateExecutionContext) { ()->Void in
+            future(context: immediate) { ()->Void in
                 throw ExpressError.PageNotFound(path: request.path)
             }
         }
@@ -155,7 +156,7 @@ public extension Action {
     }
     
     public class func chain() -> Action<C> {
-        return chain(nilRequest())
+        return chain(request: nilRequest())
     }
     
     public class func render<Context>(view:String, context:Context? = nil, status:StatusCode = .Ok, headers:Dictionary<String, String> = Dictionary()) -> Action<C> {
@@ -167,50 +168,50 @@ public extension Action {
     }
     
     public class func response(status:UInt16, content:C? = nil, headers:Dictionary<String, String> = Dictionary()) -> Action<C> {
-        return response(Response(status: status, content: content, headers: headers))
+        return response(response: Response(status: status, content: content, headers: headers))
     }
     
     public class func response(status:StatusCode, content:C? = nil, headers:Dictionary<String, String> = Dictionary()) -> Action<C> {
-        return response(status.rawValue, content: content, headers: headers)
+        return response(status:status.rawValue, content: content, headers: headers)
     }
     
     public class func status(status:UInt16) -> Action<C> {
-        return response(status)
+        return response(status: status)
     }
     
     public class func status(status:StatusCode) -> Action<C> {
-        return self.status(status.rawValue)
+        return self.status(status: status.rawValue)
     }
     
     public class func redirect(url:String, status:RedirectStatusCode) -> Action<C> {
         let headers = ["Location": url]
-        return response(status.rawValue, headers: headers)
+        return response(status: status.rawValue, headers: headers)
     }
     
     public class func redirect(url:String, permanent:Bool = false) -> Action<C> {
         let code:RedirectStatusCode = permanent ? .MovedPermanently : .TemporaryRedirect
-        return redirect(url, status: code)
+        return redirect(url: url, status: code)
     }
     
     public class func found(url:String) -> Action<C> {
-        return redirect(url, status: .Found)
+        return redirect(url: url, status: .Found)
     }
     
     public class func movedPermanently(url:String) -> Action<C> {
-        return redirect(url, status: .MovedPermanently)
+        return redirect(url: url, status: .MovedPermanently)
     }
     
     public class func seeOther(url:String) -> Action<C> {
-        return redirect(url, status: .SeeOther)
+        return redirect(url: url, status: .SeeOther)
     }
     
     public class func temporaryRedirect(url:String) -> Action<C> {
-        return redirect(url, status: .TemporaryRedirect)
+        return redirect(url: url, status: .TemporaryRedirect)
     }
 }
 
 public extension Action where C : AnyContent {
     public class func ok(str:String?) -> Action<AnyContent> {
-        return Action<AnyContent>.ok(AnyContent(str: str))
+        return Action<AnyContent>.ok(content: AnyContent(str: str))
     }
 }

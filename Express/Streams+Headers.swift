@@ -20,8 +20,8 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+import Future
 
 protocol ResponseHeadDataConsumerType : DataConsumerType {
-    func consume(head:HttpResponseHeadType) -> Future<Void, AnyError>
+    func consume(head:HttpResponseHeadType) -> Future<Void>
 }

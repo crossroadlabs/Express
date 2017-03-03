@@ -8,7 +8,7 @@
 
 import Foundation
 import Express
-import BrightFutures
+import Future
 
 let app = express()
 
@@ -110,15 +110,15 @@ func factorial(n: Double) -> Double {
     return n == 0 ? 1 : n * factorial(n - 1)
 }
 
-func calcFactorial(num:Double) -> Future<Double, AnyError> {
+func calcFactorial(num:Double) -> Future<Double> {
     return future {
         return factorial(num)
     }
 }
 
-// (request -> Future<Action<AnyContent>, AnyError> in) - this is required to tell swift you want to return a Future
+// (request -> Future<Action<AnyContent>> in) - this is required to tell swift you want to return a Future
 // hopefully inference in swift will get better eventually and just "request in" will be enough
-app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
+app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>> in
     // get the number from the url
     let num = request.params["num"].flatMap{Double($0)}.getOrElse(0)
     

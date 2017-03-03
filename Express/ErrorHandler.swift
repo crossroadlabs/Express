@@ -20,30 +20,30 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+import Future
 
 public protocol ErrorHandlerType {
-    func handle(e:ErrorType) -> AbstractActionType?
+    func handle(e:Error) -> AbstractActionType?
 }
 
-public typealias ErrorHandlerFunction = ErrorType -> AbstractActionType?
+public typealias ErrorHandlerFunction = (Error) -> AbstractActionType?
 
 class DefaultErrorHandler : ErrorHandlerType {
-    func handle(e:ErrorType) -> AbstractActionType? {
+    func handle(e:Error) -> AbstractActionType? {
         let errorName = Mirror(reflecting: e).description
         let description = "Internal Server Error\n\n" + errorName
-        return Action<AnyContent>.internalServerError(description)
+        return Action<AnyContent>.internalServerError(description: description)
     }
 }
 
 class FunctionErrorHandler : ErrorHandlerType {
     let fun:ErrorHandlerFunction
     
-    init(fun:ErrorHandlerFunction) {
+    init(fun:@escaping ErrorHandlerFunction) {
         self.fun = fun
     }
     
-    func handle(e:ErrorType) -> AbstractActionType? {
+    func handle(e:Error) -> AbstractActionType? {
         return fun(e)
     }
 }
@@ -56,11 +56,11 @@ public class AggregateErrorHandler : ErrorHandlerType {
     init() {
         register { e in
             //this is the only way to check. Otherwise it will just always tall-free bridge to NSError
-            if e.dynamicType == NSError.self {
+            if type(of: e) == NSError.self {
                 //stupid autobridging
                 switch e {
                 case let e as NSError:
-                    return Action<AnyContent>.internalServerError(e.description)
+                    return Action<AnyContent>.internalServerError(description: e.description)
                 default: return nil
                 }
             } else {
@@ -71,14 +71,14 @@ public class AggregateErrorHandler : ErrorHandlerType {
     }
     
     public func register(handler: ErrorHandlerType) {
-        handlers.insert(handler, atIndex: 0)
+        handlers.insert(handler, at: 0)
     }
     
-    public func register(f: ErrorHandlerFunction) {
-        register(FunctionErrorHandler(fun: f))
+    public func register(_ f: @escaping ErrorHandlerFunction) {
+        register(handler: FunctionErrorHandler(fun: f))
     }
     
-    public func register<E: ErrorType>(f:E -> AbstractActionType?) {
+    public func register<E: Error>(_ f:@escaping (E) -> AbstractActionType?) {
         register { e in
             guard let e = e as? E else {
                 return nil
@@ -87,12 +87,12 @@ public class AggregateErrorHandler : ErrorHandlerType {
         }
     }
     
-    public func handle(e:ErrorType) -> AbstractActionType? {
+    public func handle(e:Error) -> AbstractActionType? {
         for handler in handlers {
-            if let action = handler.handle(e) {
+            if let action = handler.handle(e: e) {
                 return action
             }
         }
-        return defaultErrorHandler.handle(e)
+        return defaultErrorHandler.handle(e: e)
     }
 }

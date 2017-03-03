@@ -94,14 +94,14 @@ public class RequestHead : HttpHead, RequestHeadType {
         self.query = query
         self.params = params
         
-        contentLength = HttpHeader.ContentLength.headerInt(headers)
-        contentType = HttpHeader.ContentType.header(headers)
+        contentLength = HttpHeader.ContentLength.headerInt(headers: headers)
+        contentType = HttpHeader.ContentType.header(headers: headers)
         super.init(headers: headers)
     }
 }
 
 public protocol RequestType : RequestHeadType, AppContext {
-    typealias Content
+    associatedtype Content
     
     var body:Content? {get}
 }
@@ -116,6 +116,10 @@ public class Request<C> : RequestHead, RequestType {
         self.app = app
         self.body = body
         super.init(head: head)
+    }
+    
+    public required init(method: String, version: String, remoteAddress: String, secure: Bool, uri: String, path: String, query: Dictionary<String, Array<String>>, headers: Dictionary<String, String>, params: Dictionary<String, String>) {
+        fatalError("init(method:version:remoteAddress:secure:uri:path:query:headers:params:) has not been implemented")
     }
 }
 

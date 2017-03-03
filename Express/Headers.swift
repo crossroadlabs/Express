@@ -20,7 +20,7 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+import Future
 
 public enum HttpHeader : String {
     case ContentType = "Content-Type"
@@ -31,7 +31,7 @@ public enum HttpHeader : String {
     }
     
     func headerInt(headers:Dictionary<String,String>) -> Int? {
-        return header(headers).flatMap { str in Int(str) }
+        return header(headers: headers).flatMap { str in Int(str) }
     }
 }
 
@@ -71,11 +71,11 @@ public class HttpResponseHead : HttpHead, HttpResponseHeadType, FlushableType {
     //all the code below should be moved to Streams+Headers and made as an extension
     //unfortunately swift does not allow to override functions introduced in extensions yet
     //should be moved as soon as the feature is implemented in swift
-    public func flushTo(out:DataConsumerType) -> Future<Void, AnyError> {
+    public func flushTo(out:DataConsumerType) -> Future<Void> {
         if let headOut = out as? ResponseHeadDataConsumerType {
-            return headOut.consume(self)
+            return headOut.consume(head: self)
         } else {
-            return out.consume(serializeHead())
+            return out.consume(data: serializeHead())
         }
     }
     

@@ -32,7 +32,7 @@ public class RegexUrlMatcher : UrlMatcherType {
     }
     
     public convenience init(method:String, pattern:String) throws {
-        self.init(method: method, regex: try pathToRegex(pattern))
+        self.init(method: method, regex: try Regex(path: pattern))
     }
     
     ///
@@ -44,14 +44,14 @@ public class RegexUrlMatcher : UrlMatcherType {
         if self.method != "*" && self.method != method {
             return nil
         }
-        guard let found = regex.findFirst(path) else {
+        guard let found = regex.findFirst(in: path) else {
             return nil
         }
         let valsArray = regex.groupNames.map { name in
-            (name, found.group(name))
+            (name, found.group(named: name))
         }.filter {$0.1 != nil} . map { tuple in
             (tuple.0, tuple.1!)
         }
-        return toMap(valsArray)
+        return toMap(array: valsArray)
     }
 }

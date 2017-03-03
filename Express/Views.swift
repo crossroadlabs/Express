@@ -21,8 +21,9 @@
 
 import Foundation
 import ExecutionContext
-import BrightFutures
+import Future
 import Result
+import Boilerplate
 
 public class Views {
     //TODO: move hardcode to config
@@ -33,9 +34,9 @@ public class Views {
     internal let renderContext = ExecutionContext.render
     
     public var cache:Bool = false
-    func cacheView(viewName:String, view:Future<ViewType, AnyError>) -> Future<ViewType, AnyError> {
+    func cacheView(viewName:String, view:Future<ViewType>) -> Future<ViewType> {
         if cache {
-            return view.andThen(context: self.viewContext) { result in
+            return view.settle(in: self.viewContext).onComplete { result in
                 if let val = try? result.dematerialize() {
                     self.views[viewName] = val
                 }
@@ -46,23 +47,23 @@ public class Views {
     }
     
     public func register(path:String) {
-        future(viewContext) {
+        future(context: viewContext) { ()->Void in
             self.paths.append(path)
         }
     }
     
     public func register(view: ViewType, name:String) {
-        future(viewContext) {
+        future(context: viewContext) {
             self.views[name] = view
         }
     }
     
     public func register(view: NamedViewType) {
-        register(view, name: view.name)
+        register(view: view, name: view.name)
     }
     
     public func register(engine: ViewEngineType) {
-        future(viewContext) {
+        future(context: viewContext) {
             let exts = engine.extensions()
             for ext in exts {
                 self.engines[ext] = engine
@@ -70,14 +71,14 @@ public class Views {
         }
     }
     
-    func view(viewName:String, resolver: (String)->Future<ViewType, AnyError>) -> Future<ViewType, AnyError> {
+    func view(viewName:String, resolver: @escaping (String)->Future<ViewType>) -> Future<ViewType> {
         return future(context: viewContext) {
             Result<ViewType?, AnyError>(value: self.views[viewName])
-        }.flatMap { (view:ViewType?) -> Future<ViewType, AnyError> in
+        }.flatMap { (view:ViewType?) -> Future<ViewType> in
             return view.map { view in
-                Future<ViewType, AnyError>(value: view)
+                Future<ViewType>(value: view)
             }.getOrElse {
-                return self.cacheView(viewName, view: resolver(viewName))
+                return self.cacheView(viewName: viewName, view: resolver(viewName))
             }
         }
     }
@@ -121,9 +122,12 @@ public class Views {
         }
     }
     
-    public func render<Context>(view:String, context:Context?) -> Future<FlushableContentType, AnyError> {
-        return self.view(view).map(renderContext) { view in
-            try view.render(context)
+    public func render<Context>(view:String, context:Context?) -> Future<FlushableContentType> {
+        //TODO: check getOrElse logic!!!
+        
+        
+        return self.view(viewName: view).settle(in: viewContext).map { view in
+            try view.render(context: context)
         }
     }
 }

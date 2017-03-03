@@ -20,43 +20,42 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+import Future
 import ExecutionContext
 
 public protocol StaticDataProviderType {
-    func etag(file:String) -> Future<String, AnyError>
-    func data(app:Express, file:String) -> Future<FlushableContentType, AnyError>
+    func etag(file:String) -> Future<String>
+    func data(app:Express, file:String) -> Future<FlushableContentType>
 }
 
 public class StaticFileProvider : StaticDataProviderType {
     let root:String
-    let fm = NSFileManager.defaultManager()
+    let fm = FileManager.default
     
     public init(root:String) {
         self.root = root
     }
     
     func fullPath(file:String) -> String {
-        return root.bridge().stringByAppendingPathComponent(file)
+        return root.bridge().appendingPathComponent(file)
     }
     
-    private func attributes(file:String) throws -> [String : Any] {
+    private func attributes(file:String) throws -> [FileAttributeKey : Any] {
         do {
-            return try self.fm.attributesOfItemAtPath(file).map { (k, v) in
-                (k, v as Any)
-            }
+           
+            return try self.fm.attributesOfItem(atPath: file)
         } catch {
             throw ExpressError.FileNotFound(filename: file)
         }
     }
     
-    public func etag(file:String) -> Future<String, AnyError> {
-        let file = fullPath(file)
+    public func etag(file:String) -> Future<String> {
+        let file = fullPath(file: file)
         
         return future {
-            let attributes = try self.attributes(file)
+            let attributes = try self.attributes(file: file)
             
-            guard let modificationDate = (attributes[NSFileModificationDate].flatMap{$0 as? NSDate}) else {
+            guard let modificationDate = (attributes[FileAttributeKey.modificationDate].flatMap{$0 as? NSDate}) else {
                 //TODO: throw different error
                 throw ExpressError.PageNotFound(path: file)
             }
@@ -70,12 +69,12 @@ public class StaticFileProvider : StaticDataProviderType {
         }
     }
     
-    public func data(app:Express, file:String) -> Future<FlushableContentType, AnyError> {
-        let file = fullPath(file)
+    public func data(app:Express, file:String) -> Future<FlushableContentType> {
+        let file = fullPath(file: file)
         
         return future {
             var isDir = ObjCBool(false)
-            if !self.fm.fileExistsAtPath(file, isDirectory: &isDir) || isDir.boolValue {
+            if !self.fm.fileExists(atPath: file, isDirectory: &isDir) || isDir.boolValue {
                 //TODO: implement file directory index (WebDav)
                 throw ExpressError.PageNotFound(path: file)
             }
@@ -85,12 +84,12 @@ public class StaticFileProvider : StaticDataProviderType {
                 throw ExpressError.FileNotFound(filename: file)
             }
             
-            let count = data.length / sizeof(UInt8)
+            let count = data.length / MemoryLayout<UInt8>.size
             // create array of appropriate length:
-            var array = [UInt8](count: count, repeatedValue: 0)
+            var array = [UInt8](repeating: 0, count: count)
             
             // copy bytes into array
-            data.getBytes(&array, length:count * sizeof(UInt8))
+            data.getBytes(&array, length:count * MemoryLayout<UInt8>.size)
             
             let ext = file.bridge().pathExtension
             
@@ -115,40 +114,40 @@ public class BaseStaticAction<C : FlushableContentType> : Action<C>, Intermediat
         self.cacheControl = cacheControl
         
         var headers = [String: String]()
-        headers.updateWithHeader(self.cacheControl)
+        headers.updateWithHeader(header: self.cacheControl)
         
         self.headers = headers
     }
     
-    public func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?), AnyError> {
+    public func nextAction<RequestContent : ConstructableContentType>(request:Request<RequestContent>) -> Future<(AbstractActionType, Request<RequestContent>?)> {
         
         if request.method != HttpMethod.Get.rawValue {
-            return Future<(AbstractActionType, Request<RequestContent>?), AnyError>(value: (Action<AnyContent>.chain(), nil))
+            return Future<(AbstractActionType, Request<RequestContent>?)>(value: (Action<AnyContent>.chain(), nil))
         }
         
         guard let fileFromURI = request.params[self.param] else {
             print("Can not find ", self.param, " group in regex")
-            return Future<(AbstractActionType, Request<RequestContent>?), AnyError>(value: (Action<AnyContent>.chain(), nil))
+            return Future<(AbstractActionType, Request<RequestContent>?)>(value: (Action<AnyContent>.chain(), nil))
         }
         
-        let etag = self.dataProvider.etag(fileFromURI)
+        let etag = self.dataProvider.etag(file: fileFromURI)
         
-        return etag.flatMap { etag -> Future<(AbstractActionType, Request<RequestContent>?), AnyError> in
+        return etag.flatMap { etag -> Future<(AbstractActionType, Request<RequestContent>?)> in
             let headers = self.headers ++ ["ETag": etag]
             
             if let requestETag = request.headers["If-None-Match"] {
                 if requestETag == etag {
-                    let action = Action<AnyContent>.response(.NotModified, content: nil, headers: headers)
-                    return Future<(AbstractActionType, Request<RequestContent>?), AnyError>(value: (action, nil))
+                    let action = Action<AnyContent>.response(status: .NotModified, content: nil, headers: headers)
+                    return Future<(AbstractActionType, Request<RequestContent>?)>(value: (action, nil))
                 }
             }
             
-            let content = self.dataProvider.data(request.app, file: fileFromURI)
+            let content = self.dataProvider.data(app: request.app, file: fileFromURI)
             
             return content.map { content in
                 let flushableContent = FlushableContent(content: content)
                 
-                return (Action.ok(flushableContent, headers: headers), nil)
+                return (Action.ok(content: flushableContent, headers: headers), nil)
             }
         }.recoverWith { e in
             switch e {
@@ -156,7 +155,7 @@ public class BaseStaticAction<C : FlushableContentType> : Action<C>, Intermediat
             case ExpressError.FileNotFound(filename: _):
                 return Future(value: (Action<AnyContent>.chain(), nil))
             default:
-                return Future(error: AnyError(cause: e))
+                return Future(error:  e)
             }
         }
     }

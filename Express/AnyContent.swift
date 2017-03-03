@@ -20,7 +20,7 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+import Future
 
 public class AnyContentFactory : AbstractContentFactory<AnyContent> {
     private var data:Array<UInt8> = []
@@ -30,11 +30,11 @@ public class AnyContentFactory : AbstractContentFactory<AnyContent> {
     }
     
     func resolve() {
-        promise.trySuccess(AnyContent(data: self.data, contentType: head.contentType)!)
+        promise.trySuccess(value: AnyContent(data: self.data, contentType: head.contentType)!)
     }
     
-    public override func consume(data:Array<UInt8>) -> Future<Void, AnyError> {
-        return future(ImmediateExecutionContext) {
+    public override func consume(data:Array<UInt8>) -> Future<Void> {
+        return future {
             self.data += data
             for length in self.head.contentLength {
                 if(self.data.count >= length) {
@@ -64,8 +64,8 @@ public class AnyContent : ConstructableContentType, FlushableContentType {
         self.contentType = contentType
     }
     
-    public func flushTo(out: DataConsumerType) -> Future<Void, AnyError> {
-        return out.consume(data)
+    public func flushTo(out: DataConsumerType) -> Future<Void> {
+        return out.consume(data: data)
     }
 }
 
@@ -79,7 +79,7 @@ public extension AnyContent {
     }
     
     func asText() -> String? {
-        return String(bytes: data, encoding: NSUTF8StringEncoding)
+        return String(bytes: data, encoding: String.Encoding.utf8)
     }
 }
 
