@@ -75,12 +75,12 @@ private func handle_request(req: EVHTPRequest, serv:ServerParams) {
     //TODO: implement request data parsing
     
     let info = EVHTP.get_request_info(req: req)
-    let head = RequestHead(method: info.method, version: info.version, remoteAddress: info.remoteIp, secure: info.scheme == "HTTPS", uri: info.uri, path: info.path, query: info.query, headers: info.headers, params: Dictionary())
+    let head = RequestHead(app: serv.app, method: info.method, version: info.version, remoteAddress: info.remoteIp, secure: info.scheme == "HTTPS", uri: info.uri, path: info.path, query: info.query, headers: info.headers, params: Dictionary())
     let os = ResponseDataConsumer(sock: req)
     
     let routeTuple = serv.app.firstRoute(request: head)
     let transaction = routeTuple.map {
-        ($0.0, head.withParams(params: $0.1))
+        ($0.0, head.withParams(params: $0.1, app: serv.app))
     }.map { ( route, header) in
         route.factory(header, os)
     }

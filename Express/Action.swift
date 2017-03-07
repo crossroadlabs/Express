@@ -105,7 +105,7 @@ class ChainAction<C : FlushableContentType, ReqC: ConstructableContentType> : Ac
         
         let route = app.nextRoute(routeId: routeId, request: request)
         return route.map { (r:(RouteType, [String: String]))->Future<Void> in
-            let req = req.withParams(params: r.1)
+            let req = req.withParams(params: r.1, app: app)
             let transaction = r.0.factory(req, out)
             for b in body {
                 if !transaction.tryConsume(content: b) {
