@@ -39,13 +39,7 @@ let package = Package(
     	.Package(url: "https://github.com/crossroadlabs/PathToRegex.git", majorVersion: 0, minor: 4),
     	.Package(url: "https://github.com/kylef/Stencil.git", majorVersion: 0, minor: 8),
         //.Package(url: "https://github.com/groue/GRMustache.swift", majorVersion: 2, minor: 0),
-    	.Package(url: "https://github.com/ypopovych/CEVHTP.git", majorVersion: 0, minor: 3),
+    	.Package(url: "https://github.com/crossroadlabs/CEVHTP.git", majorVersion: 0, minor: 3),
     ],
     exclude: ["doc"]
 )
-
-#if os(Linux)
-//package.dependencies.append(.Package(url: "https://github.com/crossroadlabs/CEVHTP.git", majorVersion: 0, minor: 2))
-#else
-//package.dependencies.append(.Package(url: "https://github.com/crossroadlabs/CEVHTP.git", majorVersion: 0, minor: 2))
-#endif
