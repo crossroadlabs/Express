@@ -162,11 +162,10 @@ private class RepeatingHeaderDict {
         var k:String?
         var v:String?
 
-        key.withMemoryRebound(to: UnsafeMutablePointer<UInt8>.self, capacity: klen){key in
-            
-            if evhtp_unescape_string(&unk, key.pointee , klen) == 0 {
-                unk!.withMemoryRebound(to: UnsafePointer<Int8>.self, capacity: klen){iunk in
-                    k = String(bytesNoCopy: unk!, length: strnlen(iunk.pointee, klen), encoding: String.Encoding.utf8, freeWhenDone: false)
+        key.withMemoryRebound(to: UInt8.self, capacity: klen){key in
+            if evhtp_unescape_string(&unk, key , klen) == 0 {
+                unk!.withMemoryRebound(to: Int8.self, capacity: klen) {iunk in
+                    k = String(bytesNoCopy: unk!, length: strnlen(iunk, klen), encoding: String.Encoding.utf8, freeWhenDone: false)
                 }
             } else {
                 k = String(bytesNoCopy: key, length: klen, encoding: String.Encoding.utf8, freeWhenDone: false)
@@ -174,14 +173,14 @@ private class RepeatingHeaderDict {
         }
     
         
-        val.withMemoryRebound(to: UnsafeMutablePointer<UInt8>.self, capacity: vlen){val in
+        val.withMemoryRebound(to: UInt8.self, capacity: vlen){val in
             
-            if evhtp_unescape_string(&unv, val.pointee , vlen) == 0 {
-                unv!.withMemoryRebound(to: UnsafePointer<Int8>.self, capacity: vlen){iunv in
-                    k = String(bytesNoCopy: unv!, length: strnlen(iunv.pointee, vlen), encoding: String.Encoding.utf8, freeWhenDone: false)
+            if evhtp_unescape_string(&unv, val , vlen) == 0 {
+                unv!.withMemoryRebound(to: Int8.self, capacity: vlen){iunv in
+                    v = String(bytesNoCopy: unv!, length: strnlen(iunv, vlen), encoding: String.Encoding.utf8, freeWhenDone: false)
                 }
             } else {
-                k = String(bytesNoCopy: val, length: vlen, encoding: String.Encoding.utf8, freeWhenDone: false)
+                v = String(bytesNoCopy: val, length: vlen, encoding: String.Encoding.utf8, freeWhenDone: false)
             }
         }
       
