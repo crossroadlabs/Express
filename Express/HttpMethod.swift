@@ -22,7 +22,7 @@
 import Foundation
 
 public enum HttpMethod : String {
-    case Any = "*"
+    case `Any` = "*"
     case Get = "GET"
     case Post = "POST"
     case Put = "PUT"

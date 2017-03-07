@@ -55,6 +55,6 @@ public extension Request where C : AnyContent {
             
             return (key, allValues)
         }
-        return toMap(merged)
+        return toMap(array: merged)
     }
 }

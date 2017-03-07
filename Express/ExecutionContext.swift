@@ -20,19 +20,21 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+import Future
 import ExecutionContext
 
-private let cmain:ExecutionContextType = ExecutionContext.main
+private let cmain:ExecutionContextProtocol = ExecutionContext.main
 
 extension ExecutionContext {
     static let main = cmain
     static let user = global
-    static let action = toContext(ExecutionContext(kind: .Parallel))
-    static let render = toContext(ExecutionContext(kind: .Parallel))
-    static let view = toContext(ExecutionContext(kind: .Serial))
+    static let network = ExecutionContext(kind: .serial)
     
-    @noreturn class func run() {
-        executionContextMain()
+    static let action = ExecutionContext(kind: .parallel)
+    static let render = ExecutionContext(kind: .parallel)
+    static let view = ExecutionContext(kind: .serial)
+    
+    class func run() -> Never  {
+        mainProc()
     }
 }

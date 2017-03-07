@@ -8,7 +8,7 @@ func calcFactorial(num:Double) -> Future&lt;Double, AnyError&gt; {
     }
 }
 
-// (request -> Future<Action<AnyContent>, AnyError> in) - this is required to tell swift you want to return a Future
+// (request -> Future<Action<AnyContent>> in) - this is required to tell swift you want to return a Future
 // hopefully inference in swift will get better eventually and just "request in" will be enough
 app.get("/factorial/:num(\\d+)") { request -> Future&lt;Action&lt;AnyContent&gt;, AnyError&gt; in
     // get the number from the url

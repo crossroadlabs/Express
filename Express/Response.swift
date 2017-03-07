@@ -20,11 +20,12 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+import Future
+import ExecutionContext
 
 //TODO: refactor
 protocol HeadersAdjuster {
-    typealias Content : FlushableContentType
+    associatedtype Content : FlushableContentType
     static func adjustHeaders(headers:Dictionary<String, String>, c:ContentType?) -> Dictionary<String, String>
 }
 
@@ -43,18 +44,18 @@ public class Response<C : FlushableContentType> : HttpResponseHead, HeadersAdjus
     
     public init(status:UInt16, content:C? = nil, headers:Dictionary<String, String> = Dictionary()) {
         self.content = content
-        super.init(status: status, headers:Response<C>.adjustHeaders(headers, c: content))
+        super.init(status: status, headers:Response<C>.adjustHeaders(headers: headers, c: content))
     }
     
-    public override func flushTo(out:DataConsumerType) -> Future<Void, AnyError> {
+    public override func flushTo(out:DataConsumerType) -> Future<Void> {
         
-        return super.flushTo(out).flatMap { ()->Future<Void,AnyError> in
+        return super.flushTo(out: out).flatMap { ()->Future<Void> in
             for c in self.content {
-                return c.flushTo(out)
+                return c.flushTo(out: out)
             }
             return Future(value: ())
-        }.flatMap { ()->Future<Void,AnyError> in
-            return future(ImmediateExecutionContext) {
+        }.flatMap { ()->Future<Void> in
+            return future(context: immediate) {
                 try out.dataEnd()
             }
         }
@@ -69,7 +70,7 @@ public class Response<C : FlushableContentType> : HttpResponseHead, HeadersAdjus
             mHeaders.updateValue(ct, forKey: HttpHeader.ContentType.rawValue)
             return mHeaders
         }
-        return h.getOrElse(headers)
+        return h.getOrElse(el: headers)
     }
 }
 

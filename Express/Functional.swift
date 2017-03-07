@@ -29,8 +29,8 @@ func toMap<A : Hashable, B>(array:Array<(A, B)>) -> Dictionary<A, B> {
     return dict
 }
 
-extension SequenceType {
-    func fold<B>(initial:B, f:(B,Generator.Element)->B) -> B {
+extension Sequence {
+    func fold<B>(initial:B, f:(B, Iterator.Element)->B) -> B {
         var b:B = initial
         forEach { e in
             b = f(b, e)
@@ -38,7 +38,7 @@ extension SequenceType {
         return b
     }
     
-    func findFirst(f:(Generator.Element)->Bool) -> Generator.Element? {
+    func findFirst(f:(Iterator.Element)->Bool) -> Iterator.Element? {
         for e in self {
             if(f(e)) {
                 return e
@@ -47,7 +47,7 @@ extension SequenceType {
         return nil
     }
     
-    func mapFirst<B>(f:(Generator.Element)->B?) -> B? {
+    func mapFirst<B>(f:(Iterator.Element)->B?) -> B? {
         for e in self {
             let b = f(e)
             if b != nil {
@@ -69,14 +69,14 @@ let folded = arr.fold(1) { b, e in
 
 print("B: ", folded)*/
 
-extension Optional : SequenceType {
-    public typealias Generator = AnyGenerator<Wrapped>
+extension Optional : Sequence {
+    public typealias Iterator = AnyIterator<Wrapped>
     /// A type that represents a subsequence of some of the elements.
-    public func generate() -> Generator {
+    public func makeIterator() -> AnyIterator<Wrapped> {
         var done:Bool = false
-        return anyGenerator {
+        return AnyIterator {
             if(done) {
-                return None
+                return .none
             }
             done = true
             return self
@@ -85,24 +85,24 @@ extension Optional : SequenceType {
 }
 
 public extension Optional {
-    func getOrElse(@autoclosure el:() -> Wrapped) -> Wrapped {
+    func getOrElse( el:@autoclosure () -> Wrapped) -> Wrapped {
         switch self {
-            case .Some(let value): return value
+            case .some(let value): return value
             default: return el()
         }
     }
     
     func getOrElse(el:() -> Wrapped) -> Wrapped {
         switch self {
-            case .Some(let value): return value
+            case .some(let value): return value
             default: return el()
         }
     }
 }
 
 public extension Dictionary {
-    mutating func getOrInsert(key:Key, @autoclosure f:()->Value) -> Value {
-        return getOrInsert(key, f: f)
+    mutating func getOrInsert(key:Key, f:@autoclosure ()->Value) -> Value {
+        return getOrInsert(key: key, f: f)
     }
     
     mutating func getOrInsert(key:Key, f:()->Value) -> Value {
@@ -114,8 +114,8 @@ public extension Dictionary {
         return stored
     }
     
-    mutating func getOrInsert(key:Key, @autoclosure f:() throws ->Value) throws -> Value {
-        return try getOrInsert(key, f: f)
+    mutating func getOrInsert(key:Key, f:@autoclosure () throws ->Value) throws -> Value {
+        return try getOrInsert(key: key, f: f)
     }
     
     mutating func getOrInsert(key:Key, f:() throws -> Value) throws -> Value {
@@ -129,7 +129,7 @@ public extension Dictionary {
 }
 
 public extension Dictionary {
-    func map<K : Hashable, V>(@noescape transform: ((Key, Value)) throws -> (K, V)) rethrows -> Dictionary<K, V> {
+    func map<K : Hashable, V>( transform: ((Key, Value)) throws -> (K, V)) rethrows -> Dictionary<K, V> {
         var result = Dictionary<K, V>()
         for it in self {
             let (k, v) = try transform(it)

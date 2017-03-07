@@ -23,7 +23,7 @@ import PackageDescription
 
 let package = Package(
     name: "Express",
-    exclude: ["doc"],
+   
     targets: [
         Target(
             name: "Express"
@@ -34,16 +34,12 @@ let package = Package(
         )
     ],
     dependencies: [
-    	.Package(url: "https://github.com/crossroadlabs/BrightFutures.git", majorVersion: 0, minor: 4),
-    	.Package(url: "https://github.com/crossroadlabs/TidyJSON.git", majorVersion: 1, minor: 1),
-    	.Package(url: "https://github.com/crossroadlabs/PathToRegex.git", majorVersion: 0, minor: 2),
-    	.Package(url: "https://github.com/crossroadlabs/Regex.git", majorVersion: 0, minor: 5),
-    	.Package(url: "https://github.com/crossroadlabs/Stencil.git", majorVersion: 0, minor: 5),
-    ]
+    	.Package(url: "https://github.com/reactive-swift/Future.git", majorVersion: 0, minor: 1),
+    	.Package(url: "https://github.com/IBM-Swift/SwiftyJSON.git", majorVersion: 15),
+    	.Package(url: "https://github.com/crossroadlabs/PathToRegex.git", majorVersion: 0, minor: 4),
+    	.Package(url: "https://github.com/kylef/Stencil.git", majorVersion: 0, minor: 8),
+        //.Package(url: "https://github.com/groue/GRMustache.swift", majorVersion: 2, minor: 0),
+    	.Package(url: "https://github.com/crossroadlabs/CEVHTP.git", majorVersion: 0, minor: 4),
+    ],
+    exclude: ["doc"]
 )
-
-#if os(Linux)
-package.dependencies.append(.Package(url: "https://github.com/crossroadlabs/CEVHTP.git", majorVersion: 0, minor: 2))
-#else
-package.dependencies.append(.Package(url: "https://github.com/crossroadlabs/CEVHTP.git", majorVersion: 0, minor: 1))
-#endif

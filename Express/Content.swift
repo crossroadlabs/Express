@@ -20,15 +20,16 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import BrightFutures
+import Future
+import ExecutionContext
 
 public protocol ContentFactoryType : DataConsumerType {
-    typealias Content
+    associatedtype Content
     
     init(response:RequestHeadType)
     
     func tryConsume(content:ContentType) -> Bool
-    func content() -> Future<Content, AnyError>
+    func content() -> Future<Content>
 }
 
 public protocol ContentType {
@@ -36,7 +37,7 @@ public protocol ContentType {
 }
 
 public protocol ConstructableContentType : ContentType {
-    typealias Factory: ContentFactoryType
+    associatedtype Factory: ContentFactoryType
 }
 
 public class ContentFactoryBase {
@@ -62,22 +63,22 @@ public class FlushableContent : FlushableContentType {
         self.content = content
     }
     
-    public func flushTo(out:DataConsumerType) -> Future<Void, AnyError> {
-        return content.flushTo(out)
+    public func flushTo(out:DataConsumerType) -> Future<Void> {
+        return content.flushTo(out: out)
     }
 }
 
 public class AbstractContentFactory<T> : ContentFactoryBase, ContentFactoryType {
     public typealias Content = T
-    var promise:Promise<Content, AnyError>
+    var promise:Promise<Content>
     
     public required init(response:RequestHeadType) {
-        promise = Promise()
+        promise = Promise(context: ExecutionContext.network)
         super.init(response: response)
     }
     
-    public func consume(data:Array<UInt8>) -> Future<Void, AnyError> {
-        return future(ImmediateExecutionContext) {
+    public func consume(data:Array<UInt8>) -> Future<Void> {
+        return future(context: immediate) {
             throw ExpressError.NotImplemented(description: "Not implemented consume in " + Mirror(reflecting: self).description)
         }
     }
@@ -89,14 +90,15 @@ public class AbstractContentFactory<T> : ContentFactoryBase, ContentFactoryType 
     public func tryConsume(content: ContentType) -> Bool {
         switch content {
         case let match as Content:
-            promise.success(match)
+            //TODO: check this? return value?
+            promise.trySuccess(value: match)
             return true
         default:
             return false
         }
     }
     
-    public func content() -> Future<Content, AnyError> {
+    public func content() -> Future<Content> {
         return promise.future
     }
 }
