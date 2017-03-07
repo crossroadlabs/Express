@@ -28,7 +28,7 @@ private let cmain:ExecutionContextProtocol = ExecutionContext.main
 extension ExecutionContext {
     static let main = cmain
     static let user = global
-    static let network = ExecutionContext(kind: .parallel)
+    static let network = ExecutionContext(kind: .serial)
     
     static let action = ExecutionContext(kind: .parallel)
     static let render = ExecutionContext(kind: .parallel)
