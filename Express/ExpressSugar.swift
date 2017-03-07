@@ -34,35 +34,35 @@ public extension Express {
         self.handle(matcher: defaultUrlMatcher(path: path, method: method), handler: handler)
     }
     
-    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, path:String, handler:@escaping (Request<RequestContent>) -> Action<ResponseContent>) -> Void {
+    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, path:String, handler:@escaping (Request<RequestContent>) throws -> Action<ResponseContent>)  -> Void {
         self.handleInternal(method: method, path: path, handler: handler)
     }
     
-    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, regex:Regex, handler:@escaping (Request<RequestContent>) -> Action<ResponseContent>) -> Void {
+    func handle<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(method:String, regex:Regex, handler:@escaping (Request<RequestContent>) throws -> Action<ResponseContent>) -> Void {
         self.handle(matcher: RegexUrlMatcher(method: method, regex: regex), handler: handler)
     }
     
-    func all<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) -> Action<ResponseContent>) -> Void {
+    func all<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) throws -> Action<ResponseContent>) -> Void {
         self.handle(method: HttpMethod.Any.rawValue, path: path, handler: handler)
     }
     
-    func get<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) -> Action<ResponseContent>) -> Void {
+    func get<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) throws -> Action<ResponseContent>) -> Void {
         self.handle(method: HttpMethod.Get.rawValue, path: path, handler: handler)
     }
     
-    func post<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) -> Action<ResponseContent>) -> Void {
+    func post<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) throws -> Action<ResponseContent>) -> Void {
         self.handle(method: HttpMethod.Post.rawValue, path: path, handler: handler)
     }
     
-    func put<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) -> Action<ResponseContent>) -> Void {
+    func put<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) throws -> Action<ResponseContent>) -> Void {
         self.handle(method: HttpMethod.Put.rawValue, path: path, handler: handler)
     }
     
-    func delete<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) -> Action<ResponseContent>) -> Void {
+    func delete<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) throws -> Action<ResponseContent>) -> Void {
         self.handle(method: HttpMethod.Delete.rawValue, path: path, handler: handler)
     }
     
-    func patch<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) -> Action<ResponseContent>) -> Void {
+    func patch<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType>(path:String, handler:@escaping (Request<RequestContent>) throws -> Action<ResponseContent>) -> Void {
         self.handle(method: HttpMethod.Patch.rawValue, path: path, handler: handler)
     }
     
