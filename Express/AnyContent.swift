@@ -21,6 +21,7 @@
 
 import Foundation
 import Future
+import ExecutionContext
 
 public class AnyContentFactory : AbstractContentFactory<AnyContent> {
     private var data:Array<UInt8> = []
@@ -34,7 +35,7 @@ public class AnyContentFactory : AbstractContentFactory<AnyContent> {
     }
     
     public override func consume(data:Array<UInt8>) -> Future<Void> {
-        return future {
+        return future(context: immediate) {
             self.data += data
             for length in self.head.contentLength {
                 if(self.data.count >= length) {
