@@ -24,7 +24,7 @@ import CEVHTP
 import Result
 import ExecutionContext
 import Future
-import CEvent2
+import CEvent
 
 #if os(Linux)
     import Glibc
