@@ -25,10 +25,7 @@ import Stencil
 
 private extension Path {
     var containerDir: Path {
-        
-        
-        return Path()
-        //return Path(string: String(describing: self).stringByDeletingLastPathComponent)
+        return Path(NSString(string: String(describing: self)).deletingLastPathComponent)
     }
 }
 
@@ -126,12 +123,12 @@ public class StencilViewEngine : ViewEngineType {
     public func view(filePath:String) throws -> ViewType {
         do {
             let path = Path(filePath)
-            //let dir = path.containerDir
-            let loader = FileSystemLoader(paths: [path])
+            let dir = path.containerDir
+            let loader = FileSystemLoader(paths: [dir])
             
             let environment = Environment(loader: loader)
             
-            let template = try environment.loadTemplate(name: filePath)
+            let template = try environment.loadTemplate(name: path.lastComponent)
 
             return StencilView(template: template, loader: loader)
         } catch let e as TemplateSyntaxError {

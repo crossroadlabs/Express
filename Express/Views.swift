@@ -127,9 +127,6 @@ public class Views {
     }
     
     public func render<Context>(view:String, context:Context?) -> Future<FlushableContentType> {
-        //TODO: check getOrElse logic!!!
-        
-        
         return self.view(viewName: view).settle(in: viewContext).map { view in
             try view.render(context: context)
         }
