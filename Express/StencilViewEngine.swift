@@ -77,11 +77,12 @@ private let loaderKey = "loader"
 
 class StencilView : ViewType {
     let template:Template
-    let loader:Loader?
+
     
     init(template:Template, loader:Loader? = nil) {
         self.template = template
-        self.loader = loader
+        
+        
     }
     
     func render<C>(context:C?) throws -> FlushableContentType {
@@ -101,11 +102,12 @@ class StencilView : ViewType {
                 //TODO: merge loaders
             }
             
-            let contextLoader:[String:Any] = self.loader.map{["loader": $0]}.getOrElse(el: Dictionary())
-            let finalContext = contextSupplied ++ contextLoader
+            //let contextLoader:[String:Any] = self.loader.map{["loader": $0]}.getOrElse(el: Dictionary())
+            let finalContext = contextSupplied //++ contextLoader
+           
+            let render = try template.render(finalContext)
             
-            let stencilContext = Stencil.Context(dictionary: finalContext)
-            let render = try template.render(stencilContext)
+            
             return AnyContent(str:render, contentType: "text/html")!
         } catch let e as TemplateSyntaxError {
             throw ExpressError.Render(description: e.description, line: nil, cause: e)
@@ -126,7 +128,11 @@ public class StencilViewEngine : ViewEngineType {
             let path = Path(filePath)
             //let dir = path.containerDir
             let loader = FileSystemLoader(paths: [path])
-            let template = try Template(path: path)
+            
+            let environment = Environment(loader: loader)
+            
+            let template = try environment.loadTemplate(name: filePath)
+
             return StencilView(template: template, loader: loader)
         } catch let e as TemplateSyntaxError {
             throw ExpressError.Render(description: e.description, line: nil, cause: e)

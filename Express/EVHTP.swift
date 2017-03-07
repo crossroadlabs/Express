@@ -23,11 +23,13 @@ import Foundation
 import CEVHTP
 import Result
 import Future
+import CEvent2
+
 #if os(Linux)
     import Glibc
 #endif
 
-internal typealias EVHTPp = UnsafeMutablePointer<evhtp_t>
+internal typealias EVHTPp = UnsafeMutablePointer<evhtp_t>?
 internal typealias EVHTPRequest = UnsafeMutablePointer<evhtp_request_t>
 internal typealias EVHTPRouteCallback = (EVHTPRequest) -> ()
 internal typealias EVHTPCallback = UnsafeMutablePointer<evhtp_callback_t>
@@ -101,10 +103,14 @@ private class HeadersDict {
     static func fromHeaders(headers: UnsafeMutablePointer<evhtp_kvs_t>) -> HeadersDict {
         var headData = HeadersDict()
         
-        evhtp_kvs_for_each(headers, { (kv: UnsafeMutablePointer<evhtp_kv_t>, arg: UnsafeMutablePointer<Void>) -> (Int32) in
-            UnsafeMutablePointer<HeadersDict>(arg).memory.addHeader(kv.memory.key, klen: kv.memory.klen, val: kv.memory.val, vlen: kv.memory.vlen)
+        evhtp_kvs_for_each(headers, { (kv, arg) -> Int32 in
+
+            if let arg = UnsafeMutablePointer<HeadersDict>(OpaquePointer(arg)), let kv = kv {
+                arg.pointee.addHeader(key: kv.pointee.key, klen: kv.pointee.klen, val: kv.pointee.val, vlen: kv.pointee.vlen)
+            }
             return 0
-            }, &headData)
+        }, &headData)
+        
         return headData
     }
     
@@ -136,40 +142,58 @@ private class RepeatingHeaderDict {
     static func fromHeaders(headers: UnsafeMutablePointer<evhtp_kvs_t>) -> RepeatingHeaderDict {
         var headData = RepeatingHeaderDict()
         
-        evhtp_kvs_for_each(headers, { (kv: UnsafeMutablePointer<evhtp_kv_t>, arg: UnsafeMutablePointer<Void>) -> (Int32) in
-            UnsafeMutablePointer<RepeatingHeaderDict>(arg).memory.addHeader(kv.memory.key, klen: kv.memory.klen, val: kv.memory.val, vlen: kv.memory.vlen)
+        evhtp_kvs_for_each(headers, { (kv, arg) -> (Int32) in
+            
+            if let arg = UnsafeMutablePointer<RepeatingHeaderDict>(OpaquePointer(arg)), let kv = kv {
+                arg.pointee.addHeader(key: kv.pointee.key, klen: kv.pointee.klen, val: kv.pointee.val, vlen: kv.pointee.vlen)
+            }
             return 0
-            }, &headData)
+        }, &headData)
         return headData
     }
     
+    
+    
     private func addHeader(key: UnsafeMutablePointer<Int8>, klen: Int, val: UnsafeMutablePointer<Int8>, vlen: Int) {
-        var unk = UnsafeMutablePointer<UInt8>.allocate(capacity: klen)
-        var unv = UnsafeMutablePointer<UInt8>.allocate(capacity: vlen)
+        var unk:UnsafeMutablePointer<UInt8>? = UnsafeMutablePointer<UInt8>.allocate(capacity: klen)
+        var unv:UnsafeMutablePointer<UInt8>?  = UnsafeMutablePointer<UInt8>.allocate(capacity: vlen)
         
         var k:String?
         var v:String?
-        
-        if evhtp_unescape_string(&unk, UnsafeMutablePointer<UInt8>(key), klen) == 0 {
-            k = String(bytesNoCopy: unk, length: strnlen(UnsafePointer<Int8>(unk), klen), encoding: String.Encoding.utf8, freeWhenDone: false)
-        } else {
-            k = String(bytesNoCopy: key, length: klen, encoding: String.Encoding.utf8, freeWhenDone: false)
-        }
-        if evhtp_unescape_string(&unv, UnsafeMutablePointer<UInt8>(val), vlen) == 0 {
-            v = String(bytesNoCopy: unv, length: strnlen(UnsafePointer<Int8>(unv), vlen), encoding: String.Encoding.utf8, freeWhenDone: false)
-        } else {
-            v = String(bytesNoCopy: val, length: vlen, encoding: String.Encoding.utf8, freeWhenDone: false)
-        }
 
+        key.withMemoryRebound(to: UnsafeMutablePointer<UInt8>.self, capacity: klen){key in
+            
+            if evhtp_unescape_string(&unk, key.pointee , klen) == 0 {
+                unk!.withMemoryRebound(to: UnsafePointer<Int8>.self, capacity: klen){iunk in
+                    k = String(bytesNoCopy: unk!, length: strnlen(iunk.pointee, klen), encoding: String.Encoding.utf8, freeWhenDone: false)
+                }
+            } else {
+                k = String(bytesNoCopy: key, length: klen, encoding: String.Encoding.utf8, freeWhenDone: false)
+            }
+        }
+    
+        
+        val.withMemoryRebound(to: UnsafeMutablePointer<UInt8>.self, capacity: vlen){val in
+            
+            if evhtp_unescape_string(&unv, val.pointee , vlen) == 0 {
+                unv!.withMemoryRebound(to: UnsafePointer<Int8>.self, capacity: vlen){iunv in
+                    k = String(bytesNoCopy: unv!, length: strnlen(iunv.pointee, vlen), encoding: String.Encoding.utf8, freeWhenDone: false)
+                }
+            } else {
+                k = String(bytesNoCopy: val, length: vlen, encoding: String.Encoding.utf8, freeWhenDone: false)
+            }
+        }
+      
+        
         if var a = dict[k!] {
             a.append(v!)
         } else {
             dict[k!] = [v!]
         }
-        unk.deinitialize()
-        unk.deallocate(capacity: klen)
-        unv.deinitialize()
-        unv.deallocate(capacity: vlen)
+        unk!.deinitialize()
+        unk!.deallocate(capacity: klen)
+        unv!.deinitialize()
+        unv!.deallocate(capacity: vlen)
     }
 }
 
@@ -182,9 +206,10 @@ private class DataReadParams {
     }
 }
 
-private func request_callback(req: EVHTPRequest, callbk: UnsafeMutablePointer<Void>) {
-    let callback = UnsafeMutablePointer<EVHTPRouteCallback>(callbk).pointee
-    callback(req)
+private func request_callback(req: EVHTPRequest?, callbk: UnsafeMutableRawPointer?) {
+    
+    let callback = UnsafeMutablePointer<EVHTPRouteCallback>(OpaquePointer(callbk)!).pointee
+    callback(req!)
     evhtp_request_pause(req)
 }
 
@@ -271,7 +296,7 @@ internal class EVHTPRequestInfo {
     }
     var path: String {
         get {
-            let p = String.fromCString(req.pointee.uri.pointee.path.pointee.full)
+            let p = String(validatingUTF8: req.pointee.uri.pointee.path.pointee.full)
             if p != nil {
                 return p!
             }
@@ -281,11 +306,12 @@ internal class EVHTPRequestInfo {
     var uri: String {
         get {
             var p = path
-            let q = String.fromCString(UnsafeMutablePointer<Int8>(req.pointee.uri.pointee.query_raw))
+            
+            let q = String(validatingUTF8: UnsafeMutablePointer<Int8>(OpaquePointer(req.pointee.uri.pointee.query_raw)!))
             if q != nil && q != "" {
                 p = p + "?" + q!
             }
-            let f = String.fromCString(UnsafeMutablePointer<Int8>(req.pointee.uri.pointee.fragment))
+            let f = String(validatingUTF8: UnsafeMutablePointer<Int8>(OpaquePointer(req.pointee.uri.pointee.fragment)!))
             if f != nil && f != "" {
                 p = p + "#" + f!
             }
@@ -294,7 +320,7 @@ internal class EVHTPRequestInfo {
     }
     var host: String {
         get {
-            var h = String.fromCString(req.pointee.uri.pointee.authority.pointee.hostname)
+            var h = String(validatingUTF8: req.pointee.uri.pointee.authority.pointee.hostname)
             if h != nil {
                 let p = req.pointee.uri.pointee.authority.pointee.port
                 if p > 0 {
@@ -307,12 +333,12 @@ internal class EVHTPRequestInfo {
     }
     var username: String? {
         get {
-            return String.fromCString(req.pointee.uri.pointee.authority.pointee.username)
+            return String(validatingUTF8: req.pointee.uri.pointee.authority.pointee.username)
         }
     }
     var password: String? {
         get {
-            return String.fromCString(req.pointee.uri.pointee.authority.pointee.password)
+            return String(validatingUTF8: req.pointee.uri.pointee.authority.pointee.password)
         }
     }
     var scheme: String {
@@ -335,11 +361,14 @@ internal class EVHTPRequestInfo {
     }
     var remoteIp: String {
         get {
-            let mbuf = UnsafeMutablePointer<Int8>.allocate(capacity: Int(INET6_ADDRSTRLEN))
+            let mbuf = UnsafeMutablePointer<CChar>.allocate(capacity: Int(INET6_ADDRSTRLEN))
             let err = getnameinfo(req.pointee.conn.pointee.saddr, UInt32(sockaddr_size(saddr: req.pointee.conn.pointee.saddr)), mbuf, UInt32(INET6_ADDRSTRLEN), nil, 0, NI_NUMERICHOST)
+            
+            
+            
             var res = ""
             if err == 0 {
-                let t = String.fromCString(mbuf)
+                let t = String(validatingUTF8: mbuf)
                 if t != nil {
                     res = t!
                 }
@@ -387,11 +416,11 @@ internal class _evhtp {
     }
     
     func start_event(base: OpaquePointer) -> Future<Void> {
-        let p = Promise<Void, NoError>()
+        let p = Promise<Void>()
         
-        event_base_once(base, -1, EV_TIMEOUT, { (fd: Int32, what: Int16, arg: UnsafeMutablePointer<Void>) in
-            Unmanaged<Promise<Void, NoError>>.fromOpaque(COpaquePointer(arg)).takeRetainedValue().success()
-        }, UnsafeMutablePointer<Void>(Unmanaged.passRetained(p).toOpaque()), nil)
+        event_base_once(base, -1, EV_TIMEOUT, { (fd: Int32, what: Int16, arg: UnsafeMutableRawPointer?) in
+            try! Unmanaged<Promise<Void>>.fromOpaque(arg!).takeRetainedValue().success(value: ())
+        }, UnsafeMutableRawPointer(Unmanaged.passRetained(p).toOpaque()), nil)
         
         return p.future
     }
@@ -399,13 +428,13 @@ internal class _evhtp {
     func add_simple_route(htp: EVHTPp, path: String, cb: @escaping EVHTPRouteCallback) -> EVHTPCallback {
         let cbp = UnsafeMutablePointer<EVHTPRouteCallback>.allocate(capacity: 1)
         cbp.initialize(to: cb)
-        return evhtp_set_cb(htp, path, request_callback, UnsafeMutablePointer<Void>(cbp))
+        return evhtp_set_cb(htp, path, request_callback, UnsafeMutableRawPointer(cbp))
     }
     
     func add_general_route(htp: EVHTPp, cb: @escaping EVHTPRouteCallback) {
         let cbp = UnsafeMutablePointer<EVHTPRouteCallback>.allocate(capacity: 1)
         cbp.initialize(to: cb)
-        evhtp_set_gencb(htp, request_callback, UnsafeMutablePointer<Void>(cbp))
+        evhtp_set_gencb(htp, request_callback, UnsafeMutableRawPointer(cbp))
     }
     
     func add_wildcard_route(htp: EVHTPp, wpath:String, cb: @escaping EVHTPRouteCallback) -> EVHTPCallback {
@@ -440,8 +469,8 @@ internal class _evhtp {
     
     func finish_response(req: EVHTPRequest, buffer: EVHTPBuffer) {
         evhtp_send_reply_chunk_end(req)
-        event_base_once(req.memory.htp.memory.evbase, -1, EV_TIMEOUT, { (fd: Int32, what: Int16, arg: UnsafeMutableRawPointer) -> Void in
-            evhtp_request_resume(EVHTPRequest(arg))
+        event_base_once(req.pointee.htp.pointee.evbase, -1, EV_TIMEOUT, { (fd: Int32, what: Int16, arg: UnsafeMutableRawPointer?) -> Void in
+            evhtp_request_resume(EVHTPRequest(OpaquePointer(arg)!))
         }, req, nil)
     }
 }
@@ -453,5 +482,5 @@ func evhtp_parse_query(query:String) -> [String: [String]] {
     defer {
         evhtp_kvs_free(parsed)
     }
-    return RepeatingHeaderDict.fromHeaders(headers: parsed).dict
+    return RepeatingHeaderDict.fromHeaders(headers: parsed!).dict
 }

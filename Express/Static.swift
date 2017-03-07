@@ -147,7 +147,7 @@ public class BaseStaticAction<C : FlushableContentType> : Action<C>, Intermediat
             return content.map { content in
                 let flushableContent = FlushableContent(content: content)
                 
-                return (Action.ok(content: flushableContent, headers: headers), nil)
+                return (Action.ok(flushableContent, headers: headers), nil)
             }
         }.recoverWith { e in
             switch e {

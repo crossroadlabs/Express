@@ -83,8 +83,9 @@ public class JsonView : NamedViewType {
     public func render<Context>(context:Context?) throws -> FlushableContentType {
         //TODO: implement reflection
         let json = context.flatMap{$0 as? JSONConvertible}.flatMap { $0.toJSON() }
+        
         //TODO: avoid string path
-        guard let render = json?.dump() else {
+        guard let render = json?.string else {
             throw ExpressError.Render(description: "unable to render json: " + context.flatMap{String(describing: $0)}.getOrElse(el: "None"), line: nil, cause: nil)
         }
         return AnyContent(str:render, contentType: "application/json")!

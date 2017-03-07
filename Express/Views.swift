@@ -46,23 +46,23 @@ public class Views {
         }
     }
     
-    public func register(path:String) {
+    public func register(_ path:String) {
         future(context: viewContext) { ()->Void in
             self.paths.append(path)
         }
     }
     
-    public func register(view: ViewType, name:String) {
+    public func register(_ view: ViewType, name:String) {
         future(context: viewContext) {
             self.views[name] = view
         }
     }
     
-    public func register(view: NamedViewType) {
-        register(view: view, name: view.name)
+    public func register(_ view: NamedViewType) {
+        register(view, name: view.name)
     }
     
-    public func register(engine: ViewEngineType) {
+    public func register(_ engine: ViewEngineType) {
         future(context: viewContext) {
             let exts = engine.extensions()
             for ext in exts {
@@ -83,41 +83,45 @@ public class Views {
         }
     }
     
-    func view(viewName:String) -> Future<ViewType, AnyError> {
-        return view(viewName) { viewName in
-            return future(context: self.viewContext) {
-                let fileManager = NSFileManager.defaultManager()
+    func view(viewName:String) -> Future<ViewType> {
+        return view(viewName: viewName) { viewName in
+            
+            return future(context: self.viewContext) { ()->Result<ViewType, AnyError> in
+                let fileManager = FileManager.default
                 let exts = self.engines.keys
                 
                 let combinedData = self.paths.map { path in
                     exts.map { ext in
-                        (ext, path.bridge().stringByAppendingPathComponent(viewName) + "." + ext)
+                        (ext, path.bridge().appendingPathComponent(viewName) + "." + ext)
                     }
-                }.flatten()
+                }.joined()
                 
                 return combinedData.findFirst { (ext, file) -> Bool in
                     // get first found template (ext, file)
                     //TODO: (path as NSString).stringByAppendingPathComponent(view) reimplement
                     var isDir = ObjCBool(false)
-                    return fileManager.fileExistsAtPath(file, isDirectory: &isDir) && !isDir.boolValue
+                    return fileManager.fileExists(atPath: file, isDirectory: &isDir) && !isDir.boolValue
                 }.flatMap { (ext, file) -> (ViewEngineType, String)? in
                     //convert to engine and full file path
                     let engine = self.engines[ext]
                     return engine.map { (engine:ViewEngineType) -> (ViewEngineType, String) in
                         (engine, file)
                     }
-                }.map { (engine, file) in
+                }.map { (engine, file)  -> Result<ViewType, AnyError> in
                     do {
-                        return Result(value: try engine.view(file))
+                        return Result(value: try engine.view(filePath: file))
                     } catch let e as ExpressError {
                         switch e {
-                            case ExpressError.FileNotFound(let filename): return Result(error: AnyError(cause: ExpressError.NoSuchView(name: filename)))
-                            default: return Result(error: AnyError(cause: e))
+                            case ExpressError.FileNotFound(let filename): return Result(error: AnyError(ExpressError.NoSuchView(name: filename)))
+                            default: return Result(error: AnyError(e))
                         }
                     } catch let e {
-                        return Result(error: AnyError(cause: e))
+                        return Result(error: AnyError(e))
                     }
-                }.getOrElse(Result(error: AnyError(cause: ExpressError.NoSuchView(name: viewName))))
+                }.getOrElse(el: Result(error: AnyError(ExpressError.NoSuchView(name: viewName))))
+                
+                
+                
             }
         }
     }

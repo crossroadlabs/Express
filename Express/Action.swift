@@ -127,7 +127,7 @@ class ChainAction<C : FlushableContentType, ReqC: ConstructableContentType> : Ac
 }
 
 public extension Action {
-    public class func ok(content:Content? = nil, headers:Dictionary<String, String> = Dictionary()) -> Action<C> {
+    public class func ok(_ content:Content? = nil, headers:Dictionary<String, String> = Dictionary()) -> Action<C> {
         let response = Response<Content>(status: 200, content: content, headers: headers)
         return ResponseAction(response: response)
     }
@@ -211,7 +211,7 @@ public extension Action {
 }
 
 public extension Action where C : AnyContent {
-    public class func ok(str:String?) -> Action<AnyContent> {
-        return Action<AnyContent>.ok(content: AnyContent(str: str))
+    public class func ok(_ str:String?) -> Action<AnyContent> {
+        return Action<AnyContent>.ok(AnyContent(str: str))
     }
 }
