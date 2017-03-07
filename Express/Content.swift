@@ -73,7 +73,7 @@ public class AbstractContentFactory<T> : ContentFactoryBase, ContentFactoryType 
     var promise:Promise<Content>
     
     public required init(response:RequestHeadType) {
-        promise = Promise()
+        promise = Promise(context: ExecutionContext.network)
         super.init(response: response)
     }
     

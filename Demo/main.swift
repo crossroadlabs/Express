@@ -50,7 +50,7 @@ app.errorHandler.register { (e:NastyError) in
         return Action<AnyContent>.redirect(url: "/error/recovered")
     case .Fatal(let reason):
         let content = AnyContent(str: "Unrecoverable nasty error happened. Reason: " + reason)
-        return Action<AnyContent>.response(.InternalServerError, content: content)
+        return Action<AnyContent>.response(status: .InternalServerError, content: content)
     }
 }
 
@@ -75,7 +75,7 @@ app.get(path: "/hello") { request in
 }
 
 //user as an url param
-app.get(path: "/hello/:user.html") { (request: Request<AnyContent>)  in
+app.get(path: "/hello/:user.html") { (request: Request<AnyContent>) -> Action<AnyContent>  in
     //get user
     let user = request.params["user"]
     //if there is a user - create our context. If there is no user, context will remain nil
@@ -84,7 +84,7 @@ app.get(path: "/hello/:user.html") { (request: Request<AnyContent>)  in
     return Action.render(view: "hello", context: context)
 }
 
-app.post(path: "/api/user") { (request: Request<AnyContent>)  in
+app.post(path: "/api/user") { (request: Request<AnyContent>) -> Action<AnyContent>   in
     //check if JSON has arrived
     guard let json = request.body?.asJSON() else {
         return Action.ok("Invalid request")
@@ -99,7 +99,7 @@ app.post(path: "/api/user") { (request: Request<AnyContent>)  in
         "description": "User with username '" + username + "' created succesfully"]
     
     //render disctionary as json (remember the one we've registered above?)
-    return Action.render(JsonView.name, context: response)
+    return Action.render(view: JsonView.name, context: response)
 }
 
 //:param - this is how you define a part of URL you want to receive through request object
@@ -153,13 +153,13 @@ func testItems(request:Request<AnyContent>) throws -> [String: Any] {
     return ["test": "ok", "items": viewItems]
 }
 
-app.get(path: "/render.html") { (request: Request<AnyContent>)  in
-    let items = try testItems(request)
-    return Action.render("test", context: items)
+app.get(path: "/render.html") { (request: Request<AnyContent>) throws -> Action<AnyContent>   in
+    let items = try testItems(request: request)
+    return Action<AnyContent>.render(view: "test", context: items)
 }
 
 //TODO: make a list of pages
-app.get(path: "/") { (request: Request<AnyContent>)  in
+app.get(path: "/") { (request: Request<AnyContent>) -> Action<AnyContent>   in
     let examples:[Any] = [
         ["title": "Hello Express", "link": "/hello", "id":"hello", "code": "code/hello.stencil"],
         ["title": "Echo", "link": "/echo?call=hello", "id":"echo", "code": "code/echo.stencil"],
@@ -177,7 +177,7 @@ app.get(path: "/") { (request: Request<AnyContent>)  in
     
     let context:[String: Any] = ["examples": examples]
     
-    return Action.render("index", context: context)
+    return Action.render(view: "index", context: context)
 }
 
 app.get(path: "/test/redirect") { request in

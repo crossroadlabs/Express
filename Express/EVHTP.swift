@@ -22,6 +22,7 @@
 import Foundation
 import CEVHTP
 import Result
+import ExecutionContext
 import Future
 import CEvent2
 
@@ -139,7 +140,7 @@ private class RepeatingHeaderDict {
         }
     }
     
-    static func fromHeaders(headers: UnsafeMutablePointer<evhtp_kvs_t>) -> RepeatingHeaderDict {
+    static func fromHeaders(headers: UnsafeMutablePointer<evhtp_kvs_t>?) -> RepeatingHeaderDict {
         var headData = RepeatingHeaderDict()
         
         evhtp_kvs_for_each(headers, { (kv, arg) -> (Int32) in
@@ -207,7 +208,6 @@ private class DataReadParams {
 }
 
 private func request_callback(req: EVHTPRequest?, callbk: UnsafeMutableRawPointer?) {
-    
     let callback = UnsafeMutablePointer<EVHTPRouteCallback>(OpaquePointer(callbk)!).pointee
     callback(req!)
     evhtp_request_pause(req)
@@ -306,12 +306,14 @@ internal class EVHTPRequestInfo {
     var uri: String {
         get {
             var p = path
+            let uri = req.pointee.uri.pointee
             
-            let q = String(validatingUTF8: UnsafeMutablePointer<Int8>(OpaquePointer(req.pointee.uri.pointee.query_raw)!))
+            let q = UnsafePointer<CChar>(OpaquePointer(uri.query_raw)).flatMap(String.init(validatingUTF8:))
             if q != nil && q != "" {
                 p = p + "?" + q!
             }
-            let f = String(validatingUTF8: UnsafeMutablePointer<Int8>(OpaquePointer(req.pointee.uri.pointee.fragment)!))
+            let f = UnsafePointer<CChar>(OpaquePointer(uri.fragment)).flatMap(String.init(validatingUTF8:))
+            
             if f != nil && f != "" {
                 p = p + "#" + f!
             }
@@ -416,7 +418,7 @@ internal class _evhtp {
     }
     
     func start_event(base: OpaquePointer) -> Future<Void> {
-        let p = Promise<Void>()
+        let p = Promise<Void>(context: ExecutionContext.network)
         
         event_base_once(base, -1, EV_TIMEOUT, { (fd: Int32, what: Int16, arg: UnsafeMutableRawPointer?) in
             try! Unmanaged<Promise<Void>>.fromOpaque(arg!).takeRetainedValue().success(value: ())

@@ -120,12 +120,12 @@ private func server_thread(pm: UnsafeMutableRawPointer) -> UnsafeMutableRawPoint
     EVHTP.bind_address(htp: htp_serv, host: "0.0.0.0", port: serv.port)
     
     EVHTP.add_general_route(htp: htp_serv) { (req: EVHTPRequest) -> () in
+        
+        
         handle_request(req: req, serv: serv)
     }
     
-    EVHTP.start_event(base: base).onSuccess {_ in 
-        serv.promise.trySuccess( value: () )
-    }
+    serv.promise.completeWith(future: EVHTP.start_event(base: base))
     
     EVHTP.start_server_loop(base: base)
     return nil
@@ -137,7 +137,7 @@ class HttpServer : ServerType {
     let thread: UnsafeMutablePointer<pthread_t?>
     
     func start() -> Future<ServerType> {
-        let params = ServerParams(promise: Promise<Void>(), port: port, app: app)
+        let params = ServerParams(promise: Promise<Void>(context: ExecutionContext.network), port: port, app: app)
         
         
         pthread_create(thread, nil, server_thread, UnsafeMutableRawPointer(Unmanaged.passRetained(params).toOpaque()))

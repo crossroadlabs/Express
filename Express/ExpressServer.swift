@@ -30,7 +30,7 @@ public extension Express {
         return server.start()
     }
     
-    func run()  {
+    func run() -> Never {
         #if os(Linux) && !dispatch
             print("Note: You have built Express without dispatch support. We have implemented this mode to support Linux developers while Dispatch for Linux is not available out of the box. Consider it to be development mode only and not suitable for production as it might cause occasional hanging and crashes. Still, there is a possibility to build Express with dispatch support (recommended for production use). Follow this link for more info: https://github.com/crossroadlabs/Express")
         #endif

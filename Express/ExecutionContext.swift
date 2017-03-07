@@ -28,12 +28,13 @@ private let cmain:ExecutionContextProtocol = ExecutionContext.main
 extension ExecutionContext {
     static let main = cmain
     static let user = global
+    static let network = ExecutionContext(kind: .parallel)
+    
     static let action = ExecutionContext(kind: .parallel)
     static let render = ExecutionContext(kind: .parallel)
     static let view = ExecutionContext(kind: .serial)
     
-    class func run()  {
-        //TODO: WTF???
-        //executionContextMain()
+    class func run() -> Never  {
+        mainProc()
     }
 }
