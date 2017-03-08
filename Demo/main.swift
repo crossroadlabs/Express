@@ -16,7 +16,7 @@ let app = express()
 //app.views.cache = true
 
 app.views.register(JsonView())
-//app.views.register(MustacheViewEngine())
+app.views.register(MustacheViewEngine())
 app.views.register(StencilViewEngine())
 
 app.get(path: "/echo") { (request: Request<AnyContent>) in
@@ -189,6 +189,10 @@ app.get(path: "/test/redirect") { request in
 
 app.all(path: "/merged/query") { request in
     Action.render(view: JsonView.name, context: request.mergedQuery())
+}
+
+app.get(path: "/mustache/:hello") { request in
+    Action.render(view: "mustache", context: ["hello": request.params["hello"]])
 }
 
 app.listen(port: 9999).onSuccess { server in
