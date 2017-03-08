@@ -408,8 +408,8 @@ internal class _evhtp {
         return htp
     }
     
-    func bind_address(htp: EVHTPp, host: String, port: UInt16) {
-        evhtp_bind_socket(htp, host, port, 1024)
+    func bind_address(htp: EVHTPp, host: String, port: UInt16) -> Int32 {
+        return evhtp_bind_socket(htp, host, port, 1024)
     }
     
     func start_server_loop(base: OpaquePointer) {
@@ -417,7 +417,7 @@ internal class _evhtp {
     }
     
     func start_event(base: OpaquePointer) -> Future<Void> {
-        let p = Promise<Void>(context: ExecutionContext.network)
+        let p = Promise<Void>()
         
         event_base_once(base, -1, EV_TIMEOUT, { (fd: Int32, what: Int16, arg: UnsafeMutableRawPointer?) in
             try! Unmanaged<Promise<Void>>.fromOpaque(arg!).takeRetainedValue().success(value: ())

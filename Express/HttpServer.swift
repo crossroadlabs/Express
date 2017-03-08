@@ -28,12 +28,10 @@ import Future
 import ExecutionContext
 
 private class ServerParams {
-    let promise: Promise<Void>
     let port: UInt16
     let app:Express
     
-    init(promise: Promise<Void>, port: UInt16, app: Express) {
-        self.promise = promise
+    init(port: UInt16, app: Express) {
         self.port = port
         self.app = app
     }
@@ -49,25 +47,29 @@ private class ResponseDataConsumer : ResponseHeadDataConsumerType {
     }
     
     func consume(head: HttpResponseHeadType) -> Future<Void> {
-        //TODO: handle errors if any
-        if let h = head as? HttpResponseHead {
-            buffer = EVHTP.start_response(req: sock, headers: h.headers, status: h.status)
-        } else {
-            buffer = EVHTP.start_response(req: sock, headers: Dictionary<String, String>(), status: head.status)
+        return future(context: ExecutionContext.network) {
+            //TODO: handle errors if any
+            if let h = head as? HttpResponseHead {
+                self.buffer = EVHTP.start_response(req: self.sock, headers: h.headers, status: h.status)
+            } else {
+                self.buffer = EVHTP.start_response(req: self.sock, headers: Dictionary<String, String>(), status: head.status)
+            }
         }
-        return Future(value: ())
     }
     
     func consume(data:Array<UInt8>) -> Future<Void> {
-        //TODO: handle errors if any
-        buffer?.write(data: data)
-        return Future(value: ())
+        return future(context: ExecutionContext.network) {
+            //TODO: handle errors if any
+            self.buffer?.write(data: data)
+        }
     }
     
     func dataEnd() throws {
-        //TODO: handle errors if any
-        EVHTP.finish_response(req: sock, buffer: buffer!)
-        buffer = nil
+        ExecutionContext.network.async {
+            //TODO: handle errors if any
+            EVHTP.finish_response(req: self.sock, buffer: self.buffer!)
+            self.buffer = nil
+        }
     }
 }
 
@@ -113,22 +115,15 @@ private func handle_request(req: EVHTPRequest, serv:ServerParams) {
     }
 }
 
-private func server_thread(pm: UnsafeMutableRawPointer) -> UnsafeMutableRawPointer? {
-    let serv = Unmanaged<ServerParams>.fromOpaque(pm).takeRetainedValue()
-    let base = EVHTP.create_base()
-    let htp_serv = EVHTP.create_htp(base: base)
-    EVHTP.bind_address(htp: htp_serv, host: "0.0.0.0", port: serv.port)
+private func setup_server(params serv:ServerParams) -> Bool {
+    let base = ExecutionContext.network.base
     
+    let htp_serv = EVHTP.create_htp(base: base)
+    let bound = EVHTP.bind_address(htp: htp_serv, host: "0.0.0.0", port: serv.port)
     EVHTP.add_general_route(htp: htp_serv) { (req: EVHTPRequest) -> () in
-        
-        
         handle_request(req: req, serv: serv)
     }
-    
-    serv.promise.completeWith(future: EVHTP.start_event(base: base))
-    
-    EVHTP.start_server_loop(base: base)
-    return nil
+    return bound == 0
 }
 
 class HttpServer : ServerType {
@@ -137,13 +132,10 @@ class HttpServer : ServerType {
     let thread: UnsafeMutablePointer<pthread_t?>
     
     func start() -> Future<ServerType> {
-        let params = ServerParams(promise: Promise<Void>(context: ExecutionContext.network), port: port, app: app)
-        
-        
-        pthread_create(thread, nil, server_thread, UnsafeMutableRawPointer(Unmanaged.passRetained(params).toOpaque()))
-        return params.promise.future.map {
-            self
-        }
+        let params = ServerParams(port: port, app: app)
+        return future(context:ExecutionContext.network) {
+            setup_server(params: params)
+        }.filter {$0}.map {_ in self}
     }
     
     required init(app:Express, port:UInt16) {

@@ -19,8 +19,6 @@
 //
 //===----------------------------------------------------------------------===//
 
-import Foundation
-import Future
 import ExecutionContext
 
 private let cmain:ExecutionContextProtocol = ExecutionContext.main
@@ -28,7 +26,7 @@ private let cmain:ExecutionContextProtocol = ExecutionContext.main
 extension ExecutionContext {
     static let main = cmain
     static let user = global
-    static let network = ExecutionContext(kind: .serial)
+    static let network = EventExecutionContext()
     
     static let action = ExecutionContext(kind: .parallel)
     static let render = ExecutionContext(kind: .parallel)
