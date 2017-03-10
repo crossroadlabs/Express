@@ -43,6 +43,15 @@ class FunctionErrorHandler : ErrorHandlerType {
         self.fun = fun
     }
     
+    convenience init<E : Error>(fun: @escaping (E) -> AbstractActionType?) {
+        self.init { e -> AbstractActionType? in
+            guard let e = e as? E else {
+                return nil
+            }
+            return fun(e)
+        }
+    }
+    
     func handle(e:Error) -> AbstractActionType? {
         return fun(e)
     }
@@ -74,19 +83,6 @@ public class AggregateErrorHandler : ErrorHandlerType {
         handlers.insert(handler, at: 0)
     }
     
-    public func register(_ f: @escaping ErrorHandlerFunction) {
-        register(handler: FunctionErrorHandler(fun: f))
-    }
-    
-    public func register<E: Error>(_ f:@escaping (E) -> AbstractActionType?) {
-        register { e in
-            guard let e = e as? E else {
-                return nil
-            }
-            return f(e)
-        }
-    }
-    
     public func handle(e:Error) -> AbstractActionType? {
         for handler in handlers {
             if let action = handler.handle(e: e) {
@@ -94,5 +90,33 @@ public class AggregateErrorHandler : ErrorHandlerType {
             }
         }
         return defaultErrorHandler.handle(e: e)
+    }
+}
+
+//API sugar
+
+public extension AggregateErrorHandler {
+    public func register(_ f: @escaping ErrorHandlerFunction) {
+        register(handler: FunctionErrorHandler(fun: f))
+    }
+    
+    public func register<Content : FlushableContentType>(_ f: @escaping (Error) -> Action<Content>?) {
+        register(handler: FunctionErrorHandler(fun: f))
+    }
+    
+    public func register(_ f: @escaping (Error) -> Action<AnyContent>?) {
+        register(handler: FunctionErrorHandler(fun: f))
+    }
+    
+    public func register<E: Error>(_ f:@escaping (E) -> AbstractActionType?) {
+        register(handler: FunctionErrorHandler(fun: f))
+    }
+    
+    public func register<Content : FlushableContentType, E: Error>(_ f:@escaping (E) -> Action<Content>?) {
+        register(handler: FunctionErrorHandler(fun: f))
+    }
+    
+    public func register<E: Error>(_ f:@escaping (E) -> Action<AnyContent>?) {
+        register(handler: FunctionErrorHandler(fun: f))
     }
 }

@@ -43,10 +43,10 @@ app.get(path: "/error/:fatal?") { (request:Request<AnyContent>) throws -> Action
 app.errorHandler.register { (e:NastyError) in
     switch e {
     case .Recoverable:
-        return Action<AnyContent>.redirect(url: "/error/recovered")
+        return .redirect(url: "/error/recovered")
     case .Fatal(let reason):
         let content = AnyContent(str: "Unrecoverable nasty error happened. Reason: " + reason)
-        return Action<AnyContent>.response(status: .InternalServerError, content: content)
+        return .response(status: .InternalServerError, content: content)
     }
 }
 
@@ -54,9 +54,9 @@ app.errorHandler.register { (e:NastyError) in
 app.errorHandler.register { (e:ExpressError) in
     switch e {
     case .PageNotFound(let path):
-        return Action<AnyContent>.render(view: "404", context: ["path": path], status: .NotFound)
+        return .render(view: "404", context: ["path": path], status: .NotFound)
     case  .RouteNotFound(let path):
-        return Action<AnyContent>.render(view: "404", context: ["path": path], status: .NotFound)
+        return .render(view: "404", context: ["path": path], status: .NotFound)
     default:
         return nil
     }
