@@ -25,11 +25,17 @@
 
 ![🐧 linux: ready](https://img.shields.io/badge/%F0%9F%90%A7%20linux-ready-red.svg)
 [![Build Status](https://travis-ci.org/crossroadlabs/Express.svg?branch=master)](https://travis-ci.org/crossroadlabs/Express)
-[![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager/)
 ![Platform OS X | Linux](https://img.shields.io/badge/platform-OS%20X%20%7C%20Linux-orange.svg)
-![Swift version](https://img.shields.io/badge/Swift-2.1 | 2.2-blue.svg)
+![Swift version](https://img.shields.io/badge/Swift-3.x-blue.svg)
 [![GitHub license](https://img.shields.io/badge/license-LGPL v3-green.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/crossroadlabs/Express.svg)](https://github.com/crossroadlabs/Express/releases)
+
+<table bgcolor="#ff0000">
+<tr><td>
+<img src="https://www.iconfinder.com/icons/728979/download/png/256" height=64 align="left"/>UPDATE March 2017: Swift Express is back on track and is Swift 3.x compatible. From now on we will suport the latest stable swift builds only. There is no release of the newest version done yet, though you can enjoy it from the "master" branch. Stay tuned.
+</td></tr>
+</table>
 
 <table bgcolor="#ff0000">
 <tr><td>
