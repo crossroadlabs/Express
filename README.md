@@ -312,6 +312,7 @@ Let us know if we are on the right path! Influence the project, create feature r
 	* Ported Express to Swift 3.0
 	* Moved to [Reactive Swift](https://github.com/reactive-swift) foundation ([Execution contexts](https://github.com/reactive-swift/ExecutionContext), [Futures](https://github.com/reactive-swift/Future), etc.)
 	* Wrapped libevent as an [ExecutionContext](https://github.com/reactive-swift/ExecutionContext)
+	* Dropped [Carthage](https://github.com/Carthage/Carthage) support
 
 * v0.3: linux support
 	* Runs on linux with and without [Dispatch](https://swift.org/core-libraries/#libdispatch) support (see [installation section](./doc/gettingstarted/installing.md#linux-) and [building in production](./doc/gettingstarted/buildrun.md#production-build))
