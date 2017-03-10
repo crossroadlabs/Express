@@ -19,8 +19,8 @@ app.views.register(JsonView())
 app.views.register(MustacheViewEngine())
 app.views.register(StencilViewEngine())
 
-app.get(path: "/echo") { (request: Request<AnyContent>) in
-    return Action.ok(request.query["call"]?.first)
+app.get(path: "/echo") { request in
+    .ok(request.query["call"]?.first)
 }
 
 enum NastyError : Error {
@@ -29,7 +29,7 @@ enum NastyError : Error {
 }
 
 app.get(path: "/error/recovered") { request in
-    return Action.render(view: "error-recovered", context: [String:Any]())
+    .render(view: "error-recovered", context: [String:Any]())
 }
 
 app.get(path: "/error/:fatal?") { (request:Request<AnyContent>) throws -> Action<AnyContent>  in
@@ -39,10 +39,6 @@ app.get(path: "/error/:fatal?") { (request:Request<AnyContent>) throws -> Action
     
     throw NastyError.Fatal(reason: fatal)
 }
-
-
-
-
 
 app.errorHandler.register { (e:NastyError) in
     switch e {
@@ -71,27 +67,27 @@ app.errorHandler.register { (e:ExpressError) in
 app.get(path: "/assets/:file+", action: StaticAction(path: "public", param:"file"))
 
 app.get(path: "/hello") { request in
-    return Action.ok(AnyContent(str: "<h1><center>Hello Express!!!</center></h1>", contentType: "text/html"))
+    .ok(AnyContent(str: "<h1><center>Hello Express!!!</center></h1>", contentType: "text/html"))
 }
 
 //user as an url param
-app.get(path: "/hello/:user.html") { (request: Request<AnyContent>) -> Action<AnyContent>  in
+app.get(path: "/hello/:user.html") { (request) -> Action<AnyContent>  in
     //get user
     let user = request.params["user"]
     //if there is a user - create our context. If there is no user, context will remain nil
     let context = user.map {["user": $0]}
     //render our template named "hello"
-    return Action.render(view: "hello", context: context)
+    return .render(view: "hello", context: context)
 }
 
-app.post(path: "/api/user") { (request: Request<AnyContent>) -> Action<AnyContent>   in
+app.post(path: "/api/user") { (request) -> Action<AnyContent> in
     //check if JSON has arrived
     guard let json = request.body?.asJSON() else {
-        return Action.ok("Invalid request")
+        return .ok("Invalid request")
     }
     //check if JSON object has username field
     guard let username = json["username"].string else {
-        return Action.ok("Invalid request")
+        return .ok("Invalid request")
     }
     //compose the response as a simple dictionary
     let response =
@@ -99,13 +95,13 @@ app.post(path: "/api/user") { (request: Request<AnyContent>) -> Action<AnyConten
         "description": "User with username '" + username + "' created succesfully"]
     
     //render disctionary as json (remember the one we've registered above?)
-    return Action.render(view: JsonView.name, context: response)
+    return .render(view: JsonView.name, context: response)
 }
 
 //:param - this is how you define a part of URL you want to receive through request object
 app.get(path: "/echo/:param") { request in
     //here you get the param from request: request.params["param"]
-    return Action.ok(request.params["param"])
+    .ok(request.params["param"])
 }
 
 func factorial(n: Double) -> Double {
@@ -114,7 +110,7 @@ func factorial(n: Double) -> Double {
 
 func calcFactorial(num:Double) -> Future<Double> {
     return future {
-        return factorial(n: num)
+        factorial(n: num)
     }
 }
 
@@ -128,12 +124,7 @@ app.get(path: "/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>> i
     let factorial = calcFactorial(num: num)
     
     //map the result of future to Express Action
-    let future = factorial.map { fac in
-        Action.ok(String(fac))
-    }
-    
-    //return the future
-    return future
+    return factorial.map(String.init).map {.ok($0)}
 }
 
 func testItems(request:Request<AnyContent>) throws -> [String: Any] {
@@ -153,13 +144,13 @@ func testItems(request:Request<AnyContent>) throws -> [String: Any] {
     return ["test": "ok", "items": viewItems]
 }
 
-app.get(path: "/render.html") { (request: Request<AnyContent>) throws -> Action<AnyContent>   in
+app.get(path: "/render.html") { request in
     let items = try testItems(request: request)
-    return Action<AnyContent>.render(view: "test", context: items)
+    return .render(view: "test", context: items)
 }
 
 //TODO: make a list of pages
-app.get(path: "/") { (request: Request<AnyContent>) -> Action<AnyContent>   in
+app.get(path: "/") { request -> Action<AnyContent> in
     let examples:[Any] = [
         ["title": "Hello Express", "link": "/hello", "id":"hello", "code": "code/hello.stencil"],
         ["title": "Echo", "link": "/echo?call=hello", "id":"echo", "code": "code/echo.stencil"],
@@ -177,22 +168,22 @@ app.get(path: "/") { (request: Request<AnyContent>) -> Action<AnyContent>   in
     
     let context:[String: Any] = ["examples": examples]
     
-    return Action.render(view: "index", context: context)
+    return .render(view: "index", context: context)
 }
 
 app.get(path: "/test/redirect") { request in
-    return future {
+    future {
         let to = request.query["to"].flatMap{$0.first}.getOrElse(el: "../render.html")
-        return Action.redirect(url: to)
+        return .redirect(url: to)
     }
 }
 
 app.all(path: "/merged/query") { request in
-    Action.render(view: JsonView.name, context: request.mergedQuery())
+    .render(view: JsonView.name, context: request.mergedQuery())
 }
 
 app.get(path: "/mustache/:hello") { request in
-    Action.render(view: "mustache", context: ["hello": request.params["hello"]])
+    .render(view: "mustache", context: ["hello": request.params["hello"]])
 }
 
 app.listen(port: 9999).onSuccess { server in
