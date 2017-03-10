@@ -298,13 +298,20 @@ Let us know if we are on the right path! Influence the project, create feature r
 
 ## Roadmap
 
-* v0.4: proper streaming APIs
-* v0.5: more content types available out of the box
-* v0.6: Web Sockets
-* v0.7: hot code reload
+* v0.4: stable version with Swift 3.0
+* v0.5: proper streaming
+* v0.6: new core (based on [Reactive Swift](https://github.com/reactive-swift))
+* v0.7: more content types available out of the box
+* v0.8: Web Sockets
+* v0.9: hot code reload
 * v1.0: hit the production!
 
 ## Changelog
+
+* v0.4: Swift 3.0
+	* Ported Express to Swift 3.0
+	* Moved to [Reactive Swift](https://github.com/reactive-swift) foundation ([Execution contexts](https://github.com/reactive-swift/ExecutionContext), [Futures](https://github.com/reactive-swift/Future), etc.)
+	* Wrapped libevent as an [ExecutionContext](https://github.com/reactive-swift/ExecutionContext)
 
 * v0.3: linux support
 	* Runs on linux with and without [Dispatch](https://swift.org/core-libraries/#libdispatch) support (see [installation section](./doc/gettingstarted/installing.md#linux-) and [building in production](./doc/gettingstarted/buildrun.md#production-build))
