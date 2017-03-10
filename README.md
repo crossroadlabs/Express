@@ -64,7 +64,7 @@ open HelloExpress.xcodeproj
 
 ```swift
 app.get("/myecho") { request in
-    return Action.ok(request.query["message"]?.first)
+    .ok(request.query["message"]?.first)
 }
 ```
 
@@ -113,7 +113,7 @@ All the examples can be found in `Demo` project inside the main repo.
 
 ```swift
 app.get("/hello") { request in
-    return Action.ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
+    .ok(AnyContent(str: "<h1>Hello Express!!!</h1>", contentType: "text/html"))
 }
 ```
 
@@ -164,7 +164,7 @@ Let's get our echo example from [Getting Started](#getting-started) a bit furthe
 //:param - this is how you define a part of URL you want to receive through request object
 app.get("/echo/:param") { request in
     //here you get the param from request: request.params["param"]
-    return Action.ok(request.params["param"])
+    .ok(request.params["param"])
 }
 ```
 
@@ -209,7 +209,7 @@ app.post("/api/user") { request in
         "description": "User with username '" + username + "' created succesfully"]
     
     //render disctionary as json (remember the one we've registered above?)
-    return Action.render(JsonView.name, context: response)
+    return .render(JsonView.name, context: response)
 }
 ```
 
@@ -259,7 +259,7 @@ app.get("/hello/:user.html") { request in
     //if there is a user - create our context. If there is no user, context will remain nil
     let context = user.map {["user": $0]}
     //render our template named "hello"
-    return Action.render("hello", context: context)
+    return .render("hello", context: context)
 }
 ```
 
