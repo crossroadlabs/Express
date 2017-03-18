@@ -34,7 +34,7 @@ let package = Package(
         )
     ],
     dependencies: [
-    	.Package(url: "https://github.com/reactive-swift/Future.git", "0.2.0-alpha.1"),
+    	.Package(url: "https://github.com/reactive-swift/Future.git", "0.2.0-alpha"),
     	.Package(url: "https://github.com/IBM-Swift/SwiftyJSON.git", majorVersion: 15),
     	.Package(url: "https://github.com/crossroadlabs/PathToRegex.git", majorVersion: 0, minor: 4),
     	.Package(url: "https://github.com/kylef/Stencil.git", majorVersion: 0, minor: 8),
