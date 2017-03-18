@@ -24,8 +24,8 @@ app.get(path: "/echo") { request in
 }
 
 enum NastyError : Error {
-    case Recoverable
-    case Fatal(reason:String)
+    case recoverable
+    case fatal(reason:String)
 }
 
 app.get(path: "/error/recovered") { request in
@@ -34,17 +34,17 @@ app.get(path: "/error/recovered") { request in
 
 app.get(path: "/error/:fatal?") { (request:Request<AnyContent>) throws -> Action<AnyContent>  in
     guard let fatal = request.params["fatal"] else {
-        throw NastyError.Recoverable
+        throw NastyError.recoverable
     }
     
-    throw NastyError.Fatal(reason: fatal)
+    throw NastyError.fatal(reason: fatal)
 }
 
 app.errorHandler.register { (e:NastyError) in
     switch e {
-    case .Recoverable:
+    case .recoverable:
         return .redirect(url: "/error/recovered")
-    case .Fatal(let reason):
+    case .fatal(let reason):
         let content = AnyContent(str: "Unrecoverable nasty error happened. Reason: " + reason)
         return .response(status: .InternalServerError, content: content)
     }
@@ -138,7 +138,7 @@ func testItems(request:Request<AnyContent>) throws -> [String: Any] {
     }
     
     if let reason = request.query["throw"]?.first {
-        throw NastyError.Fatal(reason: reason)
+        throw NastyError.fatal(reason: reason)
     }
     
     return ["test": "ok", "items": viewItems]
