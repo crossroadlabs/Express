@@ -100,16 +100,16 @@ class ChainAction<C : FlushableContentType, ReqC: ConstructableContentType> : Ac
     }
     
     func handle<RequestContent : ConstructableContentType>(app:Express, routeId:String, request:Request<RequestContent>, out:DataConsumerType) -> Future<Void> {
-        let req = self.request.map {$0 as RequestHeadType} .getOrElse(el: request)
-        let body = self.request.map {$0.body.map {$0 as ContentType}} .getOrElse(el: request.body)
+        let req = self.request.map {$0 as RequestHeadType} ?? request
+        let body = self.request.flatMap {$0.body.flatMap {$0 as ContentType}} ?? request.body
         
         let route = app.nextRoute(routeId: routeId, request: request)
         return route.map { (r:(RouteType, [String: String]))->Future<Void> in
             let req = req.withParams(params: r.1, app: app)
             let transaction = r.0.factory(req, out)
-            for b in body {
-                if !transaction.tryConsume(content: b) {
-                    if let flushableBody = b as? FlushableContentType {
+            if let body = body {
+                if !transaction.tryConsume(content: body) {
+                    if let flushableBody = body as? FlushableContentType {
                         flushableBody.flushTo(out: transaction)
                     } else {
                         print("Can not chain this action")

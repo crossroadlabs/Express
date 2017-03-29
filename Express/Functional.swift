@@ -69,21 +69,6 @@ let folded = arr.fold(1) { b, e in
 
 print("B: ", folded)*/
 
-extension Optional : Sequence {
-    public typealias Iterator = AnyIterator<Wrapped>
-    /// A type that represents a subsequence of some of the elements.
-    public func makeIterator() -> AnyIterator<Wrapped> {
-        var done:Bool = false
-        return AnyIterator {
-            if(done) {
-                return .none
-            }
-            done = true
-            return self
-        }
-    }
-}
-
 public extension Optional {
     func getOrElse( el:@autoclosure () -> Wrapped) -> Wrapped {
         switch self {

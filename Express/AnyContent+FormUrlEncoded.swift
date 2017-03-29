@@ -23,13 +23,9 @@ import Foundation
 
 public extension AnyContent {
     func asFormUrlEncoded() -> Dictionary<String, Array<String>>? {
-        for ct in contentType {
-            //TODO: move to constants
-            if "application/x-www-form-urlencoded" == ct {
-                return asText().map(evhtp_parse_query)
-            }
-        }
-        return nil
+        return contentType.filter {$0 == "application/x-www-form-urlencoded"}.flatMap { _ in
+            self.asText()
+        }.map(evhtp_parse_query)
     }
 }
 

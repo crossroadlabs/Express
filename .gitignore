@@ -9,4 +9,5 @@ Carthage
 
 # SPM
 .build
+Package.pins
 Packages

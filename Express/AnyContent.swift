@@ -37,7 +37,7 @@ public class AnyContentFactory : AbstractContentFactory<AnyContent> {
     public override func consume(data:Array<UInt8>) -> Future<Void> {
         return future(context: immediate) {
             self.data += data
-            for length in self.head.contentLength {
+            if let length = self.head.contentLength {
                 if(self.data.count >= length) {
                     self.resolve()
                 }

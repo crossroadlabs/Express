@@ -48,12 +48,9 @@ public class Response<C : FlushableContentType> : HttpResponseHead, HeadersAdjus
     }
     
     public override func flushTo(out:DataConsumerType) -> Future<Void> {
-        
+        let content = self.content
         return super.flushTo(out: out).flatMap { ()->Future<Void> in
-            for c in self.content {
-                return c.flushTo(out: out)
-            }
-            return Future(value: ())
+            return content.map {$0.flushTo(out: out)} ?? Future(value: ())
         }.flatMap { ()->Future<Void> in
             return future(context: immediate) {
                 try out.dataEnd()
