@@ -21,37 +21,37 @@
 
 import Foundation
 
-public protocol ExpressErrorType : ErrorType {
+public protocol ExpressErrorType : Error {
 }
 
-public enum ExpressError : ErrorType {
+public enum ExpressError : Error {
     case NotImplemented(description:String)
     case FileNotFound(filename:String)
     case PageNotFound(path:String)
     case RouteNotFound(path:String)
     case NoSuchView(name:String)
-    case Render(description:String, line:Int?, cause:ErrorType?)
+    case Render(description:String, line:Int?, cause:Error?)
 }
 
-func ExpressErrorHandler(e:ErrorType) -> AbstractActionType? {
+func ExpressErrorHandler(e:Error) -> AbstractActionType? {
     guard let e = e as? ExpressError else {
         return nil
     }
     
     switch e {
-        case .NotImplemented(let description): return Action<AnyContent>.internalServerError(description)
-        case .FileNotFound(let filename): return Action<AnyContent>.internalServerError("File not found: " + filename)
-        case .NoSuchView(let name): return Action<AnyContent>.internalServerError("View not found: " + name)
-        case .PageNotFound(let path): return Action<AnyContent>.notFound(path)
-        case .RouteNotFound(let path): return Action<AnyContent>.routeNotFound(path)
+        case .NotImplemented(let description): return Action<AnyContent>.internalServerError(description: description)
+        case .FileNotFound(let filename): return Action<AnyContent>.internalServerError(description: "File not found: " + filename)
+        case .NoSuchView(let name): return Action<AnyContent>.internalServerError(description: "View not found: " + name)
+        case .PageNotFound(let path): return Action<AnyContent>.notFound(filename: path)
+        case .RouteNotFound(let path): return Action<AnyContent>.routeNotFound(path: path)
         case .Render(var description, line: let line, cause: let e):
             description += "\n\n"
             if (line != nil) {
-                description.appendContentsOf("At line:" + line!.description + "\n\n")
+                description.append("At line:" + line!.description + "\n\n")
             }
             if (e != nil) {
-                description.appendContentsOf("With error: " + e.debugDescription)
+                description.append("With error: " + e.debugDescription)
             }
-            return Action<AnyContent>.internalServerError("View not found: " + description)
+            return Action<AnyContent>.internalServerError(description: "View not found: " + description)
     }
 }

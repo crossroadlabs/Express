@@ -21,27 +21,27 @@
 
 import Foundation
 import ExecutionContext
-import BrightFutures
+import Future
 import Result
 
 public protocol TransactionType : DataConsumerType {
     func tryConsume(content:ContentType) -> Bool
     
-    var action:Future<AbstractActionType, AnyError> {get}
+    var action:Future<AbstractActionType> {get}
     
     func selfProcess()
 }
 
-class Transaction<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType, E: ErrorType> : TransactionType {
+class Transaction<RequestContent : ConstructableContentType, ResponseContent : FlushableContentType> : TransactionType {
     let app:Express
     let routeId:String
     let out:DataConsumerType
     let head:RequestHeadType
     let factory:RequestContent.Factory
-    let content:Future<RequestContent.Factory.Content, AnyError>
-    let actionPromise:Promise<AbstractActionType, AnyError>
-    let action:Future<AbstractActionType, AnyError>
-    let request:Promise<Request<RequestContent>, NoError>
+    let content:Future<RequestContent.Factory.Content>
+    let actionPromise:Promise<AbstractActionType>
+    let action:Future<AbstractActionType>
+    let request:Promise<Request<RequestContent>>
     
     internal required init(app:Express, routeId:String, head:RequestHeadType, out:DataConsumerType) {
         self.app = app
@@ -52,82 +52,80 @@ class Transaction<RequestContent : ConstructableContentType, ResponseContent : F
         self.content = factory.content()
         self.actionPromise = Promise()
         self.action = actionPromise.future
-        self.request = Promise<Request<RequestContent>, NoError>()
-        content.onSuccess(ExecutionContext.user) { content in
+        self.request = Promise<Request<RequestContent>>()
+        content.settle(in: ExecutionContext.user).onSuccess() { content in
             let request = Request<RequestContent>(app: app, head: head, body: content as? RequestContent)
-            self.request.success(request)
+            self.request.trySuccess(value: request)
         }
         content.onFailure { e in
-            self.actionPromise.failure(AnyError(cause: e))
+            self.actionPromise.tryFail(error: e)
         }
     }
     
-    convenience init(app:Express, routeId:String, head:RequestHeadType, out:DataConsumerType, handler:Request<RequestContent> -> Future<Action<ResponseContent>, E>) {
+    convenience init(app:Express, routeId:String, head:RequestHeadType, out:DataConsumerType, handler:@escaping (Request<RequestContent>) -> Future<Action<ResponseContent>>) {
         self.init(app: app, routeId: routeId, head: head, out: out)
         request.future.onSuccess { request in
             let action = handler(request)
             action.onSuccess { action in
-                self.actionPromise.success(action)
+                self.actionPromise.trySuccess(value: action)
             }
             action.onFailure { e in
-                switch e {
-                case let e as AnyError: self.failAction(e.cause)
-                default: self.failAction(e)
-                }
+                self.failAction(e: e)
             }
         }
     }
     
-    func failAction(e:ErrorType) {
-        self.actionPromise.failure(AnyError(cause: e))
+    func failAction(e:Error) {
+        self.actionPromise.tryFail(error: e)
     }
     
-    func handleActionWithRequest<C : ConstructableContentType>(actionAndRequest:Future<(AbstractActionType, Request<C>?), AnyError>) {
+    func handleActionWithRequest<C : ConstructableContentType>(actionAndRequest:Future<(AbstractActionType, Request<C>?)>) {
         actionAndRequest.onComplete { result in
             let action = Future(result: result.map {$0.0})
-            self.handleAction(action, request: result.value?.1)
+            self.handleAction(action: action, request: result.value?.1)
         }
     }
     
-    func handleAction<C : ConstructableContentType>(action:Future<AbstractActionType, AnyError>, request:Request<C>?) {
-        action.onSuccess(ExecutionContext.action) { action in
+    func handleAction<C : ConstructableContentType>(action:Future<AbstractActionType>, request:Request<C>?) {
+        action.settle(in:ExecutionContext.action ).onSuccess{ action in
             if let request = request {
-                self.processAction(action, request: request)
+                self.processAction(action: action, request: request)
             } else {
                 //yes we certainly have request here
-                for request in self.request.future.value {
-                    self.processAction(action, request: request)
+                
+                self.request.future.onSuccess{value in
+                    self.processAction(action: action, request: value)
                 }
             }
         }
         action.onFailure { e in
             //yes, we always have at least the default error handler
-            let next = self.app.errorHandler.handle(e)!
+            let next = self.app.errorHandler.handle(e: e)!
             
             if let request = request {
-                self.processAction(next, request: request)
+                self.processAction(action: next, request: request)
             } else {
                 self.request.future.onSuccess { request in
-                    self.processAction(next, request: request)
+                    self.processAction(action: next, request: request)
                 }
             }
         }
     }
     
     func selfProcess() {
-        handleAction(action, request: Optional<Request<RequestContent>>.None)
+        handleAction(action: action, request: Optional<Request<RequestContent>>.none)
     }
     
     func processAction<C : ConstructableContentType>(action:AbstractActionType, request:Request<C>) {
         switch action {
-            case let flushableAction as FlushableAction: flushableAction.flushTo(out)
+            case let flushableAction as FlushableAction: flushableAction.flushTo(out: out)
             case let intermediateAction as IntermediateActionType:
-                let actAndReq = intermediateAction.nextAction(request)
-                handleActionWithRequest(actAndReq)
+                let actAndReq = intermediateAction.nextAction(request: request)
+                handleActionWithRequest(actionAndRequest: actAndReq)
             case let selfSufficientAction as SelfSufficientActionType:
-                selfSufficientAction.handle(app, routeId: routeId, request: request, out: out).onFailure { e in
-                    let action = Future<AbstractActionType, AnyError>(error: AnyError(cause: e))
-                    self.handleAction(action, request: request)
+                selfSufficientAction.handle(app: app, routeId: routeId, request: request, out: out).onFailure { e in
+                    let action = Future<AbstractActionType>(error: e)
+                    self.handleAction(action: action, request: request)
                 }
             default:
                 //TODO: handle server error
@@ -136,11 +134,11 @@ class Transaction<RequestContent : ConstructableContentType, ResponseContent : F
     }
     
     func tryConsume(content:ContentType) -> Bool {
-        return factory.tryConsume(content)
+        return factory.tryConsume(content: content)
     }
     
-    func consume(data:Array<UInt8>) -> Future<Void, AnyError> {
-        return factory.consume(data)
+    func consume(data:Array<UInt8>) -> Future<Void> {
+        return factory.consume(data: data)
     }
     
     func dataEnd() throws {

@@ -37,9 +37,9 @@ extension RouterType {
             let method = req.method
             
             let route:(RouteType, [String: String])? = index.flatMap { i in
-                let rest = routes.suffixFrom(i)
+                let rest = routes.suffix(from: i)
                 return rest.mapFirst { e in
-                    guard let match = e.matcher.match(method, path:url) else {
+                    guard let match = e.matcher.match(method: method, path:url) else {
                         return nil
                     }
                     return (e, match)
@@ -51,12 +51,15 @@ extension RouterType {
     
     func nextRoute(routeId:String, request:RequestHeadType?) -> (RouteType, [String: String])? {
         return request.flatMap { req in
-            let index = routes.indexOf {routeId == $0.id} . map { $0.successor() }
-            return nextRoute(index, request: request)
+            
+          
+            
+            let index = routes.index {routeId == $0.id}.map { $0 + 1 } // $0.successor
+            return nextRoute(index: index, request: request)
         }
     }
     
     func firstRoute(request:RequestHeadType?) -> (RouteType, [String: String])? {
-        return nextRoute(routes.startIndex, request: request)
+        return nextRoute(index: routes.startIndex, request: request)
     }
 }

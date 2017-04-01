@@ -53,7 +53,7 @@ public protocol RequestHeadType : HttpHeadType, RequestHeadersType {
     
     var headers:Dictionary<String, String> {get}
     
-    init(method:String, version:String, remoteAddress:String, secure: Bool, uri:String, path:String, query:Dictionary<String,Array<String>>, headers:Dictionary<String, String>, params:Dictionary<String, String>)
+    init(app:Express, method:String, version:String, remoteAddress:String, secure: Bool, uri:String, path:String, query:Dictionary<String,Array<String>>, headers:Dictionary<String, String>, params:Dictionary<String, String>)
 }
 
 public class RequestHead : HttpHead, RequestHeadType {
@@ -84,7 +84,7 @@ public class RequestHead : HttpHead, RequestHeadType {
         super.init(head: head)
     }
     
-    public required init(method:String, version:String, remoteAddress:String, secure: Bool, uri:String, path:String, query:Dictionary<String,Array<String>>, headers:Dictionary<String, String>, params:Dictionary<String, String>) {
+    public required init(app:Express, method:String, version:String, remoteAddress:String, secure: Bool, uri:String, path:String, query:Dictionary<String,Array<String>>, headers:Dictionary<String, String>, params:Dictionary<String, String>) {
         self.method = method
         self.version = version
         self.remoteAddress = remoteAddress
@@ -94,14 +94,14 @@ public class RequestHead : HttpHead, RequestHeadType {
         self.query = query
         self.params = params
         
-        contentLength = HttpHeader.ContentLength.headerInt(headers)
-        contentType = HttpHeader.ContentType.header(headers)
+        contentLength = HttpHeader.ContentLength.headerInt(headers: headers)
+        contentType = HttpHeader.ContentType.header(headers: headers)
         super.init(headers: headers)
     }
 }
 
 public protocol RequestType : RequestHeadType, AppContext {
-    typealias Content
+    associatedtype Content
     
     var body:Content? {get}
 }
@@ -117,10 +117,16 @@ public class Request<C> : RequestHead, RequestType {
         self.body = body
         super.init(head: head)
     }
+    
+    public required init(app:Express, method:String, version:String, remoteAddress:String, secure: Bool, uri:String, path:String, query:Dictionary<String,Array<String>>, headers:Dictionary<String, String>, params:Dictionary<String, String>) {
+        self.app = app
+        self.body = nil
+        super.init(app: app, method: method, version: version, remoteAddress: remoteAddress, secure: secure, uri: uri, path: path, query: query, headers: headers, params: params)
+    }
 }
 
 extension RequestHeadType {
-    func withParams(params:Dictionary<String, String>) -> Self {
-        return Self(method: self.method, version: self.version, remoteAddress: self.remoteAddress, secure: self.secure, uri: self.uri, path: self.path, query: self.query, headers: headers, params: params)
+    func withParams(params:Dictionary<String, String>, app:Express) -> Self {
+        return Self(app: app, method: self.method, version: self.version, remoteAddress: self.remoteAddress, secure: self.secure, uri: self.uri, path: self.path, query: self.query, headers: headers, params: params)
     }
 }

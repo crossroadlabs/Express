@@ -1,5 +1,6 @@
 # Xcode
 *.xcworkspace
+*.xcodeproj
 xcuserdata
 
 # Carthage
@@ -8,4 +9,5 @@ Carthage
 
 # SPM
 .build
+Package.pins
 Packages

@@ -36,7 +36,7 @@ private let warning = "Warning: " + message
     extension Dictionary : MustacheCookable {
         func cook() -> MustacheEdible {
             let s = self.map { (k,v) in
-                (String(k), v as! AnyObject)
+                (String(describing: k), v as! AnyObject)
             }
             let dict:NSDictionary = NSDictionary(dictionary: s)
             return dict
@@ -62,7 +62,7 @@ private let warning = "Warning: " + message
                     return cookable.cook()
                 }
                 let box = Box(anyContext as? MustacheBoxable)
-                let render = try template.render(box)
+                let render = try template.render(with: box)
                 return AnyContent(str:render, contentType: "text/html")!
             } catch let e as MustacheError {
                 switch e.kind {

@@ -8,7 +8,7 @@
 
 import Foundation
 import Express
-import BrightFutures
+import Future
 
 let app = express()
 
@@ -19,36 +19,34 @@ app.views.register(JsonView())
 app.views.register(MustacheViewEngine())
 app.views.register(StencilViewEngine())
 
-app.get("/echo") { request in
-    return Action.ok(request.query["call"]?.first)
+app.get(path: "/echo") { request in
+    .ok(request.query["call"]?.first)
 }
 
-enum NastyError : ErrorType {
-    case Recoverable
-    case Fatal(reason:String)
+enum NastyError : Error {
+    case recoverable
+    case fatal(reason:String)
 }
 
-app.get("/error/recovered") { request in
-    return Action.render("error-recovered", context: [String:Any]())
+app.get(path: "/error/recovered") { request in
+    .render(view: "error-recovered", context: [String:Any]())
 }
 
-app.get("/error/:fatal?") { request in
+app.get(path: "/error/:fatal?") { (request:Request<AnyContent>) throws -> Action<AnyContent>  in
     guard let fatal = request.params["fatal"] else {
-        throw NastyError.Recoverable
+        throw NastyError.recoverable
     }
     
-    throw NastyError.Fatal(reason: fatal)
+    throw NastyError.fatal(reason: fatal)
 }
-
-
 
 app.errorHandler.register { (e:NastyError) in
     switch e {
-    case .Recoverable:
-        return Action<AnyContent>.redirect("/error/recovered")
-    case .Fatal(let reason):
+    case .recoverable:
+        return .redirect(url: "/error/recovered")
+    case .fatal(let reason):
         let content = AnyContent(str: "Unrecoverable nasty error happened. Reason: " + reason)
-        return Action<AnyContent>.response(.InternalServerError, content: content)
+        return .response(status: .InternalServerError, content: content)
     }
 }
 
@@ -56,9 +54,9 @@ app.errorHandler.register { (e:NastyError) in
 app.errorHandler.register { (e:ExpressError) in
     switch e {
     case .PageNotFound(let path):
-        return Action<AnyContent>.render("404", context: ["path": path], status: .NotFound)
+        return .render(view: "404", context: ["path": path], status: .NotFound)
     case  .RouteNotFound(let path):
-        return Action<AnyContent>.render("404", context: ["path": path], status: .NotFound)
+        return .render(view: "404", context: ["path": path], status: .NotFound)
     default:
         return nil
     }
@@ -66,30 +64,30 @@ app.errorHandler.register { (e:ExpressError) in
 
 /// StaticAction is just a predefined configurable handler for serving static files.
 /// It's important to pass exactly the same param name to it from the url pattern.
-app.get("/assets/:file+", action: StaticAction(path: "public", param:"file"))
+app.get(path: "/assets/:file+", action: StaticAction(path: "public", param:"file"))
 
-app.get("/hello") { request in
-    return Action.ok(AnyContent(str: "<h1><center>Hello Express!!!</center></h1>", contentType: "text/html"))
+app.get(path: "/hello") { request in
+    .ok(AnyContent(str: "<h1><center>Hello Express!!!</center></h1>", contentType: "text/html"))
 }
 
 //user as an url param
-app.get("/hello/:user.html") { request in
+app.get(path: "/hello/:user.html") { (request) -> Action<AnyContent>  in
     //get user
     let user = request.params["user"]
     //if there is a user - create our context. If there is no user, context will remain nil
     let context = user.map {["user": $0]}
     //render our template named "hello"
-    return Action.render("hello", context: context)
+    return .render(view: "hello", context: context)
 }
 
-app.post("/api/user") { request in
+app.post(path: "/api/user") { (request) -> Action<AnyContent> in
     //check if JSON has arrived
     guard let json = request.body?.asJSON() else {
-        return Action.ok("Invalid request")
+        return .ok("Invalid request")
     }
     //check if JSON object has username field
     guard let username = json["username"].string else {
-        return Action.ok("Invalid request")
+        return .ok("Invalid request")
     }
     //compose the response as a simple dictionary
     let response =
@@ -97,41 +95,36 @@ app.post("/api/user") { request in
         "description": "User with username '" + username + "' created succesfully"]
     
     //render disctionary as json (remember the one we've registered above?)
-    return Action.render(JsonView.name, context: response)
+    return .render(view: JsonView.name, context: response)
 }
 
 //:param - this is how you define a part of URL you want to receive through request object
-app.get("/echo/:param") { request in
+app.get(path: "/echo/:param") { request in
     //here you get the param from request: request.params["param"]
-    return Action.ok(request.params["param"])
+    .ok(request.params["param"])
 }
 
 func factorial(n: Double) -> Double {
-    return n == 0 ? 1 : n * factorial(n - 1)
+    return n == 0 ? 1 : n * factorial(n: n - 1)
 }
 
-func calcFactorial(num:Double) -> Future<Double, AnyError> {
+func calcFactorial(num:Double) -> Future<Double> {
     return future {
-        return factorial(num)
+        factorial(n: num)
     }
 }
 
-// (request -> Future<Action<AnyContent>, AnyError> in) - this is required to tell swift you want to return a Future
+// (request -> Future<Action<AnyContent>> in) - this is required to tell swift you want to return a Future
 // hopefully inference in swift will get better eventually and just "request in" will be enough
-app.get("/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>, AnyError> in
+app.get(path: "/factorial/:num(\\d+)") { request -> Future<Action<AnyContent>> in
     // get the number from the url
-    let num = request.params["num"].flatMap{Double($0)}.getOrElse(0)
+    let num = request.params["num"].flatMap{Double($0)}.getOrElse(el: 0)
     
     // get the factorial Future. Returns immediately - non-blocking
-    let factorial = calcFactorial(num)
+    let factorial = calcFactorial(num: num)
     
     //map the result of future to Express Action
-    let future = factorial.map { fac in
-        Action.ok(String(fac))
-    }
-    
-    //return the future
-    return future
+    return factorial.map(String.init).map {.ok($0)}
 }
 
 func testItems(request:Request<AnyContent>) throws -> [String: Any] {
@@ -145,19 +138,19 @@ func testItems(request:Request<AnyContent>) throws -> [String: Any] {
     }
     
     if let reason = request.query["throw"]?.first {
-        throw NastyError.Fatal(reason: reason)
+        throw NastyError.fatal(reason: reason)
     }
     
     return ["test": "ok", "items": viewItems]
 }
 
-app.get("/render.html") { request in
-    let items = try testItems(request)
-    return Action.render("test", context: items)
+app.get(path: "/render.html") { request in
+    let items = try testItems(request: request)
+    return .render(view: "test", context: items)
 }
 
 //TODO: make a list of pages
-app.get("/") { request in
+app.get(path: "/") { request -> Action<AnyContent> in
     let examples:[Any] = [
         ["title": "Hello Express", "link": "/hello", "id":"hello", "code": "code/hello.stencil"],
         ["title": "Echo", "link": "/echo?call=hello", "id":"echo", "code": "code/echo.stencil"],
@@ -175,21 +168,25 @@ app.get("/") { request in
     
     let context:[String: Any] = ["examples": examples]
     
-    return Action.render("index", context: context)
+    return .render(view: "index", context: context)
 }
 
-app.get("/test/redirect") { request in
-    return future {
-        let to = request.query["to"].flatMap{$0.first}.getOrElse("../render.html")
-        return Action.redirect(to)
+app.get(path: "/test/redirect") { request in
+    future {
+        let to = request.query["to"].flatMap{$0.first}.getOrElse(el: "../render.html")
+        return .redirect(url: to)
     }
 }
 
-app.all("/merged/query") { request in
-    Action.render(JsonView.name, context: request.mergedQuery())
+app.all(path: "/merged/query") { request in
+    .render(view: JsonView.name, context: request.mergedQuery())
 }
 
-app.listen(9999).onSuccess { server in
+app.get(path: "/mustache/:hello") { request in
+    .render(view: "mustache", context: ["hello": request.params["hello"]])
+}
+
+app.listen(port: 9999).onSuccess { server in
     print("Express was successfully launched on port", server.port)
 }
 

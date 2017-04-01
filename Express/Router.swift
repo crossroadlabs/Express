@@ -32,7 +32,7 @@ class Route : RouteType {
     let matcher:UrlMatcherType
     let factory:TransactionFactory
     
-    init(id:String, matcher:UrlMatcherType, factory:TransactionFactory) {
+    init(id:String, matcher:UrlMatcherType, factory:@escaping TransactionFactory) {
         self.id = id
         self.matcher = matcher
         self.factory = factory

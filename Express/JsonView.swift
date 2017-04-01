@@ -20,7 +20,7 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import TidyJSON
+import SwiftyJSON
 
 public protocol JSONConvertible {
     func toJSON() -> JSON?
@@ -58,10 +58,10 @@ extension Array : JSONConvertible {
 
 extension Dictionary : JSONConvertible {
     public func toJSON() -> JSON? {
-        let normalized = self.map {(String($0), $1)}.flatMap { (k, v) in
+        let normalized = self.map {(String(describing: $0), $1)}.flatMap { (k, v) in
             (v as? JSONConvertible).map {(k, $0)}
         }
-        return JSON(toMap(normalized.flatMap { (k, v) in
+        return JSON(toMap(array: normalized.flatMap { (k, v) in
             v.toJSON().map {(k, $0)}
         }))
     }
@@ -69,7 +69,7 @@ extension Dictionary : JSONConvertible {
 
 extension Optional {
     public func toJSON() -> JSON? {
-        return self.flatMap{$0 as? JSONConvertible}.flatMap{$0.toJSON()}.getOrElse(JSON.Null)
+        return self.flatMap{$0 as? JSONConvertible}.flatMap{$0.toJSON()}
     }
 }
 
@@ -83,9 +83,10 @@ public class JsonView : NamedViewType {
     public func render<Context>(context:Context?) throws -> FlushableContentType {
         //TODO: implement reflection
         let json = context.flatMap{$0 as? JSONConvertible}.flatMap { $0.toJSON() }
+        
         //TODO: avoid string path
-        guard let render = json?.dump() else {
-            throw ExpressError.Render(description: "unable to render json: " + context.flatMap{String($0)}.getOrElse("None"), line: nil, cause: nil)
+        guard let render = json?.rawString() else {
+            throw ExpressError.Render(description: "unable to render json: " + context.flatMap{String(describing: $0)}.getOrElse(el: "None"), line: nil, cause: nil)
         }
         return AnyContent(str:render, contentType: "application/json")!
     }
