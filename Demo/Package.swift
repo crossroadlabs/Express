@@ -22,13 +22,8 @@
 import PackageDescription
 
 let package = Package(
-    name: "Express",
+    name: "Demo",
     dependencies: [
-        .Package(url: "https://github.com/reactive-swift/Future.git", majorVersion: 0, minor: 2),
-        .Package(url: "https://github.com/IBM-Swift/SwiftyJSON.git", majorVersion: 16),
-        .Package(url: "https://github.com/crossroadlabs/PathToRegex.git", majorVersion: 0, minor: 4),
-        .Package(url: "https://github.com/kylef/Stencil.git", majorVersion: 0, minor: 8),
-        .Package(url: "https://github.com/IBM-Swift/GRMustache.swift", majorVersion: 1, minor: 7),
-        .Package(url: "https://github.com/crossroadlabs/CEVHTP.git", majorVersion: 0, minor: 4),
+        .Package(url: "../", majorVersion: 0, minor: 3)
     ]
 )
