@@ -15,9 +15,7 @@
 	</p>
 	<p>
 		<h5 align="right"><a href="./doc/index.md">Documentation    <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/82/tag-doc-64.png" height=16/></a></h5>
-		
 		<h5 align="right"><a href="http://demo.swiftexpress.io/">Live 🐧 server running Demo  <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/34/play-circle-32.png" height=16/></a></h5>
-		
 		<h5 align="right"><a href="http://swiftexpress.io/">Eating our own dog food  <img src="https://cdn0.iconfinder.com/data/icons/glyphpack/147/globe-full-32.png" height=16/></a></h5>
 		<br/>
 	</p>
@@ -28,7 +26,7 @@
 [![SPM compatible](https://img.shields.io/badge/SPM-compatible-4BC51D.svg?style=flat)](https://swift.org/package-manager/)
 ![Platform OS X | Linux](https://img.shields.io/badge/platform-OS%20X%20%7C%20Linux-orange.svg)
 ![Swift version](https://img.shields.io/badge/Swift-3.x-blue.svg)
-[![GitHub license](https://img.shields.io/badge/license-LGPL v3-green.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
+[![GitHub license](https://img.shields.io/badge/license-LGPL%20v3-green.svg)](https://raw.githubusercontent.com/crossroadlabs/Express/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/crossroadlabs/Express.svg)](https://github.com/crossroadlabs/Express/releases)
 
 <table bgcolor="#ff0000">
